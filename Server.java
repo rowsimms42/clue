@@ -12,6 +12,7 @@ public class Server extends Thread
     private boolean running = false;
     private static List<Socket> clientSocketList = new ArrayList<Socket>();
 
+    
     public Server( int port )
     {
         this.port = port;

@@ -1,3 +1,5 @@
+
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,6 +27,8 @@ public class ServerConnection extends Thread {
             //new threads get the socket passed into as the constructor argument
             //create new clientToServer thread
 
+            DataClientToServer playerOut = new DataClientToServer();
+           // playerOut.start(clientSocket);
             //create new serverToClient thread
 
             reader.close();
