@@ -44,10 +44,7 @@ class RequestHandler extends Thread
             // Close our connection
             dataIn.close();
             dataOut.close();
-/* Need to add function to remove socket from Server.clientSocketList 
-before closing socket to prevent error on server
-Once a client closes the connection, the function Server.broadcast is 
-trying to send messages to clients that are no longer connected */
+            Server.removeSocketFromList(socket);
             socket.close();
 
             System.out.println( "Connection closed" );

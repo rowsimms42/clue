@@ -5,19 +5,20 @@ import java.net.Socket;
 public class DataServerToClient extends Thread {
     Socket socket;
 
-    public void DataClientToServer(Socket socket){
+    public DataServerToClient(Socket socket){
         this.socket = socket;
     }
 
     @Override
     public void run() {
         try {
-            BufferedReader dataIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader dataFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             String msgFromServer = "";
             while(true){
                 try {
-                    msgFromServer = dataIn.readLine();
+                    msgFromServer = dataFromServer.readLine();
+                    ServerConnection.testToCloseClient(msgFromServer, socket);  //test output string for "exit", if true close connection 
                     System.out.println(msgFromServer);
                 } catch (Exception e) {
                     e.printStackTrace();

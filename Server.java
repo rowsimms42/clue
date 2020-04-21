@@ -3,16 +3,15 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Server extends Thread
 {
     private ServerSocket serverSocket;
     private int port;
     private boolean running = false;
-    private static List<Socket> clientSocketList = new ArrayList<Socket>();
+    private static ArrayList<Socket> clientSocketList = new ArrayList<Socket>();
 
-    
+
     public Server( int port )
     {
         this.port = port;
@@ -61,6 +60,16 @@ public class Server extends Thread
         }
     }
 
+
+    public static void removeSocketFromList(Socket socketToRemove){
+        for(int i = 0; i < clientSocketList.size(); i++){
+            if(clientSocketList.get(i) == socketToRemove){
+                clientSocketList.remove(i);
+                System.out.println("Socket removed: " + socketToRemove + '\n');
+                break;
+            }
+        }
+    }
 
     @Override
     public void run()
