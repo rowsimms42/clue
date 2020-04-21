@@ -52,30 +52,6 @@ public class ServerConnection extends Thread {
     public static void main(String[] args) {
         ServerConnection newPlayer = new ServerConnection();
         newPlayer.start();
-        /*
-        try(Socket clientSocket = new Socket("localhost", 4321)){
-
-            InputStream dataIn = clientSocket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(dataIn));
-            String msgFromServer = reader.readLine();
-            System.out.println(msgFromServer);
-
-            //new threads get the socket passed into as the constructor argument
-            //create new ClientToServer thread
-            DataClientToServer playerOut = new DataClientToServer(clientSocket);
-            playerOut.start();
-            
-            //create new ServerToClient thread
-            DataServerToClient playerIn = new DataServerToClient(clientSocket);
-            playerIn.start();
-           
-
-            reader.close();
-            //clientSocket.close(); // automatically closes InputStream too
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-        */
     }
     
 }
