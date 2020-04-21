@@ -23,6 +23,8 @@ class RequestHandler extends Thread
             BufferedReader dataIn = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
             PrintWriter dataOut = new PrintWriter( socket.getOutputStream() );
 
+            Thread.sleep(100); // sleep gives time to client to set up input & output streams
+
             // Write out our header to the client
             dataOut.println( "Connected, you can send and revieve messages!" );
             dataOut.flush();
