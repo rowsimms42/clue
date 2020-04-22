@@ -18,16 +18,19 @@ public class ClientManager {
 
     private ClueStartFrame start_frame;
     private ClientFrame frame; // = new ClientFrame();
+    private CharacterSelectFrame select;
     public ClientManager(){
 
-                start_frame = new ClueStartFrame();
+            start_frame = new ClueStartFrame();
                 /*
                 start_frame.setLocationRelativeTo(null);
         start_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         start_frame.setResizable(false);
         start_frame.setVisible(true); */
 
-                frame = new ClientFrame();
+
+            frame = new ClientFrame();
+
                 
 
     }

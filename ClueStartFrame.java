@@ -40,8 +40,8 @@ public class ClueStartFrame extends JFrame{
 				
 				//keep frame in memory, do not dispose(), just don't show
 				setVisible(false);
-				new CharacterSelectFrame(new ClientServerConnection("Billy Bob", 34212));
-				
+				//new CharacterSelectFrame(new ServerConnection("Billy Bob", 34212));
+				new CharacterSelectFrame(new ServerConnection());
 			}
 		});
 		btnStartGame.setBounds(149, 53, 117, 29);

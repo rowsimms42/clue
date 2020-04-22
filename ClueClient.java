@@ -12,8 +12,10 @@ public class ClueClient {
 		// TODO Auto-generated method stub
 		SwingUtilities.invokeLater(new Runnable(){
             public void run() {
-            	
-            	/* Build and display the main game window (JFrame) */
+                
+                ClientManager cm = new ClientManager();
+                cm.showStartFrame();
+            	/* Build and display the main game window (JFrame) 
                 ClientFrame frame = new ClientFrame();
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,7 +24,7 @@ public class ClueClient {
                 
                 //TODO JOptionPane - ask for port number and connect to server
                 
-                
+                */
             } //end run
         });
 

@@ -39,11 +39,11 @@ public class CharacterSelectFrame extends JFrame  {
 		setServerConnection(serverConnection);
 		
 		//check if the server was connected
-		if(!serverConnection.isClientConnectedToServer()) {
+		//if(!serverConnection.isClientConnectedToServer()) {
 			//TODO
 		
 
-		}
+	//	}
 		
 		setTitle("Character Select");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
