@@ -108,6 +108,7 @@ public class CharacterSelectFrame extends JFrame  {
 
 	public void setServerConnection(ServerConnection serverConnection) {
 		this.serverConnection = serverConnection;
+		serverConnection.start();
 	}
 
 	private void initCharacterPanels() {
