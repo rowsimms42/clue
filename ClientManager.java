@@ -16,11 +16,11 @@ import java.net.*;
 
 public class ClientManager {
 
-    private GameStartFrame start_frame;
+    private ClueStartFrame start_frame;
     private ClientFrame frame; // = new ClientFrame();
     public ClientManager(){
 
-                start_frame = new GameStartFrame();
+                start_frame = new ClueStartFrame();
                 /*
                 start_frame.setLocationRelativeTo(null);
         start_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

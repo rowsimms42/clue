@@ -26,7 +26,7 @@ public class CharacterSelectFrame extends JFrame  {
 			Color.ORANGE, Color.PINK, Color.BLACK };
 	private String colorNames[] = {"Cyan", "Red", "Yellow", "Orange", "Pink", "Black"};
 	
-	ClientServerConnection serverConnection;
+	ServerConnection serverConnection;
 	private JTextArea textAreaCharacterFrameInfo;
 	
 	private String imageNameArray[] = {"rodent.jpg", "cow.jpg"};
@@ -34,7 +34,7 @@ public class CharacterSelectFrame extends JFrame  {
 	/**
 	 * Create the frame.
 	 */
-	public CharacterSelectFrame(ClientServerConnection serverConnection) {
+	public CharacterSelectFrame(ServerConnection serverConnection) {
 		//assign the server object
 		setServerConnection(serverConnection);
 		
@@ -105,7 +105,7 @@ public class CharacterSelectFrame extends JFrame  {
 			return 6; 
 	}
 
-	public void setServerConnection(ClientServerConnection serverConnection) {
+	public void setServerConnection(ServerConnection serverConnection) {
 		this.serverConnection = serverConnection;
 	}
 
