@@ -14,23 +14,25 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.awt.*;
+import javax.swing.*;
 
 public class CharacterSelectFrame extends JFrame  {
 
 	private JPanel contentPane, characterPanel;
 	private JPanel[] characterPanelArray;
 	private final int MAX_CHARACTERS = 6;
-	private ImageIcon characterImageArray[];
-	//FOR Testing
-	private Color[] colorArray = {Color.CYAN, Color.RED, Color.YELLOW,
-			Color.ORANGE, Color.PINK, Color.BLACK };
-	private String colorNames[] = {"Cyan", "Red", "Yellow", "Orange", "Pink", "Black"};
-	
+	private JLabel[] label;
+	private Color[] colorArray = {new Color(0,204,102), new Color(204,0,204), Color.WHITE,
+		new Color(204,204,0), new Color(204,0,0), Color.BLUE };
+	private String imageName[] = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard", "Miss Scarlett", "Mrs. Peacock"};
+	private String imageNameArray[] = {"resources\\green.png", "resources\\plum.png", "resources\\white.png", "resources\\mustard.png", "resources\\scarlett.png", "resources\\peacock.png"};
+	private ImageIcon[] characterImageArray;
 	ServerConnection serverConnection;
 	private JTextArea textAreaCharacterFrameInfo;
-	
-	private String imageNameArray[] = {"rodent.jpg", "cow.jpg"};
-	
+
+
 	/**
 	 * Create the frame.
 	 */
@@ -67,8 +69,7 @@ public class CharacterSelectFrame extends JFrame  {
 		textAreaCharacterFrameInfo.setEditable(false);
 		textAreaCharacterFrameInfo.setBounds(6, 498, 388, 59);
 		contentPane.add(textAreaCharacterFrameInfo);
-		//textAreaCharacterFrameInfo.setText(serverConnection.getServerName());
-		
+		//textAreaCharacterFrameInfo.setText(serverConnection.getServerName());		
 		
 		initCharacterPanels();
 		
@@ -79,7 +80,7 @@ public class CharacterSelectFrame extends JFrame  {
 				int x = e.getX();
 				int y = e.getY();
 				int panelSelected = determinePanelClickedOn(x, y);
-				textAreaCharacterFrameInfo.setText(colorNames[ panelSelected - 1 ]);
+				textAreaCharacterFrameInfo.setText(imageName[ panelSelected - 1 ]);
 			}
 		});
 		
@@ -118,22 +119,19 @@ public class CharacterSelectFrame extends JFrame  {
 
 	private void initPanelsInArray() {
 		characterPanelArray = new JPanel[6];
+		label = new JLabel[6];
+		characterImageArray = new ImageIcon[6];
 		for(int i = 0; i < MAX_CHARACTERS; i++) {
 			characterPanelArray[i] = new JPanel();
-		}
-	}
-	
-	private void initImageArray() {
-		for(int i = 0; i < MAX_CHARACTERS; i++) {
 			characterImageArray[i] = new ImageIcon(imageNameArray[i]);
+			label[i] = new JLabel(characterImageArray[i]);
 		}
 	}
 	
 	private void addPictureToPanels() {
-		
-		//NOTE - Adding colors for testing purposes
 		for(int i = 0; i < MAX_CHARACTERS; i++) {
 			characterPanelArray[i].setBackground(colorArray[i]);
+			characterPanelArray[i].add(label[i]);
 		}
 		/*
 		characterPanelArray[0].setBackground(Color.CYAN);
