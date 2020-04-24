@@ -1,5 +1,17 @@
 
-public class ClueGameConstants {
+public final class ClueGameConstants {
 
-    static final int MAX_CHARACTERS = 6;
+	public static final int MAX_CHARACTERS = 6;
+	
+	public static final int MIN_CHARACTERS = 3;
+	
+	public static final int REQUEST_AVAILABLE_CHARACTERS = 1223419;
+	
+	public static final int CONFIRM_INDEX_AVAILABLE = 4532178;
+	
+	
+	//TODO add more constant variables as needed
+	
+	
+	
 }
