@@ -24,7 +24,6 @@ import java.awt.event.MouseEvent;
 
 public class CharacterSelectFrame extends JFrame {
 
-	private final int MAX_CHARACTERS = 6;
 	private final int REQUEST_AVAILABLE_CHARACTERS = 12300;
 	
 	private JPanel contentPane, characterPanel;
@@ -45,6 +44,7 @@ public class CharacterSelectFrame extends JFrame {
 	private JTextArea textAreaCharacterFrameInfo;
 	private String imageNamesArray[] = {"Mr. Green", "Professor Plum", "Mrs. White", 
 			               "Colonel Mustard", "Miss Scarlett", "Mrs. Peacock"};
+	private int characterSelected = 0;
 	private int availableCharacters = 0;
 	private boolean availableCharactersArray[] = {true, true, true, true, true, true};
 	private boolean isValidCharacterSelected = false;
@@ -86,9 +86,12 @@ public class CharacterSelectFrame extends JFrame {
 		if(!serverConnection.isServerConnected())
 			handleNotConnected();
 		
-		
 		//availableCharacters = serverConnection.requestNumber(REQUEST_AVAILABLE_CHARACTERS);
-		availableCharacters = 54;
+		//serverConnection.sendingInfo(playemove, PLAYER.MADE.MOVE);
+		
+		availableCharacters = serverConnection.requestNumber(
+								ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS);
+		availableCharacters = 55;
 		if(availableCharacters > 0) {
 			updatePanelArrayUsedCharacters();
 		}
@@ -98,33 +101,51 @@ public class CharacterSelectFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
+				/*determine which character was selected based on which 
+				 * panel was clicked on. characterSelected will be
+				 * values 1 - 6. 
+				 */
 				int x = e.getX();
 				int y = e.getY();
-				int characterSelected = determinePanelClickedOn(x, y);
+				characterSelected = determinePanelClickedOn(x, y);
 				
-				//TODO: send character selected to server
+				//send character selected to server
+				serverConnection.sendSelectedCharacter(characterSelected);
 				
-
-				//The character is not available
-				if(!availableCharactersArray[characterSelected - 1]) {
+				//from server, if selected character is available or not
+				boolean isAvailableCharacter = serverConnection.
+												recieceSpecificCharAvailable(characterSelected);
+				
+				if(!isAvailableCharacter) {
+					//----Character became unavailable-----
+					
+					//TODO uncomment for final app
+					
+					//TODO remove and use showCharacterUsedandNewAvailableRequest
+					// function in final app -----------------------------------
 					textAreaCharacterFrameInfo.setText(imageNamesArray[ characterSelected - 1 ]);
 					JOptionPane.showMessageDialog(null, "The character you selected is already choosen");
 					btnAdvance.setEnabled(false);
+					
+					//request again all available/unavailable characters
+					availableCharacters = serverConnection.requestNumber(
+							ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS);
+					
+					//update panel with available/unavailable characters
+					updatePanelArrayUsedCharacters();
+					//---------------------------------------------------------
+					
+					
 				}
 				else {
+					//-----Character is still available -------
 					textAreaCharacterFrameInfo.setText(imageNamesArray[ characterSelected - 1 ] +
-													  " is available");
+							  " is available");
 					btnAdvance.setEnabled(true);
 				}
 				
-				//TODO: send character selected to server
-				
-				//TODO: receive data if character is available from server
-				
-				//TODO: Confirm with server that character is indeed available. 
-	
 			}
-		});
+		}); //end Panel mouse listener
 		
 	
 		
@@ -134,16 +155,49 @@ public class CharacterSelectFrame extends JFrame {
 		
 		btnAdvance.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO 
 				
-				new ClientFrame(serverConnectionPassed).setVisible(true);
+				//re-confirm with the server that the selected character is indeed available
+				boolean isCharacterIndeedAvailable = serverConnection.
+								confirmAvailable(ClueGameConstants.CONFIRM_INDEX_AVAILABLE, 
+										characterSelected);
+				
+				if(isCharacterIndeedAvailable) {
+					//---selected character confirmed to be available-----
+					
+					//character will be chosen, tell server to mark this character as used 
+					serverConnection.markCharacterAsUsed(characterSelected);
+					
+					//TODO set the player's character 
+					
+					//transition to the next frame
+					new ClientFrame(serverConnectionPassed).setVisible(true);
+				}
+				else {
+					//----selected character was confirmed not to be available---
+					
+					//Show JOptionpane message window that character is already chosen
+					String characterAlreadySelectedStr = imageNamesArray[ characterSelected -1] +
+							" has already been selected by another character. Choose another"
+							+ " available character.";
+					JOptionPane.showMessageDialog(null, characterAlreadySelectedStr);
+					
+					//request again all available/unavailable characters
+					availableCharacters = serverConnection.requestNumber(
+							ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS);
+					
+					//update panel with available/unavailable characters
+					updatePanelArrayUsedCharacters();
+					
+					//disable this button
+					btnAdvance.setEnabled(false);
+				}
 			}
-		});
+		}); //end button listener
 
-		setVisible(true);
+		
+		setVisible(true); //set the character select frame to visibility to true
 	} //end constructor
 
-	
 	
 	/*
 	 *  Method to hide the characters that have already been 
@@ -152,7 +206,7 @@ public class CharacterSelectFrame extends JFrame {
 	 */
 	private void updatePanelArrayUsedCharacters() {
 		
-		for(int i = 0; i < MAX_CHARACTERS; i++) {
+		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			boolean isBitSet = isNthBitSet(availableCharacters, i+1);
 			if(isBitSet) {
 				//Set the background color to black 
@@ -193,10 +247,10 @@ public class CharacterSelectFrame extends JFrame {
 	}
 
 	private void initPanelsInArray() {
-		characterPanelArray = new JPanel[MAX_CHARACTERS];
-		characterImageLabel = new JLabel[MAX_CHARACTERS];
-		characterImageArray = new ImageIcon[MAX_CHARACTERS];
-		for(int i = 0; i < MAX_CHARACTERS; i++) {
+		characterPanelArray = new JPanel[ClueGameConstants.MAX_CHARACTERS];
+		characterImageLabel = new JLabel[ClueGameConstants.MAX_CHARACTERS];
+		characterImageArray = new ImageIcon[ClueGameConstants.MAX_CHARACTERS];
+		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			characterPanelArray[i] = new JPanel();
 			/* TODO uncomment
 			characterImageArray[i] = new ImageIcon(imageNameArray[i]);
@@ -204,9 +258,8 @@ public class CharacterSelectFrame extends JFrame {
 		}
 	}
 	
-	
 	private void addPictureToPanels() {
-		for(int i = 0; i < MAX_CHARACTERS; i++) {
+		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			characterPanelArray[i].setBackground(colorArray[i]);
 			/*TODO Uncomment
 			characterPanelArray[i].add(characterImageLabel[i]); */
@@ -251,6 +304,7 @@ public class CharacterSelectFrame extends JFrame {
 						showGameQuitMessageAndExitGame();
 					}
 					int portNumber = Integer.parseInt(portNumStr);
+					
 					serverConnection.reconnectToServer( portNumber );
 					//TODO remove in final, FOR TESTING
 					serverConnection.setServerConnected(true);
@@ -266,6 +320,19 @@ public class CharacterSelectFrame extends JFrame {
 		}
 	}
 	
+	private void showCharacterUsedandNewAvailableRequest() {
+		
+		textAreaCharacterFrameInfo.setText(imageNamesArray[ characterSelected - 1 ]);
+		JOptionPane.showMessageDialog(null, "The character you selected is already choosen");
+		btnAdvance.setEnabled(false);
+		
+		//request again all available/unavailable characters
+		availableCharacters = serverConnection.requestNumber(
+				ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS);
+		
+		//update panel with available/unavailable characters
+		updatePanelArrayUsedCharacters();
+	}
 	
 	public void setServerConnection(ServerConnection serverConnection) {
 		this.serverConnection = serverConnection;
