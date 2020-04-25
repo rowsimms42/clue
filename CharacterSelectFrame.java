@@ -252,17 +252,15 @@ public class CharacterSelectFrame extends JFrame {
 		characterImageArray = new ImageIcon[ClueGameConstants.MAX_CHARACTERS];
 		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			characterPanelArray[i] = new JPanel();
-			/* TODO uncomment
 			characterImageArray[i] = new ImageIcon(imageNameArray[i]);
-			characterImageLabel[i] = new JLabel(characterImageArray[i]); */
+			characterImageLabel[i] = new JLabel(characterImageArray[i]);
 		}
 	}
 	
 	private void addPictureToPanels() {
 		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			characterPanelArray[i].setBackground(colorArray[i]);
-			/*TODO Uncomment
-			characterPanelArray[i].add(characterImageLabel[i]); */
+			characterPanelArray[i].add(characterImageLabel[i]); 
 		}
 	}
 	
