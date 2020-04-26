@@ -56,6 +56,7 @@ public class ClueStartFrame extends JFrame {
 		contentPane.add(dice_panel);
 		contentPane.add(image_panel);
 		contentPane.add(button_panel);
+		button_panel.add(start_button);
 
 		start_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -73,7 +74,6 @@ public class ClueStartFrame extends JFrame {
 				
 			}
 		});
-		button_panel.add(start_button);
 		
 		//pack();
 		setLocationRelativeTo(null);
