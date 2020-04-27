@@ -1,16 +1,15 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.*;
-import java.awt.event.*;
-import java.awt.*;
 
 public class ClueStartFrame extends JFrame {
 	// private JPanel contentPane, clue_logo_panel, button_panel;
@@ -66,9 +65,8 @@ public class ClueStartFrame extends JFrame {
 				// new CharacterSelectFrame(new ServerConnection("Billy Bob", 34212));
 
 				try {
-					new CharacterSelectFrame(new NIOClientConnect());
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+					new CharacterSelectFrame(new Client()); // Server must be started seperately before this function will return anything 
+				} catch (IOException | ClassNotFoundException e1) {
 					e1.printStackTrace();
 				}
 				
@@ -84,3 +82,9 @@ public class ClueStartFrame extends JFrame {
 
 } // end class
 
+/**
+ * Need another window that comes up when only first person connection
+ * This starts the server, after that, there is no need to interact 
+ * with the server except through the Client class, which holds the 
+ * methods to send and receive data 
+ */

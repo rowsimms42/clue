@@ -1,30 +1,28 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 //import com.sun.security.ntlm.Server;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import java.awt.GridLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import old server classes.ServerConnection;
+
+
 
 
 public class CharacterSelectFrame extends JFrame {
-
-	private final int REQUEST_AVAILABLE_CHARACTERS = 12300;
 	
 	private JPanel contentPane, characterPanel;
 	private JPanel[] characterPanelArray;
@@ -40,7 +38,7 @@ public class CharacterSelectFrame extends JFrame {
 									   "resources\\white.png", "resources\\mustard.png", 
 									   "resources\\scarlett.png", "resources\\peacock.png"};
 	
-	ServerConnection serverConnection;
+	Client player;
 	private JTextArea textAreaCharacterFrameInfo;
 	private String imageNamesArray[] = {"Mr. Green", "Professor Plum", "Mrs. White", 
 			               "Colonel Mustard", "Miss Scarlett", "Mrs. Peacock"};
@@ -50,9 +48,9 @@ public class CharacterSelectFrame extends JFrame {
 	private boolean isValidCharacterSelected = false;
 	
 	
-	public CharacterSelectFrame(ServerConnection serverConnection) {
+	public CharacterSelectFrame(Client player) {
 		
-		setServerConnection(serverConnection);
+		setServerConnection(player); // the player is the new Thread that connects with the server
 	
 		//Build the  frame and its components
 		setTitle("Character Select");
@@ -83,14 +81,26 @@ public class CharacterSelectFrame extends JFrame {
 		
 		//At this point we should be connected to the server
 		//but if we are not then reconnect or quit the game
-		if(!serverConnection.isServerConnected())
+		if(!player.isPlayerConnected()) { 
 			handleNotConnected();
+		}
 		
+		/**
+		 * Function example to get available players back from server
+		 */
+		Message msg = new Message(ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS, null);
+		player.send(msg);
+		Message newMsg = player.getMessage();
+		int constFromServer = newMsg.getMessageID();
+		//call function that handles constants in switch statement
+		//then adjust the GUI accordingly
+
+
 		//availableCharacters = serverConnection.requestNumber(REQUEST_AVAILABLE_CHARACTERS);
 		//serverConnection.sendingInfo(playemove, PLAYER.MADE.MOVE);
 		
-		availableCharacters = serverConnection.requestNumber(
-								ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS);
+		//availableCharacters = serverConnection.requestNumber(
+		//						ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS);
 		availableCharacters = 55;
 		if(availableCharacters > 0) {
 			updatePanelArrayUsedCharacters();
@@ -110,7 +120,7 @@ public class CharacterSelectFrame extends JFrame {
 				characterSelected = determinePanelClickedOn(x, y);
 				
 				//send character selected to server
-				serverConnection.sendSelectedCharacter(characterSelected);
+				player.sendSelectedCharacter(characterSelected);
 				
 				//from server, if selected character is available or not
 				boolean isAvailableCharacter = serverConnection.
@@ -283,7 +293,7 @@ public class CharacterSelectFrame extends JFrame {
 	}
 	
 	private void handleNotConnected() {
-		while(!serverConnection.isServerConnected()) {
+		while(!player.isPlayerConnected()) {
 			//Not connected to server
 			
 			//Show error connection message
@@ -295,17 +305,14 @@ public class CharacterSelectFrame extends JFrame {
 				case JOptionPane.YES_OPTION: 
 					//Attempt to reconnect to the server
 					String portNumStr = JOptionPane.showInputDialog(null,
-										"Enter port number of the server",
+										"Enter port number of the server", // Don't need port number anymore, it is in ClueGameConstants
 										"Server Reconnection Attempt",
 										JOptionPane.INFORMATION_MESSAGE);
 					if(portNumStr == null) {
 						showGameQuitMessageAndExitGame();
 					}
-					int portNumber = Integer.parseInt(portNumStr);
-					
-					serverConnection.reconnectToServer( portNumber );
-					//TODO remove in final, FOR TESTING
-					serverConnection.setServerConnected(true);
+					player = startNewConnection();
+
 					break;
 				case JOptionPane.NO_OPTION:
 					showGameQuitMessageAndExitGame();
@@ -332,9 +339,14 @@ public class CharacterSelectFrame extends JFrame {
 		updatePanelArrayUsedCharacters();
 	}
 	
-	public void setServerConnection(ServerConnection serverConnection) {
-		this.serverConnection = serverConnection;
+	public void setServerConnection(Client player) {
+		this.player = player;
 	}
 	
+
+	public Client startNewConnection() {
+		Client player = new Client();
+		return player;
+	}
 
 } //end class

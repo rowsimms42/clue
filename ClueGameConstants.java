@@ -1,5 +1,8 @@
-
 public final class ClueGameConstants {
+
+	public static final int PORT = 6060;
+
+	public static final String IP = "localhost";
 
 	public static final int MAX_CHARACTERS = 6;
 	

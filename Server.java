@@ -6,13 +6,11 @@ import java.util.ArrayList;
 public class Server extends Thread
 {
     private ServerSocket serverSocket;
-    private int port;
     private boolean running = false;
     public static ArrayList<Socket> clientSocketList = new ArrayList<Socket>();
 
-    public Server( int port )
+    public Server()
     {
-        this.port = port;
         startServer();
         //should not be reached
         stopServer();
@@ -22,7 +20,7 @@ public class Server extends Thread
     {
         try
         {
-            serverSocket = new ServerSocket( port );
+            serverSocket = new ServerSocket( ClueGameConstants.PORT );
             this.start();
         }
         catch (IOException e)
@@ -42,6 +40,18 @@ public class Server extends Thread
             if (s == socket){
                 clientSocketList.remove(s);
             }
+        }
+    }
+
+    public Boolean isServerConnected()
+    {
+        if(!this.serverSocket.isClosed()){
+            return true;
+        } else if(this.serverSocket.isClosed()){
+            return false;
+        } else {
+            System.out.println("Serious Error when testing for ServerSocket connection on IP and PORT");
+            return false;
         }
     }
 
@@ -75,9 +85,8 @@ public class Server extends Thread
 
     public static void main( String[] args )
     {
-        int port = 4321;
 
-        Server server = new Server( port );
+        Server server = new Server();
 
     }
 }

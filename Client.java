@@ -6,12 +6,13 @@ import java.net.UnknownHostException;
 
 public class Client {
 
-    private int PORT = 4321;
     private Socket socket;
+    private Boolean isConnected = false;
 
     public Client() throws UnknownHostException, ClassNotFoundException {
         try {
-            this.socket = new Socket("localhost", this.PORT);
+            this.socket = new Socket(ClueGameConstants.IP, ClueGameConstants.PORT);
+            this.isConnected = true;
         } catch (IOException e) {
             try {
                 this.socket.close();
@@ -37,4 +38,16 @@ public class Client {
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         Client newPlayer = new Client();
     }
-}
+
+
+/**
+ * Functions that do not involve communicating with server
+ */
+
+    public Boolean isPlayerConnected(){
+            return this.isConnected;
+        }
+ 
+
+
+} // Client Class
