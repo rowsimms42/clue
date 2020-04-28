@@ -17,7 +17,7 @@ import javax.swing.JTextArea;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
-import old server classes.ServerConnection;
+//import old server classes.ServerConnection;
 
 
 
@@ -219,8 +219,10 @@ public class CharacterSelectFrame extends JFrame {
 		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			boolean isBitSet = isNthBitSet(availableCharacters, i+1);
 			if(isBitSet) {
-				//Set the background color to black 
-				characterPanelArray[i].setBackground(Color.BLACK);
+				ImageIcon unavail = new ImageIcon("resources\\unavailable.png");
+				JLabel unavailLabel = new JLabel(unavail);
+				characterPanelArray[i].remove(characterImageLabel[i]);
+				characterPanelArray[i].add(unavailLabel);
 				//Mark character as unavailable in array
 				availableCharactersArray[i] = false;
 			}
