@@ -2,7 +2,11 @@ import java.io.Serializable;
 
 public class Message implements Serializable{
 
-	private int messageID ; 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+	private int messageID;
 	private Object data;
 	
 	public Message(int messageID, Object data) {
