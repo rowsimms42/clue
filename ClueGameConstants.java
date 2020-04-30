@@ -9,6 +9,8 @@ public final class ClueGameConstants {
 		public static final int MIN_CHARACTERS = 3;
 		
 		public static final int REQUEST_AVAILABLE_CHARACTERS = 1223419;
+
+		public static final int AVAILABLE_CHARACTER_BOOL_ARRAY = 54332;
 		
 		public static final int CONFIRM_INDEX_AVAILABLE = 4532178;
 	

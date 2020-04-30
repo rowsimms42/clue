@@ -13,6 +13,7 @@ public class Client {
         try {
             this.socket = new Socket(ClueGameConstants.IP, ClueGameConstants.PORT);
             this.isConnected = true;
+            GameState.setNumberOfCharacters();
         } catch (IOException e) {
             try {
                 this.socket.close();

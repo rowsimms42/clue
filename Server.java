@@ -11,6 +11,8 @@ public class Server extends Thread
 
     public Server()
     {
+        //Set up initial GameState with server start
+        GameState.initializeVariables();
         startServer();
         //should not be reached
         stopServer();

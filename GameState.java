@@ -1,18 +1,33 @@
+import java.net.Socket;
 
 public class GameState {
 	
-	private int availableCharacters;
-	private Boolean availableCharactersArray[];
-	
-	
-	public GameState() {
-		
-		initializeVariables();
-		
-		
-	} //end constructor
+	private static int availableCharacters;
+	private static Boolean availableCharactersArray[];
+	private static int numberOfPlayers;
 
-	private void initializeVariables(){
+	private static enum Weapon{
+		CandleStick,
+		Dagger,
+		LeadPipe,
+		Revolver,
+		Rope,
+		Wrench
+	}
+	
+	
+	
+	/*
+	 * Need to set up call to new Game state and
+	 * Initialize all data that need to be set
+	 * from a call at the same time that the server
+	 * starts functioning. There is only 1 GameState
+	 * and it is accessed through the GameHandler
+	 * so the data can be undated and shared with 
+	 * the clients 
+	 */
+
+	public static void initializeVariables(){
 	
 		setAvailableCharacters(0);
 		
@@ -25,22 +40,36 @@ public class GameState {
 		
 	}
 
-	private void setAvailableCharacters(int availableCharacters) {
-		this.availableCharacters = availableCharacters;
+
+	private static void setAvailableCharacters(int avChrts) {
+		availableCharacters = avChrts;
 	}
 	
-	public int getAvailableCharacters() {
-		return availableCharacters;
+	public static Boolean[] getAvailableCharacters() {
+		return availableCharactersArray;
 	}
 
 	
-	//Index should be between 1 - 6
-	public boolean isSpecificCharacterAvailable(int index) {
-		return (availableCharactersArray[index - 1] == true) ;
+	//Index should be between 0, 5
+	public static boolean isSpecificCharacterAvailable(int index) {
+		if(availableCharactersArray[index] == true){
+			return true;
+		} else{
+			return false;
+		}
 	}
 	
 	
-	private void setSpecificCharacterToUnavailable(int index ) {
+	/*
+	 * Character:
+	 * 0: Mr. Green
+	 * 1: Professor Plumb
+	 * 2: Mrs. White
+	 * 3: Colonel Mustard
+	 * 4: Miss Scarlet 
+	 * 5: Mrs. Peacock
+	 */
+	public static void setSpecificCharacterToUnavailable(int index ) {
 		
 		availableCharacters = setNthBit(availableCharacters, index - 1);
 		
@@ -48,10 +77,24 @@ public class GameState {
 		
 	}
 	
-	private int setNthBit(int number, int n) {
+	private  static int setNthBit(int number, int n) {
 		
 		return ((1 << n) | number);
 	}
 	
+	public static void setNumberOfCharacters(){
+		for(Socket s : Server.clientSocketList){
+			numberOfPlayers++;
+		}
+	}
+
+	private int getNumberOfPlayers(){
+		for(Socket s : Server.clientSocketList){
+			numberOfPlayers++;
+		}
+		return numberOfPlayers;
+	}
+
+
 	
 } //end class
