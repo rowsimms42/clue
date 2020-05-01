@@ -23,18 +23,19 @@ public class GameHandler {
                 int characterIndex = (Integer) msgObj.getData();
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_IS_CHARACTER_AVAILABLE,
                     Boolean.valueOf(gameState.isSpecificCharacterAvailable(characterIndex)));
-                return msgObj;
+                return returnMessage;
 
             case ClueGameConstants.REQUEST_INDEED_CHARACTER_AVAILABLE: 
                 characterIndex = (Integer) msgObj.getData();
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_IS_CHARACTER_AVAILABLE,
                     Boolean.valueOf(gameState.isSpecificCharacterAvailable(characterIndex)));
-                return msgObj;
+                return returnMessage;
 
             case ClueGameConstants.MARK_CHARACTER_AS_TAKEN:
                 characterIndex = (Integer) msgObj.getData();
+                gameState.setSpecificCharacterToUnavailable(characterIndex);
                 returnMessage = new Message(ClueGameConstants.CONFIRM_CHARACTER_SELECTED, null);
-                return msgObj;
+                return returnMessage;
 
             //case ClueGameConstants.    
             default:
