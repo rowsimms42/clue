@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class Server extends Thread
 {
+    private GameHandler gameHandler;
+    private GameState gameState;
     private ServerSocket serverSocket;
     private boolean running = false;
     public static ArrayList<Socket> clientSocketList = new ArrayList<Socket>();
@@ -12,7 +14,9 @@ public class Server extends Thread
     public Server()
     {
         //Set up initial GameState with server start
-        GameState.initializeVariables();
+        gameState = new GameState();
+        gameHandler = new GameHandler(gameState); 
+        // Set up GameHandler
         startServer();
         //should not be reached
         stopServer();
@@ -37,13 +41,18 @@ public class Server extends Thread
         this.interrupt();
     }
 
-    public static void removeSocket(Socket socket){
+    synchronized public static void removeSocket(Socket socket){
         for(Socket s : clientSocketList){
             if (s == socket){
                 clientSocketList.remove(s);
             }
         }
     }
+
+    synchronized private void addSocket(Socket socket){
+        clientSocketList.add(socket);
+    }
+
 
     public Boolean isServerConnected()
     {
@@ -71,10 +80,10 @@ public class Server extends Thread
                 Socket socket = serverSocket.accept();
 
                 //Add new socket to list of sockets
-                clientSocketList.add(socket);
+                addSocket(socket);
 
                 // Pass the socket to the RequestHandler thread for processing
-                RequestHandler requestHandler = new RequestHandler( socket );
+                RequestHandler requestHandler = new RequestHandler( socket, gameHandler );
 
                 requestHandler.start();
             }

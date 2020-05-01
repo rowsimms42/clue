@@ -1,3 +1,4 @@
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,7 +14,6 @@ public class Client {
         try {
             this.socket = new Socket(ClueGameConstants.IP, ClueGameConstants.PORT);
             this.isConnected = true;
-            GameState.setNumberOfCharacters();
         } catch (IOException e) {
             try {
                 this.socket.close();
@@ -25,10 +25,10 @@ public class Client {
     }
 
 
-    synchronized public Message getMessage() throws IOException, ClassNotFoundException {
+    synchronized public Message getMessage() throws IOException, EOFException, ClassNotFoundException {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            Object msg = in.readObject();
-            return (Message) msg;
+            Message msg = (Message) in.readObject();
+            return msg;
         }
 
     synchronized public void send(Message msg) throws IOException {

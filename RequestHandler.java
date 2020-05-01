@@ -6,10 +6,12 @@ import java.net.Socket;
 
 class RequestHandler extends Thread {
     private Socket socket;
+    private GameHandler gameHandler;
     
 
-    RequestHandler(Socket socket) {
+    RequestHandler(Socket socket, GameHandler gameHandler) {
         this.socket = socket;
+        this.gameHandler = gameHandler;
     }
 
     @Override
@@ -20,7 +22,7 @@ class RequestHandler extends Thread {
             Thread.sleep(100); // sleep gives time to client to set up input & output streams
 
 
-            while (!socket.isClosed()) {
+            while (socket.isConnected()) {
                 sendMessageToClient(listenForMessageFromClient());
             }
 
@@ -39,20 +41,17 @@ class RequestHandler extends Thread {
         }
     }
 
-    synchronized private void sendMessageToClient(Object gameObj) throws IOException {
+    synchronized private void sendMessageToClient(Message gameObj) throws IOException {
         //Send Updated GameState object to all threads connected to server
-        for (Socket s : Server.clientSocketList){
-            ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             out.writeUnshared(gameObj);
-        }
-
     }
 
-    synchronized private Object listenForMessageFromClient() throws ClassNotFoundException, IOException, EOFException {
+    synchronized private Message listenForMessageFromClient() throws ClassNotFoundException, IOException, EOFException {
         // Server blocks here until Client writes objects to server
         ObjectInputStream in = new ObjectInputStream(this.socket.getInputStream()); 
-        Object gameObject = in.readObject();
-        Object returnObject = GameHandler.parseMessage((Message) gameObject);
+        Message gameObject = (Message) in.readObject();
+        Message returnObject = gameHandler.parseMessage(gameObject);
         //socket.shutdownInput();
         return returnObject;
     }

@@ -2,9 +2,9 @@ import java.net.Socket;
 
 public class GameState {
 	
-	private static int availableCharacters;
-	private static Boolean availableCharactersArray[];
-	private static int numberOfPlayers;
+	private int availableCharacters;
+	private Boolean availableCharactersArray[];
+	private int numberOfPlayers;
 
 	private static enum Weapon{
 		CandleStick,
@@ -15,6 +15,9 @@ public class GameState {
 		Wrench
 	}
 	
+	public GameState(){
+
+	}
 	
 	
 	/*
@@ -27,7 +30,7 @@ public class GameState {
 	 * the clients 
 	 */
 
-	public static void initializeVariables(){
+	public void initializeVariables(){
 	
 		setAvailableCharacters(0);
 		
@@ -41,17 +44,17 @@ public class GameState {
 	}
 
 
-	private static void setAvailableCharacters(int avChrts) {
+	private void setAvailableCharacters(int avChrts) {
 		availableCharacters = avChrts;
 	}
 	
-	public static Boolean[] getAvailableCharacters() {
-		return availableCharactersArray;
+	public int getAvailableCharacters() {
+		return availableCharacters;
 	}
 
 	
 	//Index should be between 0, 5
-	public static boolean isSpecificCharacterAvailable(int index) {
+	public boolean isSpecificCharacterAvailable(int index) {
 		if(availableCharactersArray[index] == true){
 			return true;
 		} else{
@@ -69,7 +72,7 @@ public class GameState {
 	 * 4: Miss Scarlet 
 	 * 5: Mrs. Peacock
 	 */
-	public static void setSpecificCharacterToUnavailable(int index ) {
+	public void setSpecificCharacterToUnavailable(int index ) {
 		
 		availableCharacters = setNthBit(availableCharacters, index - 1);
 		
@@ -77,12 +80,12 @@ public class GameState {
 		
 	}
 	
-	private  static int setNthBit(int number, int n) {
+	private int setNthBit(int number, int n) {
 		
 		return ((1 << n) | number);
 	}
 	
-	public static void setNumberOfCharacters(){
+	public  void setNumberOfCharacters(){
 		for(Socket s : Server.clientSocketList){
 			numberOfPlayers++;
 		}
