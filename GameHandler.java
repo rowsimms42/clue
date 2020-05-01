@@ -2,6 +2,7 @@
 public class GameHandler {
 
     GameState gameState;
+    int characterIndex;
 
     GameHandler(GameState gameState){
         this.gameState = gameState;
@@ -20,7 +21,7 @@ public class GameHandler {
                 return returnMessage;
 
             case ClueGameConstants.IS_SELECTED_CHARACTER_AVAILABLE:
-                int characterIndex = (Integer) msgObj.getData();
+                characterIndex = (Integer) msgObj.getData();
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_IS_CHARACTER_AVAILABLE,
                     Boolean.valueOf(gameState.isSpecificCharacterAvailable(characterIndex)));
                 return returnMessage;
