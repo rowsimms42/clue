@@ -10,12 +10,11 @@ class RequestHandler extends Thread {
     Message returnedMessage;
     ObjectInputStream ois;
     ObjectOutputStream oos;
-    //Player player;
+    Player player;
 
     RequestHandler(Socket socket, GameHandler gameHandler) {
         this.socket = socket;
         this.gameHandler = gameHandler;
-        //player = Player();
 
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
@@ -31,14 +30,17 @@ class RequestHandler extends Thread {
         try {
             System.out.println("New client connected.");
 
+            this.player = new Player(getId());
+
             //increase the number of players and display amount
             gameHandler.incrementAmountOfPlayers();
             System.out.println("Player amount: " + gameHandler.getNumberOfCurrentPlayers());
 
-            //TODO add the new player to the gamestate
-            
+            //Adds the new player to the gamestate
+            gameHandler.addPlayerToGame(player, getId());
+        
             //Print the thread id
-            System.out.println("Thread ID is: " + getId());
+            System.out.println("New Player Thread ID is: " + getId());
 
             // sleep gives time to client to set up input & output streams
             Thread.sleep(100); 
@@ -80,7 +82,7 @@ class RequestHandler extends Thread {
 
     synchronized private Message listenForMessageFromClient() throws ClassNotFoundException, IOException, EOFException {
         Message gameObject = (Message) ois.readObject();
-        Message returnObject = gameHandler.parseMessage(gameObject);
+        Message returnObject = gameHandler.parseMessage(gameObject, this.getId());
         return returnObject;
     }
 }

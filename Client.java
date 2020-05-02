@@ -10,7 +10,9 @@ public class Client {
     private Socket socket;
     private Boolean isConnected = false;
 
+
     public Client() throws UnknownHostException, ClassNotFoundException {
+
         try {
             this.socket = new Socket(ClueGameConstants.IP, ClueGameConstants.PORT);
             this.isConnected = true;

@@ -26,6 +26,7 @@ public final class ClueGameConstants {
 
 		public static final int CONFIRM_CHARACTER_SELECTED = 19;
 
+
 	
 		//TODO add more constant variables as needed
 		

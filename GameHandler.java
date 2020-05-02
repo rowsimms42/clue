@@ -8,19 +8,22 @@ public class GameHandler {
         this.gameState = gameState;
     }
 
-    /* Increment the number of players in the gamestate clas */
+    /* Increment the number of players in the gamestate class */
     public void incrementAmountOfPlayers(){
         gameState.setNumberOfPlayers( gameState.getNumberOfPlayers() + 1);
     }
 
-    //TODO function to add player to the gamestate
+    //Adds player to the gamestate
+    public void addPlayerToGame(Player player, long ID){
+        gameState.addPlayer(player, ID);
+    }
 
     /* return the number of players from the gamestate */
     public int getNumberOfCurrentPlayers(){
         return gameState.getNumberOfPlayers();
     }
 
-    public Message parseMessage(Message msgObj)
+    public Message parseMessage(Message msgObj, long ID)
     {
         int msgID = msgObj.getMessageID();
         Message returnMessage;
@@ -49,6 +52,7 @@ public class GameHandler {
             case ClueGameConstants.MARK_CHARACTER_AS_TAKEN:
                 characterIndex = (Integer) msgObj.getData();
                 gameState.setSpecificCharacterToUnavailable(characterIndex);
+                gameState.setPlayerName(characterIndex, ID);
                 returnMessage = new Message(ClueGameConstants.CONFIRM_CHARACTER_SELECTED, null);
                 System.out.println("Client wants server to mark character is taken");
                 return returnMessage;

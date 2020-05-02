@@ -1,4 +1,3 @@
-import java.net.Socket;
 import java.util.HashMap;
 
 public class GameState {
@@ -6,7 +5,16 @@ public class GameState {
 	private int availableCharacters;
 	private Boolean availableCharactersArray[];
 	private int numberOfPlayers;
-	//private HashMap<Long, Player> playerMap;
+	private HashMap<Long, Player> playerMap;
+
+	private String[] characterNames = {
+		"0",
+		"1",
+		"2",
+		"3",
+		"4",
+		"5"
+	};
 
 	private static enum Weapon{
 		CandleStick,
@@ -17,6 +25,8 @@ public class GameState {
 		Wrench
 	}
 	
+
+
 	public GameState(){
 		
 		initializeVariables();
@@ -78,14 +88,27 @@ public class GameState {
 	public int getNumberOfPlayers(){
 		return numberOfPlayers;
 	}
-	/*
+	
 	public void addPlayer(Player player, long threadID){
 		playerMap.put(threadID, player);
 	}
 
 	public HashMap getPlayerMap(){
 		return playerMap;
-	} */
+	}
 
+
+	public String getCharacterName(int index){
+		return characterNames[index - 1];
+	}
+
+
+	public void setPlayerName(int characterIndex, long ID) {
+		playerMap.get(ID).setName(getCharacterName(characterIndex));
+	}
+
+	public void setPlayerLocation(int[] loc,  long ID){
+		playerMap.get(ID).setLocation(loc);
+	}
 	
 } //end class
