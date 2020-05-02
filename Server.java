@@ -1,7 +1,8 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Server extends Thread
 {
@@ -26,7 +27,7 @@ public class Server extends Thread
     {
         try
         {
-            serverSocket = new ServerSocket( 55321);
+            serverSocket = new ServerSocket( ClueGameConstants.PORT);
             this.start();
         }
         catch (IOException e)
