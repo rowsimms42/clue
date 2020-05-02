@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Server extends Thread
 {
@@ -26,7 +26,7 @@ public class Server extends Thread
     {
         try
         {
-            serverSocket = new ServerSocket( ClueGameConstants.PORT );
+            serverSocket = new ServerSocket( 55321);
             this.start();
         }
         catch (IOException e)
@@ -42,9 +42,10 @@ public class Server extends Thread
     }
 
     synchronized public static void removeSocket(Socket socket){
-        for(Socket s : clientSocketList){
-            if (s == socket){
-                clientSocketList.remove(s);
+        for (Iterator<Socket> socketIterator = clientSocketList.iterator(); socketIterator.hasNext();) {
+            Socket socketTemp = socketIterator.next();
+            if(socket.equals(socketTemp)) {
+                socketIterator.remove();
             }
         }
     }
@@ -75,21 +76,23 @@ public class Server extends Thread
         {
             try
             {
-
                 // Call accept() to receive the next connection
                 Socket socket = serverSocket.accept();
 
+                // Pass the socket to the RequestHandler thread for processing
+                RequestHandler requestHandler = new RequestHandler( socket, gameHandler );
+                
                 //Add new socket to list of sockets
                 addSocket(socket);
 
-                // Pass the socket to the RequestHandler thread for processing
-                RequestHandler requestHandler = new RequestHandler( socket, gameHandler );
-
+                //start the new thread
                 requestHandler.start();
             }
             catch (IOException e)
             {
+            	System.out.println("Exception in Server run()");
                 e.printStackTrace();
+                
             }
         }
     }

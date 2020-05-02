@@ -1,10 +1,12 @@
 import java.net.Socket;
+import java.util.HashMap;
 
 public class GameState {
 	
 	private int availableCharacters;
 	private Boolean availableCharactersArray[];
 	private int numberOfPlayers;
+	//private HashMap<Long, Player> playerMap;
 
 	private static enum Weapon{
 		CandleStick,
@@ -16,7 +18,8 @@ public class GameState {
 	}
 	
 	public GameState(){
-
+		
+		initializeVariables();
 	}
 	
 	
@@ -32,72 +35,57 @@ public class GameState {
 
 	public void initializeVariables(){
 	
-		setAvailableCharacters(0);
+		availableCharacters = 0;
+
+		numberOfPlayers = 0;
 		
 		availableCharactersArray = new Boolean[ ClueGameConstants.MAX_CHARACTERS ];
 		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			availableCharactersArray[i] = true;
 		}
 		
+		//playerMap = new HashMap<Long, Player>();
+
 		//TODO initialize more variables as needed
 		
 	}
 
-
-	private void setAvailableCharacters(int avChrts) {
-		availableCharacters = avChrts;
-	}
-	
 	public int getAvailableCharacters() {
 		return availableCharacters;
 	}
 
-	
-	//Index should be between 0, 5
 	public boolean isSpecificCharacterAvailable(int index) {
-		if(availableCharactersArray[index] == true){
-			return true;
-		} else{
-			return false;
-		}
+		return (availableCharactersArray[index - 1] == true);
 	}
 	
-	
-	/*
-	 * Character:
-	 * 0: Mr. Green
-	 * 1: Professor Plumb
-	 * 2: Mrs. White
-	 * 3: Colonel Mustard
-	 * 4: Miss Scarlet 
-	 * 5: Mrs. Peacock
-	 */
 	public void setSpecificCharacterToUnavailable(int index ) {
+		/* Character: 0 - Mr. Green, 1 - Professor Plumb, 2 - Mrs. White,
+		   3 - Colonel Mustard, 4 - Miss Scarlet, 5 - Mrs. Peacock */
 		
 		availableCharacters = setNthBit(availableCharacters, index - 1);
 		
 		availableCharactersArray[index - 1] = false;
-		
 	}
 	
 	private int setNthBit(int number, int n) {
-		
 		return ((1 << n) | number);
 	}
 	
-	public  void setNumberOfCharacters(){
-		for(Socket s : Server.clientSocketList){
-			numberOfPlayers++;
-		}
+	public  void setNumberOfPlayers(int n){
+		numberOfPlayers = n;
 	}
 
-	private int getNumberOfPlayers(){
-		for(Socket s : Server.clientSocketList){
-			numberOfPlayers++;
-		}
+	public int getNumberOfPlayers(){
 		return numberOfPlayers;
 	}
+	/*
+	public void addPlayer(Player player, long threadID){
+		playerMap.put(threadID, player);
+	}
 
+	public HashMap getPlayerMap(){
+		return playerMap;
+	} */
 
 	
 } //end class
