@@ -52,8 +52,8 @@ class RequestHandler extends Thread {
         // Server blocks here until Client writes objects to server
         ObjectInputStream in = new ObjectInputStream(this.socket.getInputStream()); 
         Object gameObject = in.readObject();
-        Object returnObject = GameHandler.parseMessage((Message) gameObject);
+        GameHandler.parseMessage((Message) gameObject);
         //socket.shutdownInput();
-        return returnObject;
+        return gameObject;
     }
 }

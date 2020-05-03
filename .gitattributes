@@ -1,2 +1,858 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+            //A			
+			else if (x >= 29 && x <= 49 && y >= 114 && y < 133)
+            {
+                return #; //walking tiles 1,6
+            }
+            else if (x >= 29 && x <= 49 && y >= 374 && y < 393)
+            {
+                return #; //walking tiles 1 , 19
+            }
+			
+			//B
+			
+            else if (x >= 50 && x <= 69 && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 2 , 5
+            }
+            else if (x >= 50 && x <= 69 && y >= 114 && y < 133)
+            {
+                return #; //walking tiles 2 , 6
+            }
+            else if (x >= 50 && x <= 69 && y >= 234 && y < 253)
+            {
+                return #; //walking tiles 2, 12
+            }
+            else if (x >= 50 && x <= 69 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 2 , 18
+            }
+            else if (x >= 50 && x <= 69 && y >= 374 && y < 393)
+            {
+                return #; //walking tiles 2 , 19
+            }
+			
+			//C
+			
+            else if (x >= 70 && x <= 89 && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 3 , 5
+            }
+            else if (x >= 70 && x <= 89 && y >= 114 && y < 133)
+            {
+                return #; //walking tiles 3 , 6
+            }
+            else if (x >= 70 && x <= 89 && y >= 234 && y < 253)
+            {
+                return #; //walking tiles 3 , 12
+            }
+            else if (x >= 70 && x <= 89 && y >= 374 && y < 373)
+            {
+                return #; //walking tiles 3 , 18
+            }
+            else if (x >= 70 && x <= 89 && y >= 374 && y < 393)
+            {
+                return #; //walking tiles 3 , 19
+            }
+			
+			//D
+			
+            else if (x >= 90 && x <= 109 && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 4 , 5
+            }
+            else if (x >= 90 && x <= 109 && y >= 114 && y < 133)
+            {
+                return #; //walking tiles 4 , 6
+            }
+            else if (x >= 90 && x <= 109 && y >= 234 && y < 254)
+            {
+                return #; //walking tiles 4 , 12
+            }
+            else if (x >= 90 && x <= 109 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 4 , 18
+            }
+            else if (x >= 90 && x <= 109 && y >= 374 && y < 393)
+            {
+                return #; //walking tiles 4 , 19
+            }
+			
+			//E
+			
+            else if (x >= 110 && 129 <= # && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 5 ,  5
+            }
+            else if (x >= 110 && x <= 129 && y >= 114 && y < 133)
+            {
+                return #; //walking tiles 5 , 6
+            }
+            else if (x >= 110 && x <= 129 && y >= 234 && y < 253)
+            {
+                return #; //walking tiles 5 , 12
+            }
+            else if (x >= 110 && x <= 129 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 5 , 18
+            }
+            else if (x >= 110 && x <= 129 && y >= 374 && y < 393)
+            {
+                return #; //walking tiles 5 , 19
+            }
+			
+			
+			// row F
+			
+            else if (x >= 130 && x <= 149 && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 6, 5
+            }
+            else if (x >= 130 && x <= 149 && y >= 114 && y < 133)
+            {
+                return #; //walking tiles 6 , 6
+            }
+            else if (x >= 130 && x <= 149 && y >= 234 && y < 253)
+            {
+                return #; //walking tiles 6 , 12
+            }
+            else if (x >= 130 && x <= 149 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 6 , 18
+            }
+            else if (x >= 130 && x <= 149 && y >= 374 && y < 393)
+            {
+                return #; //walking tiles 6 , 19
+            }
+            else if (x >= 130 && x <= 149 && y >= 349 && y < 413)
+            {
+                return #; //walking tiles 6 , 20
+            }
+			
+			// G
+			
+            else if (x >= 150 && x <= 169 && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 7 , 5
+            }
+            else if (x >= 150 && x <= 169 && y >= 114 && y < 133)
+            {
+                return #; //walking tiles 7 , 6
+            }
+            else if (x >= 150 && x <= 169 && y >= 134 && y < 153)
+            {
+                return #; //walking tiles 7 , 7
+            }
+            else if (x >= 150 && x <= 169 && y >= 214 && y < 233)
+            {
+                return #; //walking tiles 7 , 11
+            }
+            else if (x >= 150 && x <= 169 && y >= 234 && y < 253)
+            {
+                return #; //walking tiles 7 , 12
+            }
+            else if (x >= 150 && x <= 169 && y >= 254 && y < 273)
+            {
+                return #; //walking tiles 7 , 13
+            }
+            else if (x >= 150 && x <= 169 && y >= 274 && y < #293)
+            {
+                return #; //walking tiles 7 , 14
+            }
+            else if (x >= 150 && x <= 169 && y >= 294 && y < 313)
+            {
+                return #; //walking tiles 7 , 15
+            }
+            else if (x >= 150 && x <= 169 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 7 , 16
+            }
+            else if (x >= 150 && x <= 169 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 7 , 17
+            }
+            else if (x >= 150 && x <= 169 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 7 , 18
+            }
+            else if (x >= 150 && x <= 169 && y >= 374 && y < 393)
+            {
+                return #; //walking tiles 7 , 19
+            }
+            else if (x >= 150 && x <= 169 && y >= 394 && y < 413)
+            {
+                return #; //walking tiles 7 , 20
+            }
+            else if (x >= 150 && x <= 169 && y >= 414 && y < 433)
+            {
+                return #; //walking tiles 7 , 21
+            }
+            else if (x >= 150 && x <= 169 && y >= 434 && y < 453)
+            {
+                return #; //walking tiles 7 , 22
+            }
+            else if (x >= 150 && x <= 169 && y >= 454 && y < 473)
+            {
+                return #; //walking tiles 7 , 23
+            }
+			
+			
+			//H
+			
+            else if (x >= 170 && x <= 189 && y >= 13 && y < 33)
+            {
+                return #; //walking tiles 8, 1
+            }
+            else if (x >= 170 && x <= 189  && y >= 34 && y < 53)
+            {
+                return #; //walking tiles  8, 2
+            }
+            else if (x >= 170 && x <= 189  && y >= 54 && y < 73)
+            {
+                return #; //walking tiles  8, 3
+            }
+            else if (x >= 170 && x <= 189  && y >= 74 && y < 93)
+            {
+                return #; //walking tiles  8, 4
+            }
+            else if (x >= 170 && x <= 189  && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 8, 5
+            }
+            else if (x >= 170 && x <= 189  && y >= 114 && y < 133)
+            {
+                return #; //walking tiles 8, 6
+            }
+            else if (x >= 170 && x <= 189  && y >= 134 && y < 153)
+            {
+                return #; //walking tiles 8, 7
+            }
+            else if (x >= 170 && x <= 189  && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 8, 8
+            }
+            else if (x >= 170 && x <= 189  && y >= 174 && y < 193)
+            {
+                return #; //walking tiles 8, 9
+            }
+            else if (x >= 170 && x <= 189  && y >= 194 && y < 213)
+            {
+                return #; //walking tiles 8, 10
+            }
+            else if (x >= 170 && x <= 189  && y >= 214 && y < 233)
+            {
+                return #; //walking tiles 8, 11
+            }
+            else if (x >= 170 && x <= 189  && y >= 234 && y < 253)
+            {
+                return #; //walking tiles 8, 12
+            }
+            else if (x >= 170 && x <= 189  && y >= 254 && y < 273)
+            {
+                return #; //walking tiles 8, 13
+            }
+            else if (x >= 170 && x <= 189  && y >= 274 && y < 293)
+            {
+                return #; //walking tiles 8, 14
+            }
+            else if (x >= 170 && x <= 189  && y >= 294 && y < 313)
+            {
+                return #; //walking tiles 8, 15
+            }
+            else if (x >= 170 && x <= 189  && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 8, 16
+            }
+            else if (x >= 170 && x <= 189  && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 8, 17
+            }
+            else if (x >= 170 && x <= 189  && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 8, 18
+            }
+            else if (x >= 170 && x <= 189  && y >= 374 && y < 393)
+            {
+                return #; //walking tiles 8, 19
+            }
+            else if (x >= 170 && x <= 189  && y >= 394 && y < 413)
+            {
+                return #; //walking tiles 8, 20
+            }
+            else if (x >= 170 && x <= 189  && y >= 414 && y < 433)
+            {
+                return #; //walking tiles 8, 21
+            }
+            else if (x >= 170 && x <= 189  && y >= 434 && y < 453)
+            {
+                return #; //walking tiles 8, 22
+            }
+            else if (x >= 170 && x <= 189  && y >= 454 && y < 473)
+            {
+                return #; //walking tiles 8, 23
+            }
+            else if (x >= 170 && x <= 189  && y >= 473 && y < 493)
+            {
+                return #; //walking tiles 8, 24
+            }
+						
+			
+			//I
+			
+			
+            else if (x >= 190 && x <= 209  && y >= 34 && y < 53)
+            {
+                return #; //walking tiles 9 , 2
+            }
+            else if (x >= 190 && x <= 209 && y >= 54 && y < 73)
+            {
+                return #; //walking tiles 9 , 3
+            }
+            else if (x >= 190 && x <= 209 && y >= 74 && y < 93)
+            {
+                return #; //walking tiles 9 , 4
+            }
+            else if (x >= 190 && x <= 209 && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 9 , 5
+            }
+            else if (x >= 190 && x <= 209 && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 9 , 6
+            }
+            else if (x >= 190 && x <= 209 && y >= 134 && y < 153)
+            {
+                return #; //walking tiles 9 , 7
+            }
+            else if (x >= 190 && x <= 209 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 9 , 8
+            }
+            else if (x >= 190 && x <= 209 && y >= 174 && y < 193)
+            {
+                return #; //walking tiles 9 , 9
+            }
+            else if (x >= 190 && x <= 209 && y >= 194 && y < 213)
+            {
+                return #; //walking tiles 9 , 10
+            }
+            else if (x >= 190 && x <= 209 && y >= 214 && y < 233)
+            {
+                return #; //walking tiles 9 , 11
+            }
+            else if (x >= 190 && x <= 209 && y >= 234 && y < 253)
+            {
+                return #; //walking tiles 9 , 12
+            }
+            else if (x >= 190 && x <= 209 && y >= 254 && y < 273)
+            {
+                return #; //walking tiles 9 , 13
+            }
+            else if (x >= 190 && x <= 209 && y >= 274 && y < 293)
+            {
+                return #; //walking tiles  9 , 14
+            }
+            else if (x >= 190 && x <= 209 && y >= 294 && y < 313)
+            {
+                return #; //walking tiles  9 , 15
+            }
+            else if (x >= 190 && x <= 209 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 9 , 16
+            }
+            else if (x >= 190 && x <= 209 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 9 , 17
+            }
+            else if (x >= 190 && x <= 209 && y >= 374 && y < 493)
+            {
+                return #; //walking tiles 9 , 24
+            }
+			
+			//J
+			
+            else if (x >= 210 && x <= 229 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 10 , 8
+            }
+            else if (x >= 210 && x <= 229 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 10 , 16
+            }
+            else if (x >= 210 && x <= 229 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 10 , 17
+            }
+            else if (x >= 210 && x <= 229 && y >= 474 && y < 453)
+            {
+                return #; //walking tiles 10 , 24
+            }
+            else if (x >= 210 && x <= 229 && y >= 494 && y < 513)
+            {
+                return #; //walking tiles 10 , 25
+            }
+			
+			
+			//K
+			
+			
+            else if (x >= 230 && x <= 249 && y >= 154 && y < 249)
+            {
+                return #; //walking tiles 11 , 8
+            }
+            else if (x >= 230 && x <= 249 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 11 , 16
+            }
+            else if (x >= 230 && x <= 249 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 11 17
+            }
+			
+			// L
+			
+            else if (x >= 250 && x <= 269 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 12 , 8
+            }
+            else if (x >= 250 && x <= 269 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 12 , 16
+            }
+            else if (x >= 250 && x <= 269 && y >= 334 && y < 373)
+            {
+                return #; //walking tiles 12 , 17
+            }
+			
+			// M
+			
+			
+            else if (x >= 270 && x <= 289 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 13 , 8
+            }
+            else if (x >= 270 && x <= 289 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 13 , 16
+            }
+            else if (x >= 270 && x <= 289 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 13 , 17
+            }
+            else if (x >= 270 && x <= 289 && y >= 474 && y < 493)
+            {
+                return #; //walking tiles 13 , 24
+            }
+            else if (x >= 270 && x <= 289 && y >= 494 && y < 513)
+            {
+                return #; //walking tiles 13 , 25
+            }
+			
+			
+			// N
+			
+			
+            else if (x >= 290 && x <= 309 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 14 , 8
+            }
+            else if (x >= 290 && x <= 309 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 14 , 16
+            }
+            else if (x >= 290 && x <= 309 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 14 , 17
+            }
+            else if (x >= 290 && x <= 309 && y >= 474 && y < 493)
+            {
+                return #; //walking tiles 14 , 24
+            }
+			
+			
+			//O
+			
+			
+            else if (x >= 310 && x <= 329 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 15 , 8
+            }
+            else if (x >= 310 && x <= 329 && y >= 174 && y < 193)
+            {
+                return #; //walking tiles 15 , 9
+            }
+            else if (x >= 310 && x <= 329 && y >= 194 && y < 213)
+            {
+                return #; //walking tiles 15 , 10
+            }
+            else if (x >= 310 && x <= 329 && y >= 214 && y < 233)
+            {
+                return #; //walking tiles 15 , 11
+            }
+            else if (x >= 310 && x <= 329 && y >= 234 && y < 253)
+            {
+                return #; //walking tiles 15 , 12
+            }
+            else if (x >= 310 && x <= 329 && y >= 254 && y < 273)
+            {
+                return #; //walking tiles 15 , 13
+            }
+            else if (x >= 310 && x <= 329 && y >= 274 && y < 293)
+            {
+                return #; //walking tiles 15 , 14
+            }
+            else if (x >= 310 && x <= 329 && y >= 294 && y < 313)
+            {
+                return #; //walking tiles 15 , 15
+            }
+            else if (x >= 310 && x <= 329 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 15 , 16
+            }
+            else if (x >= 310 && x <= 329 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 15 , 17
+            }
+            else if (x >= 310 && x <= 329 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 15 , 18
+            }
+            else if (x >= 310 && x <= 329 && y >= 374 && y < 393)
+            {
+                return #; //walking tiles 15 , 19
+            }
+            else if (x >= 310 && x <= 329 && y >= 394 && y < 413)
+            {
+                return #; //walking tiles 15 , 20
+            }
+            else if (x >= 310 && x <= 329 && y >= 414 && y < 433)
+            {
+                return #; //walking tiles 15 , 21
+            }
+            else if (x >= 310 && x <= 329 && y >= 434 && y < 453)
+            {
+                return #; //walking tiles 15 , 22
+            }
+            else if (x >= 310 && x <= 329 && y >= 454 && y < 473)
+            {
+                return #; //walking tiles 15 , 23
+            }
+            else if (x >= 310 && x <= 329 && y >= 474 && y < 493)
+            {
+                return #; //walking tiles 15 , 24
+            }
+			
+			// P
+			
+			
+            else if (x >= 330 && x <= 349 && y >= 34 && y < 53)
+            {
+                return #; //walking tiles 16 , 2
+            }
+            else if (x >= 330 && x <= 349 && y >= 54 && y < 73)
+            {
+                return #; //walking tiles 16 , 3
+            }
+            else if (x >= 330 && x <= 349 && y >= 74 && y < 93)
+            {
+                return #; //walking tiles 16 , 4
+            }
+            else if (x >= 330 && x <= 349 && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 16 , 5
+            }
+            else if (x >= 330 && x <= 349 && y >= 114 && y < 133)
+            {
+                return #; //walking tiles 16 , 6
+            }
+            else if (x >= 330 && x <= 349 && y >= 134 && y < 153)
+            {
+                return #; //walking tiles 16 , 7
+            }
+            else if (x >= 330 && x <= 349 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 16 , 8
+            }
+            else if (x >= 330 && x <= 349 && y >= 174 && y < 193)
+            {
+                return #; //walking tiles 16 , 9
+            }
+            else if (x >= 330 && x <= 349 && y >= 194 && y < 213)
+            {
+                return #; //walking tiles 16 , 10				
+            }
+            else if (x >= 330 && x <= 349 && y >= 214 && y < 233)
+            {
+                return #; //walking tiles 16 , 11
+            }
+            else if (x >= 330 && x <= 349 && y >= 234 && y < 253)
+            {
+                return #; //walking tiles 16 , 12
+            }
+            else if (x >= 330 && x <= 349 && y >= 254 && y < 273)
+            {
+                return #; //walking tiles 16 , 13
+            }
+            else if (x >= 330 && x <= 349 && y >= 274 && y < 293)
+            {
+                return #; //walking tiles 16 , 14
+            }
+            else if (x >= 330 && x <= 349 && y >= 294 && y < 313)
+            {
+                return #; //walking tiles 16 , 15
+            }
+            else if (x >= 330 && x <= 349 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 16 , 16
+            }
+            else if (x >= 330 && x <= 349 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 16 , 17
+            }
+            else if (x >= 330 && x <= 349 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 16 , 18
+            }
+            else if (x >= 330 && x <= 349 && y >= 374 && y < 393)
+            {
+                return #; //walking tiles 16 , 19
+            }
+            else if (x >= 330 && x <= 349 && y >= 394 && y < 413)
+            {
+                return #; //walking tiles 16 , 20
+            }
+            else if (x >= 330 && x <= 349 && y >= 414 && y < 433)
+            {
+                return #; //walking tiles 16 , 21
+            }
+            else if (x >= 330 && x <= 349 && y >= 434 && y < 453)
+            {
+                return #; //walking tiles 16 , 22
+            }
+            else if (x >= 330 && x <= 349 && y >= 454 && y < 473)
+            {
+                return #; //walking tiles 16 , 23
+            }
+            else if (x >= 330 && x <= 349 && y >= 474 && y < 493)
+            {
+                return #; //walking tiles 16 , 24
+            }
+			
+			
+			// Q
+			
+			
+            else if (x >= 350 && x <= 369 && y >= 13 && y < 33)
+            {
+                return #; //walking tiles 17 , 1
+            }
+            else if (x >= 350 && x <= 369 && y >= 34 && y < 53)
+            {
+                return #; //walking tiles 17 , 2
+            }
+            else if (x >= 350 && x <= 369 && y >= 54 && y < 73)
+            {
+                return #; //walking tiles 17 , 3
+            }
+            else if (x >= 350 && x <= 369 && y >= 74 && y < 93)
+            {
+                return #; //walking tiles 17 , 4
+            }
+            else if (x >= 350 && x <= 369 && y >= 94 && y < 113)
+            {
+                return #; //walking tiles 17 , 5
+            }
+            else if (x >= 350 && x <= 369 && y >= 114 && y < 133)
+            {
+                return #; //walking tiles 17 , 6
+            }
+            else if (x >= 350 && x <= 369 && y >= 134 && y < 153)
+            {
+                return #; //walking tiles 17 , 7
+            }
+            else if (x >= 350 && x <= 369 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 17 , 8
+            }
+            else if (x >= 350 && x <= 369 && y >= 174 && y < 193)
+            {
+                return #; //walking tiles 17 , 9
+            }
+            else if (x >= 350 && x <= 369 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 17 , 16
+            }
+            else if (x >= 350 && x <= 369 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 17 , 17
+            }
+            else if (x >= 350 && x <= 369 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles  17 , 18
+            }
+			
+			
+			//R
+			
+			
+            else if (x >= 370 && x <= 389 && y >= 134 && y < 153)
+            {
+                return #; //walking tiles 17 , 7
+            }
+            else if (x >= 370 && x <= 389 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 17 , 8
+            }
+            else if (x >= 370 && x <= 389 && y >= 174 && y < 193)
+            {
+                return #; //walking tiles 17 , 9
+            }
+			else if (x >= 370 && x <= 389 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 17 , 16
+            }
+            else if (x >= 370 && x <= 389 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 17 , 17
+            }
+            else if (x >= 370 && x <= 389 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 17 , 18
+            }
+			
+			
+			//S
+			
+			else if (x >= 390 && x <= 409 && y >= 134 && y < 153)
+            {
+                return #; //walking tiles 18 , 7
+            }
+            else if (x >= 390 && x <= 409 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 18 , 8
+            }
+            else if (x >= 390 && x <= 409 && y >= 174 && y < 193)
+            {
+                return #; //walking tiles 18 , 9
+            }
+			else if (x >= 390 && x <= 409 && y >= 314 && y < 333)
+            {
+                return #; //walking tiles 18 , 16
+            }
+            else if (x >= 390 && x <= 409 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 18 , 17
+            }
+            else if (x >= 390 && x <= 409 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 18 , 18
+            }
+			
+			
+			// T
+			
+			
+			else if (x >= 410 && x <= 429 && y >= 134 && y < 153)
+            {
+                return #; //walking tiles 19 , 7
+            }
+            else if (x >= 410 && x <= 429 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles 19 , 8
+            }
+            else if (x >= 410 && x <= 429 && y >= 174 && y < 193)
+            {
+                return #; //walking tiles 19 , 9
+            }
+			else if (x >= 410 && x <= 429 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles 19 , 17
+            }
+            else if (x >= 410 && x <= 429 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles 19 , 18
+            }
+			
+			
+			//U
+			
+			
+            else if (x >= 430 && x <= 449 && y >= 134 && y < 153)
+            {
+                return #; //walking tiles  20 , 7
+            }
+			else if (x >= 430 && x <= 449 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles  20 , 8
+            }
+            else if (x >= 430 && x <= 449 && y >= 174 && y < 193)
+            {
+                return #; //walking tiles  20 , 9
+            }
+            else if (x >= 430 && x <= 449 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles  20 , 17
+            }
+			else if (x >= 430 && x <= 449 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles  20 , 18
+            }
+			
+			//V
+			
+            else if (x >= 450 && x <= 469 && y >= 134 && y < 153)
+            {
+                return #; //walking tiles  21 , 7
+            }
+            else if (x >= 450 && x <= 469 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles  21 , 8
+            }
+			else if (x >= 450 && x <= 469 && y >= 174 && y < 193)
+            {
+                return #; //walking tiles  21 , 9
+            }
+            else if (x >= 450 && x <= 469 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles  21 , 17
+            }
+            else if (x >= 450 && x <= 469 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles  21 , 18
+            }
+			
+			//W
+			
+			else if (x >= 470 && x <= 489 && y >= 134 && y < 153)
+            {
+                return #; //walking tiles  22 , 7
+            }
+            else if (x >= 470 && x <= 489 && y >= 154 && y < 173)
+            {
+                return #; //walking tiles  22 , 8
+            }
+            else if (x >= 470 && x <= 489 && y >= 174 && y < 193)
+            {
+                return #; //walking tiles  22 , 9
+            }
+			else if (x >= 470 && x <= 489 && y >= 334 && y < 353)
+            {
+                return #; //walking tiles  22 , 17
+            }
+            else if (x >= 470 && x <= 489 && y >= 354 && y < 373)
+            {
+                return #; //walking tiles  22 , 18
+            }
+			
+			
+			//X
+			
+			
+            else if (x >= 490 && x <= 509 && y >= # && y < #)
+            {
+                return #; //walking tiles   23 , 8
+            }
+			else if (x >= 490 && x <= 509 && y >= # && y < #)
+            {
+                return #; //walking tiles  23 , 18
+            }
+           

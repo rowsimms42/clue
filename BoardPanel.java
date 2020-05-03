@@ -14,3 +14,22 @@ public class BoardPanel extends JPanel {
 
 
 } // end class
+
+
+
+
+
+/* 30 left most starting line
+13 top starting line
+533 ritht starting line
+508 bottom starting line
+
+plum starting point
+30 - 50 110 - 130
+
+
+
+
+
+
+*/
