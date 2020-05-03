@@ -275,7 +275,9 @@ public class CharacterSelectFrame extends JFrame {
 		for (int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			characterPanelArray[i] = new JPanel();
 			characterImageArray[i] = new ImageIcon(imageNameArray[i]);
-			characterImageLabel[i] = new JLabel(ClueGameConstants.CHARACTER_NAMES_ARRAY[i]);
+			//characterImageLabel[i] = new JLabel(ClueGameConstants.CHARACTER_NAMES_ARRAY[i]);
+			characterImageLabel[i] = new JLabel(characterImageArray[i]);
+
 		}
 	}
 
