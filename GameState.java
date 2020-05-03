@@ -1,3 +1,4 @@
+import java.net.Socket;
 import java.util.HashMap;
 
 public class GameState {
@@ -6,16 +7,7 @@ public class GameState {
 	private Boolean availableCharactersArray[];
 	private int numberOfPlayers;
 	private HashMap<Long, Player> playerMap;
-
-	private String[] characterNames = {
-		"0",
-		"1",
-		"2",
-		"3",
-		"4",
-		"5"
-	};
-
+	
 	private static enum Weapon{
 		CandleStick,
 		Dagger,
@@ -25,8 +17,6 @@ public class GameState {
 		Wrench
 	}
 	
-
-
 	public GameState(){
 		
 		initializeVariables();
@@ -54,7 +44,7 @@ public class GameState {
 			availableCharactersArray[i] = true;
 		}
 		
-		//playerMap = new HashMap<Long, Player>();
+		playerMap = new HashMap<Long, Player>();
 
 		//TODO initialize more variables as needed
 		
@@ -71,7 +61,6 @@ public class GameState {
 	public void setSpecificCharacterToUnavailable(int index ) {
 		/* Character: 0 - Mr. Green, 1 - Professor Plumb, 2 - Mrs. White,
 		   3 - Colonel Mustard, 4 - Miss Scarlet, 5 - Mrs. Peacock */
-		
 		availableCharacters = setNthBit(availableCharacters, index - 1);
 		
 		availableCharactersArray[index - 1] = false;
@@ -95,20 +84,14 @@ public class GameState {
 
 	public HashMap getPlayerMap(){
 		return playerMap;
-	}
+	} 
 
+	public void assignPlayerName(String name, long threadID){
+		playerMap.get(threadID).setName(name);
+	}
 
 	public String getCharacterName(int index){
-		return characterNames[index - 1];
-	}
-
-
-	public void setPlayerName(int characterIndex, long ID) {
-		playerMap.get(ID).setName(getCharacterName(characterIndex));
-	}
-
-	public void setPlayerLocation(int[] loc,  long ID){
-		playerMap.get(ID).setLocation(loc);
+		return ClueGameConstants.CHARACTER_NAMES_ARRAY[index - 1];
 	}
 	
 } //end class
