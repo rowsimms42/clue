@@ -37,10 +37,8 @@ public class CharacterSelectFrame extends JFrame {
 			"resources\\mustard.png", "resources\\scarlett.png", "resources\\peacock.png" };
 
 	Client clientConnection;
-	Message messageReceived;
+	Message messageReceived = null;;
 	private JTextArea textAreaCharacterFrameInfo;
-	private String imageNamesArray[] = { "Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
-			"Miss Scarlett", "Mrs. Peacock" };
 	private int characterSelected = 0;
 	private int availableCharacters = 0;
 	private boolean availableCharactersArray[] = { true, true, true, true, true, true };
@@ -48,7 +46,7 @@ public class CharacterSelectFrame extends JFrame {
 
 	public CharacterSelectFrame(Client clientConnection) throws IOException, ClassNotFoundException {
 
-		setServerConnection(clientConnection); // the player is the new Thread that connects with the server
+		this.clientConnection = clientConnection; // the player is the new Thread that connects with the server
 
 		// Build the frame and its components
 		setTitle("Character Select");
@@ -91,24 +89,11 @@ public class CharacterSelectFrame extends JFrame {
 			updatePanelArrayUsedCharacters();
 		}
 
-		/**
-		 * Function example to get available players back from server
-		 * 
-		 * Message msg = new Message(ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS,
-		 * null); player.send(msg); Message newMsg = player.getMessage(); int
-		 * constFromServer = newMsg.getMessageID(); //call function that handles
-		 * constants in switch statement //then adjust the GUI accordingly ​ ​
-		 * //availableCharacters =
-		 * serverConnection.requestNumber(REQUEST_AVAILABLE_CHARACTERS);
-		 * //serverConnection.sendingInfo(playemove, PLAYER.MADE.MOVE);
-		 * 
-		 * //availableCharacters = serverConnection.requestNumber( //
-		 * ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS); ​
-		 * 
-		 * availableCharacters = 55; if(availableCharacters > 0) {
-		 * updatePanelArrayUsedCharacters(); }
-		 */
-
+		//Request the player id from the server and display in text box
+		clientConnection.send(new Message(ClueGameConstants.REQUEST_PLAYER_ID, null));
+		messageReceived = clientConnection.getMessage();
+		textAreaCharacterFrameInfo.setText("Player ID is: " + messageReceived.getData().toString());
+		
 		// Mouse Listener ---------------------------------
 		characterPanel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -130,44 +115,30 @@ public class CharacterSelectFrame extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				// player.sendSelectedCharacter(characterSelected) ---- we can use the send
-				// function
-				// recieve message from server if the selected character is available
+				
+				// receive message from server if the selected character is available
 				try {
 					messageReceived = clientConnection.getMessage();
-				} catch (ClassNotFoundException e1) {
+				} catch (ClassNotFoundException | IOException e3) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					e3.printStackTrace();
 				}
+				
 				boolean isAvailableCharacter = (Boolean) messageReceived.getData();
 
 				if (!isAvailableCharacter) {
 					// ----Character became unavailable-----
 
-					// TODO uncomment for final app
-
-					// TODO remove and use showCharacterUsedandNewAvailableRequest
-					// function in final app -----------------------------------
-					textAreaCharacterFrameInfo.setText(imageNamesArray[characterSelected - 1]);
-					JOptionPane.showMessageDialog(null, "The character you selected is already choosen");
-					btnAdvance.setEnabled(false);
-
-					// request again all available/unavailable characters
 					try {
-						requestAvailableCharactersAndUpdate();
-					} catch (IOException | ClassNotFoundException e1) {
+						showCharacterUsedandNewAvailableRequest();
+					} catch (ClassNotFoundException | IOException e2) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						e2.printStackTrace();
 					}
-
-					// update panel with available/unavailable characters
-					updatePanelArrayUsedCharacters();
 				} else {
 					// -----Character is still available -------
-					textAreaCharacterFrameInfo.setText(imageNamesArray[characterSelected - 1] + " is available");
+					textAreaCharacterFrameInfo.setText(
+							ClueGameConstants.CHARACTER_NAMES_ARRAY[characterSelected - 1] + " is available");
 					btnAdvance.setEnabled(true);
 				}
 			}
@@ -175,7 +146,7 @@ public class CharacterSelectFrame extends JFrame {
 
 		// Button listener -------------------------------------------------
 
-		final Client clientConnectionPassed = clientConnection;
+		
 
 		btnAdvance.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -184,21 +155,16 @@ public class CharacterSelectFrame extends JFrame {
 				// indeed available
 				try {
 					clientConnection.send(new Message(ClueGameConstants.REQUEST_INDEED_CHARACTER_AVAILABLE,
-							Integer.valueOf(characterSelected)));
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				// recieve message from server with character availability confirmation
-				try {
+								Integer.valueOf(characterSelected)));
+					
+					// receive message from server with character availability confirmation
 					messageReceived = clientConnection.getMessage();
-				} catch (ClassNotFoundException e1) {
+				} catch (ClassNotFoundException | IOException e2) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					e2.printStackTrace();
 				}
+				
+				
 				boolean isCharacterIndeedAvailable = (Boolean) messageReceived.getData();
 
 				if (isCharacterIndeedAvailable) {
@@ -206,22 +172,23 @@ public class CharacterSelectFrame extends JFrame {
 
 					// character will be chosen, tell server to mark this character as used
 					try {
-						clientConnection.send(
-							new Message(ClueGameConstants.MARK_CHARACTER_AS_TAKEN,Integer.valueOf(characterSelected)));
+						clientConnection.send( new Message(ClueGameConstants.MARK_CHARACTER_AS_TAKEN,
+												Integer.valueOf(characterSelected)));
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
+					final Client clientConnectionPassed = clientConnection;
 					// TODO set the player's character
-
+					setVisible(false);
 					// transition to the next frame
 					new ClientFrame(clientConnectionPassed).setVisible(true);
 				} else {
 					// ----selected character was confirmed not to be available---
 
 					// Show JOptionpane message window that character is already chosen
-					String characterAlreadySelectedStr = imageNamesArray[characterSelected - 1]
+					String characterAlreadySelectedStr = 
+							ClueGameConstants.CHARACTER_NAMES_ARRAY[characterSelected - 1]
 							+ " has already been selected by another character. Choose another"
 							+ " available character.";
 					JOptionPane.showMessageDialog(null, characterAlreadySelectedStr);
@@ -229,14 +196,11 @@ public class CharacterSelectFrame extends JFrame {
 					// request again all available/unavailable characters
 					try {
 						requestAvailableCharactersAndUpdate();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (ClassNotFoundException e1) {
+					} catch (ClassNotFoundException | IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
+					
 					// update panel with available/unavailable characters
 					updatePanelArrayUsedCharacters();
 
@@ -311,7 +275,7 @@ public class CharacterSelectFrame extends JFrame {
 		for (int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			characterPanelArray[i] = new JPanel();
 			characterImageArray[i] = new ImageIcon(imageNameArray[i]);
-			characterImageLabel[i] = new JLabel(characterImageArray[i]);
+			characterImageLabel[i] = new JLabel(ClueGameConstants.CHARACTER_NAMES_ARRAY[i]);
 		}
 	}
 
@@ -342,7 +306,6 @@ public class CharacterSelectFrame extends JFrame {
 	private void handleNotConnected() throws UnknownHostException, ClassNotFoundException {
 		while (!clientConnection.isPlayerConnected()) {
 			// ----Not connected to server --------
-
 			// Show error connection message
 			int ans = JOptionPane.showConfirmDialog(null, "No server connection - Attempt to reconnect?",
 					"Server Connection Error", JOptionPane.YES_NO_OPTION);
@@ -357,7 +320,7 @@ public class CharacterSelectFrame extends JFrame {
 																												// anymore,
 																												// it is
 																												// in
-																												// ClueGameConstants
+																					// ClueGameConstants
 							"Server Reconnection Attempt", JOptionPane.INFORMATION_MESSAGE);
 					if (portNumStr == null) {
 						showGameQuitMessageAndExitGame();
@@ -379,7 +342,7 @@ public class CharacterSelectFrame extends JFrame {
 
 	private void showCharacterUsedandNewAvailableRequest() throws ClassNotFoundException, IOException {
 
-		textAreaCharacterFrameInfo.setText(imageNamesArray[characterSelected - 1]);
+		textAreaCharacterFrameInfo.setText(ClueGameConstants.CHARACTER_NAMES_ARRAY[characterSelected - 1]);
 		JOptionPane.showMessageDialog(null, "The character you selected is already choosen");
 		btnAdvance.setEnabled(false);
 		// request again all available/unavailable characters

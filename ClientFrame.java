@@ -18,10 +18,12 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.lang.StringBuilder;
+import java.util.ArrayList;
 
 
 public class ClientFrame extends JFrame {
@@ -30,9 +32,8 @@ public class ClientFrame extends JFrame {
 	private StringBuilder noteStringBuilder;
 	private int noteCounter = 0;
 	private JTextArea log_text_area;
-	//private ClientManager cm;
-	//private ServerConnection serverConnection;
-	
+	Message messageRecieved;
+	Client client;
 	int rows = 24;
 	int coloums = 25;
 
@@ -40,7 +41,7 @@ public class ClientFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public ClientFrame(Client player) {
-		
+		client = player;
 		//setServerConnection(serverConnection);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -220,6 +221,22 @@ public class ClientFrame extends JFrame {
 		btnShowCards.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnShowCards.setBounds(774, 357, 117, 29);
 		contentPane.add(btnShowCards);
+		
+		
+		try {
+			client.send(new Message(ClueGameConstants.REQUEST_PLAYER_NAME, null));
+			messageRecieved = client.getMessage();
+		} catch (ClassNotFoundException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if(messageRecieved.getData() == null) {
+			System.out.println("Data with player name is null");
+		}
+		
+	
+		log_text_area.setText("Player character is: " + String.valueOf(messageRecieved.getData()));
 		
 
 		btnAddNote.addActionListener(new ActionListener() {
