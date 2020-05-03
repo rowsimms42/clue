@@ -2,9 +2,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Server extends Thread
 {
+    private GameHandler gameHandler;
+    private GameState gameState;
     private ServerSocket serverSocket;
     private boolean running = false;
     public static ArrayList<Socket> clientSocketList = new ArrayList<Socket>();
@@ -12,7 +15,9 @@ public class Server extends Thread
     public Server()
     {
         //Set up initial GameState with server start
-        GameState.initializeVariables();
+        gameState = new GameState();
+        gameHandler = new GameHandler(gameState); 
+        // Set up GameHandler
         startServer();
         //should not be reached
         stopServer();
@@ -22,7 +27,7 @@ public class Server extends Thread
     {
         try
         {
-            serverSocket = new ServerSocket( ClueGameConstants.PORT );
+            serverSocket = new ServerSocket( ClueGameConstants.PORT);
             this.start();
         }
         catch (IOException e)
@@ -37,13 +42,19 @@ public class Server extends Thread
         this.interrupt();
     }
 
-    public static void removeSocket(Socket socket){
-        for(Socket s : clientSocketList){
-            if (s == socket){
-                clientSocketList.remove(s);
+    synchronized public static void removeSocket(Socket socket){
+        for (Iterator<Socket> socketIterator = clientSocketList.iterator(); socketIterator.hasNext();) {
+            Socket socketTemp = socketIterator.next();
+            if(socket.equals(socketTemp)) {
+                socketIterator.remove();
             }
         }
     }
+
+    synchronized private void addSocket(Socket socket){
+        clientSocketList.add(socket);
+    }
+
 
     public Boolean isServerConnected()
     {
@@ -66,21 +77,23 @@ public class Server extends Thread
         {
             try
             {
-
                 // Call accept() to receive the next connection
                 Socket socket = serverSocket.accept();
 
-                //Add new socket to list of sockets
-                clientSocketList.add(socket);
-
                 // Pass the socket to the RequestHandler thread for processing
-                RequestHandler requestHandler = new RequestHandler( socket );
+                RequestHandler requestHandler = new RequestHandler( socket, gameHandler );
+                
+                //Add new socket to list of sockets
+                addSocket(socket);
 
+                //start the new thread
                 requestHandler.start();
             }
             catch (IOException e)
             {
+            	System.out.println("Exception in Server run()");
                 e.printStackTrace();
+                
             }
         }
     }
