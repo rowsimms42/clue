@@ -1,8 +1,8 @@
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 class RequestHandler extends Thread {
     private Socket socket;
@@ -55,24 +55,20 @@ class RequestHandler extends Thread {
                  sendMessageToClient(returnedMessage);
             }
 
-            oos.close();
-       	 	ois.close();
-       	 	socket.close();
+            //oos.close();
+       	 	//ois.close();
+       	 	//socket.close();
         
         } catch (Exception e) {
-        	System.out.println("\nException in Request Handler run()");
-        	e.printStackTrace();
-            // Close our connection
-        	
+        	System.out.println("\nException handled in Request Handler run(), client is disconnected");
             try {
                 socket.close(); //close the socket
                 Server.removeSocket(socket); //remove socket from clientSocketList
             } catch (IOException e1) {
                 System.out.println("Error closing connection");
-                e1.printStackTrace();
             }
-            System.out.println("Connection closed");
-            e.printStackTrace(); 
+            System.out.println("Connection closed for player: " + this.getId());
+            System.out.println("Server listening for more connectoins...");
         }
     }
 
@@ -81,9 +77,39 @@ class RequestHandler extends Thread {
         oos.writeObject(gameObj);
     }
 
-    synchronized private Message listenForMessageFromClient() throws ClassNotFoundException, IOException, EOFException {
-        Message gameObject = (Message) ois.readObject();
-        Message returnObject = gameHandler.parseMessage(gameObject, getId());
-        return returnObject;
+    synchronized private Message listenForMessageFromClient() {
+        try {
+            Message gameObject = (Message) ois.readObject();
+            Message returnObject = gameHandler.parseMessage(gameObject, getId());
+            return returnObject;
+        } catch (SocketException e) {
+            //e.printStackTrace();
+            Message errorMessage = null;
+            try {
+                ois.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return errorMessage;
+        } catch (IOException e2){
+           // e2.printStackTrace();
+            Message errorMessage = null;
+            try {
+                ois.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return errorMessage;
+        } catch(ClassNotFoundException e3) {
+            e3.printStackTrace();
+            Message errorMessage = null;
+            try {
+                ois.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return errorMessage;
+        }
     }
-}
+
+} // Class RequestHandler

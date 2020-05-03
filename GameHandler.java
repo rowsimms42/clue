@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class GameHandler {
 
     GameState gameState;
@@ -74,7 +71,7 @@ public class GameHandler {
 
             //case ClueGameConstants.    
             default:
-                return msgObj;
+                return msgObj; //returns same object sent
         }
     }
 }
