@@ -1,7 +1,8 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Server extends Thread
 {
@@ -99,8 +100,6 @@ public class Server extends Thread
 
     public static void main( String[] args )
     {
-
         Server server = new Server();
-
     }
 }
