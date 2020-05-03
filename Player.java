@@ -20,11 +20,10 @@ public class Player {
         return this.name;
     }
 
-    public void setLocation(int[] loc){
-        for (int i = 0; i <loc.length; i++){
-            this.locationArray[i] = loc[i];
+    public void setLocation(int[] playerLocation){
+        for (int i = 0; i <playerLocation.length; i++){
+            this.locationArray[i] = playerLocation[i];
         }
     }
 
 }
-
