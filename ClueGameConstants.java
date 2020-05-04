@@ -34,6 +34,8 @@ public final class ClueGameConstants {
 
 		public static final int REPLY_FROM_SERVER_PLAYER_NAME = 23;
 
+		public static final int ERROR_CODE = 24;
+
 		public static final int UNSELECTABLE_TILE = -1;
 
 		public static final int EMPTY_TILE = 0;

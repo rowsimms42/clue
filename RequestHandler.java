@@ -54,10 +54,6 @@ class RequestHandler extends Thread {
                  //Send the new messaget to the client. 
                  sendMessageToClient(returnedMessage);
             }
-
-            //oos.close();
-       	 	//ois.close();
-       	 	//socket.close();
         
         } catch (Exception e) {
         	System.out.println("\nException handled in Request Handler run(), client is disconnected");
@@ -69,30 +65,34 @@ class RequestHandler extends Thread {
             }
             System.out.println("Connection closed for player: " + this.getId());
             System.out.println("Server listening for more connectoins...");
+            /* NEED to add function to set character to available
+               NEED to add function to decrement player count */
         }
     }
 
     synchronized private void sendMessageToClient(Message gameObj) throws IOException {
         //Send message to the client
-        oos.writeObject(gameObj);
+        this.oos.writeUnshared(gameObj);
+        //this.oos.flush();
     }
 
     synchronized private Message listenForMessageFromClient() {
         try {
-            Message gameObject = (Message) ois.readObject();
+            Message gameObject = (Message) ois.readUnshared();
             Message returnObject = gameHandler.parseMessage(gameObject, getId());
             return returnObject;
         } catch (SocketException e) {
             //e.printStackTrace();
-            Message errorMessage = null;
+            Message errorMessage = new Message(ClueGameConstants.ERROR_CODE, new String("Error!!!"));
             try {
                 ois.close();
             } catch (IOException e1) {
+                System.out.println("Error in RequestHandler listenForMessageFromClient");
                 e1.printStackTrace();
             }
             return errorMessage;
         } catch (IOException e2){
-           // e2.printStackTrace();
+            System.out.println("Error in RequestHandler listenForMessageFromClient");
             Message errorMessage = null;
             try {
                 ois.close();
@@ -101,7 +101,7 @@ class RequestHandler extends Thread {
             }
             return errorMessage;
         } catch(ClassNotFoundException e3) {
-            e3.printStackTrace();
+            System.out.println("Error in RequestHandler listenForMessageFromClient");
             Message errorMessage = null;
             try {
                 ois.close();

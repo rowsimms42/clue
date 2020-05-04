@@ -39,12 +39,13 @@ public class Client {
 
 
     synchronized public Message getMessage() throws IOException, EOFException, ClassNotFoundException {
-            Message msg = (Message) ois.readObject();
+            Message msg = (Message) ois.readUnshared();
             return msg;
     }
 
     synchronized public void send(Message msg) throws IOException {
-        oos.writeObject(msg);    
+        oos.writeUnshared(msg);
+        //oos.flush();    
     }
     
     public Boolean isPlayerConnected(){

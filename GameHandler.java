@@ -28,6 +28,7 @@ public class GameHandler {
         Player tempPlayer;
 
         int msgID = msgObj.getMessageID();
+        System.out.println("Incoming to server MessageID: " + msgID);
         switch (msgID) {
 
             case ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS:
@@ -49,7 +50,7 @@ public class GameHandler {
                     Boolean.valueOf(gameState.isSpecificCharacterAvailable(characterIndex)));
                 System.out.println("Client wants to confirm that character is indeed available"); 
                 return returnMessage;
-
+                
             case ClueGameConstants.MARK_CHARACTER_AS_TAKEN:
                 characterIndex = (Integer) msgObj.getData();
                 gameState.setSpecificCharacterToUnavailable(characterIndex);
@@ -57,16 +58,20 @@ public class GameHandler {
                 returnMessage = new Message(ClueGameConstants.CONFIRM_CHARACTER_SELECTED, null);
                 System.out.println("Client wants server to mark character is taken");
                 return returnMessage;
+
             case ClueGameConstants.REQUEST_PLAYER_ID:
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_ID, 
                                 Long.valueOf(tempPlayer.getPlayerId()));
                 return returnMessage;
+
             case ClueGameConstants.REQUEST_PLAYER_NAME:
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
                 System.out.println("Player name: " + String.valueOf(tempPlayer.getName()));
+                String name = tempPlayer.getName();
+                System.out.println("Test name: " + name);
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_NAME, 
-                                            new String(tempPlayer.getName()));
+                                            name);
                 return returnMessage;
 
             //case ClueGameConstants.    
