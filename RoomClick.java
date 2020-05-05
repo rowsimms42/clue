@@ -37,16 +37,10 @@ public class RoomClick {
 
     //test if the tile is in a room
 	public static String findInRoom(int x, int y){
-		//See if the tile was found in an nxn portion of a room 
-		String roomName = null;
-		roomName = squareRooms(x, y);
-		if(roomName != null)
-			return roomName;
-		//See if title was in an odd peice of the room
-		roomName = oddRooms(x,y);
-		if(roomName != null)	
-			return roomName;
-
+		for(ClueGameConstants.ROOMS room : ClueGameConstants.ROOMS.values()){
+			if(room.isInRoom(x, y))
+				return room.name();
+		}
 		return null; //tile was not found in a room
 	}
 
@@ -59,26 +53,6 @@ public class RoomClick {
 			}
 		}
 		return null; //not found in the map
-	}
-
-	public static String squareRooms(int x, int y){
-		for(ClueGameConstants.ROOMS room : ClueGameConstants.ROOMS.values()){
-			if(x >= room.getXMin() && x <= room.getXMax()){
-				if(y >= room.getYMin() && y <= room.getYMax())
-					return room.getRoomName();
-			}
-		}
-		return null;
-	}
-	
-	public static String oddRooms(int x, int y){
-		for(ClueGameConstants.ROOMS_ODD room : ClueGameConstants.ROOMS_ODD.values()){
-			if(x >= room.getXMin() && x <= room.getXMax()){
-				if(y >= room.getYMin() && y <= room.getYMax())
-					return room.getRoomName();
-			}
-		}
-		return null;
 	}
 
 	//HashMap contains invalid tiles. 
