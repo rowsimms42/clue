@@ -36,9 +36,15 @@ public final class ClueGameConstants {
 
 		public static final int ERROR_CODE = 24;
 
+		public static final int EMPTY_TILE = 25;
+
+		public static final int GET_DICE_ROLL = 26;
+
+		public static final int DICE_ROLL_FROM_SERVER = 27;
+
+		
 		public static final int UNSELECTABLE_TILE = -1;
 
-		public static final int EMPTY_TILE = 25;
 
 		public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
 										"Miss Scarlett", "Mrs. Peacock"};
