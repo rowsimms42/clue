@@ -27,7 +27,7 @@ public class Server extends Thread
     {
         try
         {
-            serverSocket = new ServerSocket( ClueGameConstants.PORT);
+            serverSocket = new ServerSocket( 55332);
             this.start();
         }
         catch (IOException e)
@@ -100,8 +100,6 @@ public class Server extends Thread
 
     public static void main( String[] args )
     {
-
         Server server = new Server();
-
     }
 }

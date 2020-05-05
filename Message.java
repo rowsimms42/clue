@@ -28,6 +28,7 @@ public class Message implements Serializable{
 
 	public void setData(Object data) {
 		this.data = data;
+		System.out.println("test print of data: " + data);
 	}
 
 }

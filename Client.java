@@ -9,53 +9,58 @@ public class Client {
 
     private Socket socket;
     private Boolean isConnected = false;
-    private ObjectOutputStream oos;
-    private ObjectInputStream ois;
+    
+    ObjectOutputStream oos;
+    ObjectInputStream ois;
 
     public Client() throws UnknownHostException, ClassNotFoundException {
+    	
         try {
-            this.socket = new Socket(ClueGameConstants.IP, ClueGameConstants.PORT);
+            this.socket = new Socket(ClueGameConstants.IP, 55332);
             this.isConnected = true;
         } catch (IOException e) {
             try {
-                if(this.socket != null)
-                    this.socket.close();
+            	if(this.socket != null)
+            		this.socket.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
             e.printStackTrace();
         }
-
+        
         try {
-            this.oos = new ObjectOutputStream(socket.getOutputStream());
-            this.ois = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			ois = new ObjectInputStream(socket.getInputStream());
+			oos = new ObjectOutputStream(socket.getOutputStream());
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
     }
+
 
     synchronized public Message getMessage() throws IOException, EOFException, ClassNotFoundException {
-            Message msg = (Message) ois.readObject();
+            Message msg = (Message) ois.readUnshared();
             return msg;
-        }
+    }
 
     synchronized public void send(Message msg) throws IOException {
-        oos.writeObject(msg);    
+        oos.writeUnshared(msg);
+        //oos.flush();    
     }
-
-    public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
-        Client newPlayer = new Client();
-    }
-
-
-/**
- * Functions that do not involve communicating with server
- */
-
+    
     public Boolean isPlayerConnected(){
             return this.isConnected;
-        }
+    }
  
-
+    public void closeConnection() {
+    	try {
+			socket.close();
+			oos.close();
+			ois.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
 } // Client Class

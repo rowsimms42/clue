@@ -26,10 +26,45 @@ public final class ClueGameConstants {
 
 		public static final int CONFIRM_CHARACTER_SELECTED = 19;
 
+		public static final int REQUEST_PLAYER_ID = 20;
 
-	
-		//TODO add more constant variables as needed
-		
-		
+		public static final int REPLY_FROM_SERVER_PLAYER_ID = 21;
+
+		public static final int REQUEST_PLAYER_NAME = 22;
+
+		public static final int REPLY_FROM_SERVER_PLAYER_NAME = 23;
+
+		public static final int ERROR_CODE = 24;
+
+		public static final int UNSELECTABLE_TILE = -1;
+
+		public static final int EMPTY_TILE = 25;
+
+		public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
+										"Miss Scarlett", "Mrs. Peacock"};
+
+		public static enum ROOMS{
+			Conservatory(new Rect(0,5,20,23), new Rect(0,4,19,19)),
+			Billard(new Rect(0, 5, 12, 16), new Rect(0, 5, 12, 16)),
+			Library(new Rect(1,5,6,10), new Rect(0,6,7,9)),
+			Study(new Rect(0, 5, 0, 3), new Rect(0, 6, 0, 0)),
+			Ballroom(new Rect(8, 15, 17, 22), new Rect(10,13,23,23)),
+			Hall(new Rect(9, 14, 0, 6), new Rect(9, 14, 0, 6)),
+			StairCase(new Rect(10,13, 8, 14), new Rect(10,13, 8, 14)),
+			Lounge(new Rect(17, 23, 1, 5), new Rect(18,23,0,0)),
+			Kitchen(new Rect(18, 22, 18, 23), new Rect(23, 23, 19, 23)),
+			DinningHall(new Rect(16,23,9,14), new Rect(19,23,15,15));
+
+			private Rect rect1, rect2;
+
+			ROOMS(Rect rect1, Rect rect2){
+				this.rect1 = rect1;
+				this.rect2 = rect2;
+			}
+
+			public Boolean isInRoom(int x, int y){
+				return rect1.isWithIn(x, y) || rect2.isWithIn(x,y);
+			}
+		};
 		
 	} //end class

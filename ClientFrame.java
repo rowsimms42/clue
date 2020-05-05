@@ -18,21 +18,22 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.lang.StringBuilder;
+import java.util.ArrayList;
 
 
 public class ClientFrame extends JFrame {
 
 	private JPanel contentPane;
-	private StringBuilder noteStringBuilder;
+	private StringBuilder noteStringBuilder, logStringBuilder;
 	private int noteCounter = 0;
-	private JTextArea log_text_area;
-	//private ClientManager cm;
-	//private ServerConnection serverConnection;
-	
+	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote;
+	Message messageRecieved;
+	Client client;
 	int rows = 24;
 	int coloums = 25;
 
@@ -40,7 +41,7 @@ public class ClientFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public ClientFrame(Client player) {
-		
+		client = player;
 		//setServerConnection(serverConnection);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,6 +53,7 @@ public class ClientFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		noteStringBuilder = new StringBuilder();
+		logStringBuilder  = new StringBuilder();
 		
 		JPanel BoardPanel = new JPanel();
 		BoardPanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -61,7 +63,6 @@ public class ClientFrame extends JFrame {
 		BoardPanel.setLayout(null);
 		
 		//***** determine x and y coordinates *****//
-		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -120,8 +121,7 @@ public class ClientFrame extends JFrame {
 			    	String yc=String.valueOf(y);  
 			    	String s = (", ");
 			    	String coordinates = xc.concat(s).concat(yc);
-			    	//int tileSelected = determineTile(x,y);
-			    	log_text_area.setText(coordinates);
+			    	addToLogConsole(coordinates);
 			    }
 			}
 	
@@ -176,7 +176,7 @@ public class ClientFrame extends JFrame {
 		lblAddGameNote.setBounds(774, 24, 113, 16);
 		contentPane.add(lblAddGameNote);
 		
-		final JTextArea textAreaGameNote = new JTextArea();
+		textAreaGameNote = new JTextArea();
 		textAreaGameNote.setEditable(true);
 		textAreaGameNote.setLineWrap(true);
 		textAreaGameNote.setBounds(706, 52, 238, 98);
@@ -193,7 +193,7 @@ public class ClientFrame extends JFrame {
 		lblGameNotes.setBounds(784, 206, 80, 16);
 		contentPane.add(lblGameNotes);
 		
-		final JTextArea textAreaNotesAdded = new JTextArea(5, 10);
+		textAreaNotesAdded = new JTextArea(5, 10);
 		textAreaNotesAdded.setEditable(false);
 		textAreaNotesAdded.setLineWrap(true);
 		
@@ -221,27 +221,23 @@ public class ClientFrame extends JFrame {
 		btnShowCards.setBounds(774, 357, 117, 29);
 		contentPane.add(btnShowCards);
 		
-
+		//reqest and recieve the player name from the server
+		try {
+			client.send(new Message(ClueGameConstants.REQUEST_PLAYER_NAME, null));
+			messageRecieved = client.getMessage();
+			if(messageRecieved.getData() == null) {
+				System.out.println("Data with player name is null");
+			}
+		} catch (ClassNotFoundException | IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		//display the character name in the console log
+		addToLogConsole(String.valueOf(messageRecieved.getData()));
+	
 		btnAddNote.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String note_to_add = textAreaGameNote.getText();
-				if(note_to_add.isEmpty()) {
-					/*
-                    Display JOptionPane with error message if textAreaGameNote
-                    contained no text. 
-                    */
-					JOptionPane.showMessageDialog(null, "No Text Entered");
-				}
-				else {
-					noteCounter++;
-					noteStringBuilder.append("Note ");
-					noteStringBuilder.append(Integer.toString(noteCounter));
-					noteStringBuilder.append(": ");
-					noteStringBuilder.append(note_to_add);
-					noteStringBuilder.append("\n");
-					textAreaNotesAdded.setText(noteStringBuilder.toString());
-					textAreaGameNote.setText("");
-				}
+				addToNotebook(textAreaGameNote.getText());
 			}
 		}); //end button action listener
 	
@@ -252,6 +248,29 @@ public class ClientFrame extends JFrame {
 		
 	} 
 
+	private void addToLogConsole(String input){
+		logStringBuilder.append(input + "\n");
+		log_text_area.setText(logStringBuilder.toString());
+	}
+	
+	private void addToNotebook(String input){
+		String noteToAdd = input;
+		if(noteToAdd.isEmpty()) {
+			//Display JOptionPane with error message if textAreaGameNote contained no text. 
+			JOptionPane.showMessageDialog(null, "No Text Entered");
+		}
+		else {
+			noteCounter++;
+			noteStringBuilder.append("Note ");
+			noteStringBuilder.append(Integer.toString(noteCounter));
+			noteStringBuilder.append(": ");
+			noteStringBuilder.append(noteToAdd);
+			noteStringBuilder.append("\n");
+			textAreaNotesAdded.setText(noteStringBuilder.toString());
+			textAreaGameNote.setText("");
+		}
+	} 
+	
 	protected int clickLocation(int x, int y) 
 		{
 			if ((y <= 493 && y >= 397 && x >= 26 && x <=135) || (x >= 135 && x <= 151 && y >= 415 && y <= 493))
