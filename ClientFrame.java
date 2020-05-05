@@ -32,8 +32,10 @@ public class ClientFrame extends JFrame {
 	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote;
 	Message messageRecieved;
 	Client client;
+	RoomClick roomClick;
 	int rows = 24;
 	int coloums = 25;
+	String value;
 
 	/**
 	 * Create the frame.
@@ -96,7 +98,10 @@ public class ClientFrame extends JFrame {
 			    			gy = y_coord;
 			    		}
 					}
-					
+
+					value = RoomClick.checker(gx, gy);
+					System.out.println(value);
+
 			    	String xc=String.valueOf(gx); 
 			    	String yc=String.valueOf(gy);  
 			    	String s = (", ");

@@ -3,23 +3,17 @@ import java.util.*;
 
 public class RoomClick {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		char answer;
-		Scanner scanner = new Scanner(System.in);
-		HashMap<Integer, ArrayList<Integer>> map = fillMapBadTiles();
-		do{
-			System.out.println("Enter x value: ");
-			int x = scanner.nextInt();
-			System.out.println("Enter y value: ");
-			int y = scanner.nextInt();
+	public RoomClick() {
 		
-			System.out.println();
-			System.out.println(determineTileType(x,y,map));
-			System.out.println("Continue(Y/N)");
-			answer = scanner.next().charAt(0);
-		}while(answer=='Y'|| answer=='y');
-		scanner.close();
+	}
+
+	public static String checker(int x, int y)
+	{
+		// TODO Auto-generated method stub
+		HashMap<Integer, ArrayList<Integer>> map = fillMapBadTiles();
+		String value;
+		return value = determineTileType(x, y, map);
+		
 	}
 	
 	public static String determineTileType(int x, int y, HashMap<Integer, ArrayList<Integer>> map){
@@ -41,7 +35,8 @@ public class RoomClick {
 			if(room.isInRoom(x, y))
 				return room.name();
 		}
-		return null; //tile was not found in a room
+		//return null; //tile was not found in a room
+		return null;
 	}
 
 	public static String findInvalidTiles(HashMap<Integer, ArrayList<Integer>> map, int x, int y){
@@ -74,4 +69,5 @@ public class RoomClick {
 
 		return map;
 	}
+	
 }
