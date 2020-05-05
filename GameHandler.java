@@ -67,11 +67,9 @@ public class GameHandler {
 
             case ClueGameConstants.REQUEST_PLAYER_NAME:
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-                System.out.println("Player name: " + String.valueOf(tempPlayer.getName()));
-                String name = tempPlayer.getName();
-                System.out.println("Test name: " + name);
+                System.out.println("Player name: " + tempPlayer.getName());
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_NAME, 
-                                            name);
+                                            tempPlayer.getName());
                 return returnMessage;
 
             //case ClueGameConstants.    

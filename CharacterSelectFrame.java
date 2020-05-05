@@ -174,7 +174,8 @@ public class CharacterSelectFrame extends JFrame {
 					try {
 						clientConnection.send( new Message(ClueGameConstants.MARK_CHARACTER_AS_TAKEN,
 												Integer.valueOf(characterSelected)));
-					} catch (IOException e1) {
+						messageReceived = clientConnection.getMessage();
+					} catch (ClassNotFoundException | IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
