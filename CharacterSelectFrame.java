@@ -219,7 +219,7 @@ public class CharacterSelectFrame extends JFrame {
 		// Receive message with available connections from the server
 		messageReceived = clientConnection.getMessage();
 		// Get available connections from the message
-	//	 availableCharacters = (Integer) messageReceived.getData();
+		 availableCharacters = (Integer) messageReceived.getData();
 	}
 
 	/*
