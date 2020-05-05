@@ -36,6 +36,10 @@ public final class ClueGameConstants {
 
 		public static final int ERROR_CODE = 24;
 
+		public static final int GET_DICE_ROLL = 25;
+
+		public static final int DICE_ROLL_FROM_SERVER = 26;
+
 		public static final int UNSELECTABLE_TILE = -1;
 
 		public static final int EMPTY_TILE = 0;

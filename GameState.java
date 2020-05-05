@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Random;
 
 public class GameState {
 	
@@ -91,6 +92,15 @@ public class GameState {
 
 	public String getCharacterName(int index){
 		return ClueGameConstants.CHARACTER_NAMES_ARRAY[index - 1];
+	}
+
+	public int rollDice(){
+		Random rand = new Random();
+
+		int dice_1 = rand.nextInt(7);
+		int dice_2 = rand.nextInt(7);
+
+		return dice_1 + dice_2;
 	}
 	
 } //end class
