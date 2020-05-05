@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -24,7 +23,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
-
 
 public class ClientFrame extends JFrame {
 
@@ -67,65 +65,46 @@ public class ClientFrame extends JFrame {
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int x = e.getX();
-			    int y = e.getY();
-			    int tile = clickLocation(x,y);
-			    if (tile == 1)
-			    {
-					log_text_area.setText("Conservatory");
-			    }
-			    else if (tile == 2)
-			    {
-					log_text_area.setText("Ballroom");
-			    }
-			    else if (tile == 3)
-			    {
-					log_text_area.setText("Kitchen");
-			    }
-			    else if (tile == 4)
-			    {
-					log_text_area.setText("Billiard Room");
-			    }
-			    else if (tile == 5)
-			    {
-					log_text_area.setText("Library");
-			    }
-			    else if (tile == 6)
-			    {
-					log_text_area.setText("Study");
-			    }
-			    else if (tile == 7)
-			    {
-					log_text_area.setText("Hall");
-			    }
-			    else if (tile == 8)
-			    {
-					log_text_area.setText("Lounge");
-			    }
-			    else if (tile == 9)
-			    {
-					log_text_area.setText("Dining Room");
-			    }
-			    else if (tile == 10)
-			    {
-					log_text_area.setText("Kitchen");
-			    }
-			    else if (tile == 11)
-			    {
-					log_text_area.setText("Staircase");
-			    }
+				int p_x = e.getX();
+			    int p_y = e.getY();
 			    
-			    else
+			    boolean valid = determineBounds(p_x,p_y);
+			    
+			    if (valid == false)
 			    {
-			    	String xc=String.valueOf(x); 
-			    	String yc=String.valueOf(y);  
+			    
+			    	log_text_area.setText("Invalid tile.");
+			    }
+			    else
+			    {		    
+			    	int pixal_with;
+			    	pixal_with = 20;
+			    	int x = e.getX() - 30; // off set by 30
+			    	int y = e.getY() - 13; // off set by 13
+			    	int x_mod = x%20;
+			    	int y_mod = y%20;
+			    	int x_coord = x/pixal_with;
+			    	int y_coord = y/pixal_with;
+			    	int gx = x_coord;
+			    	int gy = y_coord;
+	        	
+			    	if(x_mod >= 2 || x_mod <= 17  || y_mod >= 2 || y_mod <= 17)
+			    	{
+			    		if(x_coord <= 23 || y_coord <= 24)
+			    		{
+			    			gx = x_coord;
+			    			gy = y_coord;
+			    		}
+					}
+					
+			    	String xc=String.valueOf(gx); 
+			    	String yc=String.valueOf(gy);  
 			    	String s = (", ");
-			    	String coordinates = xc.concat(s).concat(yc);
-			    	addToLogConsole(coordinates);
+			    	String coordinates = xc.concat(s).concat(yc);			    
+			    	log_text_area.setText(coordinates);
 			    }
 			}
-	
-			});
+		});
 
 		lblNewLabel.setIcon(new ImageIcon("resources\\board.jpg"));
 		lblNewLabel.setBounds(6, 6, 569, 523);
@@ -270,57 +249,15 @@ public class ClientFrame extends JFrame {
 			textAreaGameNote.setText("");
 		}
 	} 
+	public Boolean determineBounds(int x, int y)
+	{
+	if (x>=23 && y>=13 && x<=536 && y<=511)
 	
-	protected int clickLocation(int x, int y) 
-		{
-			if ((y <= 493 && y >= 397 && x >= 26 && x <=135) || (x >= 135 && x <= 151 && y >= 415 && y <= 493))
-			{
-				return 1; //convervatory
-			}
-			else if (y<=465 && y>= 355 && x <= 359 && x>=202)
-			{
-				return 2; //ballroom
-			}
-			else if (y<=493 && y>= 377 && x >= 412 && x <= 440)
-			{
-				return 3; //kitchen
-			}
-			else if (x >= 26 && x <= 151 && y >= 255 && y <= 345)
-			{
-				return 4; //billiard room
-			}
-			else if ((x>=26 && x<= 151 && y >= 136 && y <= 227) || (x >=136 && x <=172 && y >= 157 && y <= 205))
-			{
-				return 5; //library
-			}
-			else if (x >=26 && x <= 172 && y >= 14 && y <= 89)
-			{
-				return 6; //study
-			}
-			else if (y >= 16 && y <= 149 && x >= 223 && x <= 339)
-			{
-				return 7; //hall
-			}
-			else if (x >= 390 && x <= 535 && y >= 13 && y <= 129)
-			{
-				return 8; //lounge
-			}
-			else if ((y >= 195 && y <=305 && x >= 369 && x <= 537) || (y>=305 && y <= 328 && x >= 432 && x <= 537))
-			{
-				return 9; // dining room
-			}
-			else if (x >= 411 && x <= 537 && y >= 374 && y <= 493)
-			{
-				return 10; //kitchen
-			}
-			else if (x >= 219 && x <= 321 && y >= 172 && y < 309)
-			{
-				return 11; //staircase
-			}
-			else
-			{
-				return 0;
-			}
-		}
+		return true;
+	
+	else
+		return false;
+	}
+	
 		//*client manager can update console log as well
 } //end class
