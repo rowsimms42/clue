@@ -1,5 +1,14 @@
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
+
+import javax.smartcardio.Card;
+
+import javax.smartcardio.Card;
+
+import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 
 public class GameState {
 	
@@ -8,15 +17,10 @@ public class GameState {
 	private int numberOfPlayers;
 	private HashMap<Long, Player> playerMap;
 	
-	private static enum Weapon{
-		CandleStick,
-		Dagger,
-		LeadPipe,
-		Revolver,
-		Rope,
-		Wrench
-	}
+	ArrayList<Cards> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
 	
+
+
 	public GameState(){
 		
 		initializeVariables();
@@ -48,6 +52,58 @@ public class GameState {
 
 		//TODO initialize more variables as needed
 		
+		weaponCardDeck = new ArrayList<Cards>();
+		weaponCardDeck.add(new WeaponCard("Pipe", 1, 1));
+		weaponCardDeck.add(new WeaponCard("Candle Stick", 2, 1));
+		weaponCardDeck.add(new WeaponCard("Revolver", 3, 1));
+		weaponCardDeck.add(new WeaponCard("Wrench", 4, 1));
+		weaponCardDeck.add(new WeaponCard("Knife", 5, 1));
+		weaponCardDeck.add(new WeaponCard("Rope", 6, 1));
+		Collections.shuffle(weaponCardDeck);
+
+
+		//evenlop set up for weapon
+		Random random = new Random();
+		int rand = random.nextInt(weaponCardDeck.size()); 
+		envelopeDeck.add(weaponCardDeck.get(rand));
+		weaponCardDeck.remove(rand); 
+
+	// ArrayList<Cards> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
+
+		suspectCardDeck = new ArrayList<Cards>();
+		suspectCardDeck.add(new SuspectCard("Colonel Mustard", 1, 2));
+		suspectCardDeck.add(new SuspectCard("Miss Scarlet", 2, 2));
+		suspectCardDeck.add(new SuspectCard("Professor Plum", 3, 2));
+		suspectCardDeck.add(new SuspectCard("Mr. Green", 4, 2));
+		suspectCardDeck.add(new SuspectCard("Mrs. White", 5, 2));
+		suspectCardDeck.add(new SuspectCard("Mrs. Peacock", 6, 2));
+		Collections.shuffle(suspectCardDeck);
+
+			//evenlop set up for suspects
+		//Random random = new Random();
+		int srand = random.nextInt(suspectCardDeck.size()); 
+		envelopeDeck.add(suspectCardDeck.get(srand));
+		suspectCardDeck.remove(srand); 
+
+		roomCardDeck = new ArrayList<Cards>();
+		roomCardDeck.add(new RoomCard("Conservatory", 1, 3));
+		roomCardDeck.add(new RoomCard("Billiard Room", 2, 3));
+		roomCardDeck.add(new RoomCard("Study Room", 3, 3));
+		roomCardDeck.add(new RoomCard("Hall", 4, 3));
+		roomCardDeck.add(new RoomCard("Lounge", 5, 3));
+		roomCardDeck.add(new RoomCard("Dining Room", 6, 3));
+		roomCardDeck.add(new RoomCard("Kitchen", 7, 3));
+		roomCardDeck.add(new RoomCard("Ballroom", 8, 3));
+		roomCardDeck.add(new RoomCard("Library", 9, 3));
+		Collections.shuffle(roomCardDeck);
+
+
+		// final card for evenlop, adds the room card
+		int	Rrand = random.nextInt(roomCardDeck.size());
+		envelopeDeck.add(roomCardDeck.get(Rrand));
+		roomCardDeck.remove(Rrand); 
+
+
 	}
 
 	public int getAvailableCharacters() {

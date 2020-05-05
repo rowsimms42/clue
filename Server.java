@@ -41,6 +41,7 @@ public class Server extends Thread
         running = false;
         this.interrupt();
     }
+    
 
     synchronized public static void removeSocket(Socket socket){
         for (Iterator<Socket> socketIterator = clientSocketList.iterator(); socketIterator.hasNext();) {
