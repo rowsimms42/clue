@@ -17,10 +17,8 @@ public class GameState {
 	private int numberOfPlayers;
 	private HashMap<Long, Player> playerMap;
 	
-	ArrayList<Cards> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
+	private ArrayList<Card> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
 	
-
-
 	public GameState(){
 		
 		initializeVariables();
@@ -52,7 +50,7 @@ public class GameState {
 
 		//TODO initialize more variables as needed
 		
-		weaponCardDeck = new ArrayList<Cards>();
+		weaponCardDeck = new ArrayList<Card>();
 		weaponCardDeck.add(new WeaponCard("Pipe", 1, 1));
 		weaponCardDeck.add(new WeaponCard("Candle Stick", 2, 1));
 		weaponCardDeck.add(new WeaponCard("Revolver", 3, 1));
@@ -70,7 +68,7 @@ public class GameState {
 
 	// ArrayList<Cards> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
 
-		suspectCardDeck = new ArrayList<Cards>();
+		suspectCardDeck = new ArrayList<Card>();
 		suspectCardDeck.add(new SuspectCard("Colonel Mustard", 1, 2));
 		suspectCardDeck.add(new SuspectCard("Miss Scarlet", 2, 2));
 		suspectCardDeck.add(new SuspectCard("Professor Plum", 3, 2));
@@ -85,7 +83,7 @@ public class GameState {
 		envelopeDeck.add(suspectCardDeck.get(srand));
 		suspectCardDeck.remove(srand); 
 
-		roomCardDeck = new ArrayList<Cards>();
+		roomCardDeck = new ArrayList<Card>();
 		roomCardDeck.add(new RoomCard("Conservatory", 1, 3));
 		roomCardDeck.add(new RoomCard("Billiard Room", 2, 3));
 		roomCardDeck.add(new RoomCard("Study Room", 3, 3));
