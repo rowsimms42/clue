@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 
-import javax.smartcardio.Card;
-
 public class Player {
 
     private String name;
