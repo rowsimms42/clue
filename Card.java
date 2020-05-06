@@ -4,7 +4,7 @@ public class Card {
 int value; 
 String cardName;
 
-public Cards(String name, int value){
+public Card(String name, int value){
     cardName = name;
     this.value = value; 
 }

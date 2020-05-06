@@ -8,8 +8,8 @@ public WeaponCard(String name, int value, int type){
 }
  
 public int getType() {return type;}
-public int getValue() {return value;}
-public String getName() {return getName();}
+public int getValue() {return super.getValue();}
+public String getName() {return super.getName();}
 }
 
 
