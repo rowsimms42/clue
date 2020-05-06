@@ -3,6 +3,17 @@ Test commits
 just testing this to make sure i have this working right fell free to ignore this
 
 
+
+
+TODO: 
+    Remove Client from list of Players when they exit
+    Make their player available once they are removed
+
+    Implement turn taking scheme based on the number of players
+
+
+
+
 player location for starting game, miss Scarlet goes first
 
 data: who's turn
