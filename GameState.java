@@ -4,12 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
-import javax.smartcardio.Card;
-
-import javax.smartcardio.Card;
-
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
-
 public class GameState {
 	
 	private int availableCharacters;
