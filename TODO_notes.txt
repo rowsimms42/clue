@@ -1,0 +1,47 @@
+Test commits
+
+just testing this to make sure i have this working right fell free to ignore this
+
+
+
+
+TODO: 
+    Remove Client from list of Players when they exit
+    Make their player available once they are removed
+
+    Implement turn taking scheme based on the number of players
+
+
+
+
+player location for starting game, miss Scarlet goes first
+
+data: who's turn
+    order is predefined 
+
+Class data for player Class
+
+    character
+    location
+    cards
+
+
+cards:
+    put three cards - 1 from each category - in seperate location, "Case Confidential File"
+    deal remainding cards to every player
+    if cards left over, show to all players.
+
+    
+
+Client Requests gameState update: "what the player need to know about the other players"
+    who's turn
+    player's location
+
+    
+    location on board
+    return a an array of player objects
+
+    return map of players and x,y locations
+        client -> loop through array, update board with 
+
+
