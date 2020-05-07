@@ -1,8 +1,10 @@
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Player {
+public class Player implements Serializable{
 
-    private String name;
+    private Characters playerCharacter;
     private int[] locationArray = {0,0};
     private long Id;
     private ArrayList<Card> playerCardDeck;
@@ -16,12 +18,16 @@ public class Player {
         return Id;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setCharacter(Characters character) {
+    	playerCharacter = character;
+    }
+    
+    public Characters getCharacter() {
+    	return playerCharacter;
     }
 
     public String getName(){
-        return this.name;
+       return playerCharacter.getName();
     }
 
     public void setLocation(int[] playerLocation){

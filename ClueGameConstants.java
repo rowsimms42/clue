@@ -41,6 +41,10 @@ public final class ClueGameConstants {
 		public static final int REQUEST_DICE_ROLL = 26;
 
 		public static final int REPLY_FROM_SERVER_DICE_ROLL= 27;
+		
+		public static final int REQUEST_PLAYERS_CHARACTER = 28;
+		
+		public static final int REPLY_FROM_SERVER_PLAYERS_CHARACTER = 29;
 
 		
 		public static final int UNSELECTABLE_TILE = -1;

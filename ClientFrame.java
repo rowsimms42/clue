@@ -35,15 +35,15 @@ public class ClientFrame extends JFrame {
 	Message messageRecieved;
 	Client client;
 	RoomClick roomClick;
+	Characters assignedCharacter;
 	int rows = 24;
 	int coloums = 25;
 	String value;
-	//gameboard
 	final ImageIcon gameboard;
 
 	//**miss scarlett's starting location for now as a test case
-    int xe = 320;
-    int ye = 544;
+    int xe = 0;
+    int ye = 0;
 
 	/**
 	 * Create the frame.
@@ -231,19 +231,27 @@ public class ClientFrame extends JFrame {
 		btnShowCards.setBounds(774, 357, 117, 29);
 		contentPane.add(btnShowCards);
 		
-		//reqest and recieve the player name from the server
+		//request and receive the character the player has chosen
 		try {
-			client.send(new Message(ClueGameConstants.REQUEST_PLAYER_NAME, null));
+			client.send(new Message(ClueGameConstants.REQUEST_PLAYERS_CHARACTER, null));
 			messageRecieved = client.getMessage();
-			if(messageRecieved.getData() == null) {
-				System.out.println("Data with player name is null");
-			}
+			if(messageRecieved.getData() == null) 
+				System.out.println("No data");
+			
 		} catch (ClassNotFoundException | IOException e1) {
 			e1.printStackTrace();
 		}
+				
+		//display the character properties in the console log
+		assignedCharacter = (Characters) messageRecieved.getData();
+		addToLogConsole(assignedCharacter.getName());
+		xe = assignedCharacter.getxStarting();
+		ye = assignedCharacter.getyStarting();
+		String startPointsStr = "Starting points: " + xe + " " + ye;
+		addToLogConsole(startPointsStr);
 		
 		//display the character name in the console log
-		addToLogConsole(String.valueOf(messageRecieved.getData()));
+		//addToLogConsole(String.valueOf(messageRecieved.getData()));
 	
 		btnAddNote.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -345,7 +353,7 @@ public class ClientFrame extends JFrame {
 		super.paint(g);
 		g.drawImage(gameboard.getImage(), 15, 67, null);
 		Rectangle bounds = getBounds(xe, ye);
-		g.setColor(Color.red);
+		g.setColor(new Color(assignedCharacter.getColor()));
 		g.fillRect((int)bounds.getX(), (int)bounds.getY(), (int)bounds.getHeight(), (int)bounds.getWidth());
  	}
 	

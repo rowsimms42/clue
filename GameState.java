@@ -1,4 +1,6 @@
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,8 +12,8 @@ public class GameState {
 	private Boolean availableCharactersArray[];
 	private int numberOfPlayers;
 	private HashMap<Long, Player> playerMap;
+	private HashMap<String, Characters> characterMap;
 	
-
 	private ArrayList<Card> weaponCardDeck, suspectCardDeck, 
 							roomCardDeck, envelopeDeck, combinedDeck;
 	
@@ -38,66 +40,10 @@ public class GameState {
 		numberOfPlayers = 0;
 		
 		availableCharactersArray = new Boolean[ ClueGameConstants.MAX_CHARACTERS ];
-		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
-			availableCharactersArray[i] = true;
-		}
+		Arrays.fill(availableCharactersArray, true);
 		
 		playerMap = new HashMap<Long, Player>();
-		
-		//TODO initialize more variables as needed
-		
-		weaponCardDeck = new ArrayList<Card>();
-		weaponCardDeck.add(new WeaponCard("Pipe", 1, 1));
-		weaponCardDeck.add(new WeaponCard("Candle Stick", 2, 1));
-		weaponCardDeck.add(new WeaponCard("Revolver", 3, 1));
-		weaponCardDeck.add(new WeaponCard("Wrench", 4, 1));
-		weaponCardDeck.add(new WeaponCard("Knife", 5, 1));
-		weaponCardDeck.add(new WeaponCard("Rope", 6, 1));
-		Collections.shuffle(weaponCardDeck);
-
-
-		//evenlop set up for weapon
-		Random random = new Random();
-		int rand = random.nextInt(weaponCardDeck.size()); 
-		envelopeDeck.add(weaponCardDeck.get(rand));
-		weaponCardDeck.remove(rand); 
-
-	// ArrayList<Cards> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
-
-		suspectCardDeck = new ArrayList<Card>();
-		suspectCardDeck.add(new SuspectCard("Colonel Mustard", 1, 2));
-		suspectCardDeck.add(new SuspectCard("Miss Scarlet", 2, 2));
-		suspectCardDeck.add(new SuspectCard("Professor Plum", 3, 2));
-		suspectCardDeck.add(new SuspectCard("Mr. Green", 4, 2));
-		suspectCardDeck.add(new SuspectCard("Mrs. White", 5, 2));
-		suspectCardDeck.add(new SuspectCard("Mrs. Peacock", 6, 2));
-		Collections.shuffle(suspectCardDeck);
-
-			//evenlop set up for suspects
-		//Random random = new Random();
-		int srand = random.nextInt(suspectCardDeck.size()); 
-		envelopeDeck.add(suspectCardDeck.get(srand));
-		suspectCardDeck.remove(srand); 
-
-		roomCardDeck = new ArrayList<Card>();
-		roomCardDeck.add(new RoomCard("Conservatory", 1, 3));
-		roomCardDeck.add(new RoomCard("Billiard Room", 2, 3));
-		roomCardDeck.add(new RoomCard("Study Room", 3, 3));
-		roomCardDeck.add(new RoomCard("Hall", 4, 3));
-		roomCardDeck.add(new RoomCard("Lounge", 5, 3));
-		roomCardDeck.add(new RoomCard("Dining Room", 6, 3));
-		roomCardDeck.add(new RoomCard("Kitchen", 7, 3));
-		roomCardDeck.add(new RoomCard("Ballroom", 8, 3));
-		roomCardDeck.add(new RoomCard("Library", 9, 3));
-		Collections.shuffle(roomCardDeck);
-
-
-		// final card for evenlop, adds the room card
-		int	Rrand = random.nextInt(roomCardDeck.size());
-		envelopeDeck.add(roomCardDeck.get(Rrand));
-		roomCardDeck.remove(Rrand); 
-
-
+		characterMap    = createAndbuildCharacterMap();
 		weaponCardDeck  = createAndFillWeaponCardDeck();
 		roomCardDeck    = createAndFillRoomCardDeck();
 		suspectCardDeck = createAndFillSuspectCardDeck();
@@ -136,12 +82,16 @@ public class GameState {
 		playerMap.put(threadID, player);
 	}
 
-	public HashMap getPlayerMap(){
+	public HashMap<Long, Player> getPlayerMap(){
 		return playerMap;
 	} 
+	
+	public HashMap<String, Characters> getCharacterMap() {
+		return characterMap;
+	}
 
-	public void assignPlayerName(String name, long threadID){
-		playerMap.get(threadID).setName(name);
+	public void assignPlayerCharacter(Characters character, long threadID){
+		playerMap.get(threadID).setCharacter(character);
 	}
 
 	public String getCharacterName(int index){
@@ -192,6 +142,24 @@ public class GameState {
 		suspectList.add(new SuspectCard("Mrs. Peacock", 6, 2));
 		Collections.shuffle(suspectList);
 		return suspectList;
+	}
+	
+	private HashMap<String, Characters> createAndbuildCharacterMap() {
+		HashMap<String, Characters> characterMap = new HashMap<String, Characters>();
+		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS;i++) {
+			String charName = ClueGameConstants.CHARACTER_NAMES_ARRAY[i];
+			switch(i) {
+				case 0 : characterMap.put(charName, new Characters(charName, 261123, 111,222)); break;
+				case 1 : characterMap.put(charName, new Characters(charName, 10290172,333,444)); break;
+				case 2 : characterMap.put(charName, new Characters(charName, 16777212,555,600)); break;
+				case 3 : characterMap.put(charName, new Characters(charName, 16576515,245,345)); break;
+				case 4 : characterMap.put(charName, new Characters(charName, 16515918,400,500)); break;
+				case 5 : characterMap.put(charName, new Characters(charName, 234748, 341,410)); break;
+				default: //nothing
+					
+			}
+		}
+		return characterMap;
 	}
 	
 } //end class
