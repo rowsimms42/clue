@@ -85,8 +85,6 @@ public class GameHandler {
             	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
             	tempCharacter = tempPlayer.getCharacter();
             	System.out.println("Character to be sent: " + tempCharacter.getName());
-            	System.out.println("x: " + tempCharacter.getxStarting());
-            	System.out.println("y: " + tempCharacter.getyStarting());
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYERS_CHARACTER, 
             								(Characters)tempCharacter);
             	return returnMessage;
