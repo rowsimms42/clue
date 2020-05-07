@@ -109,7 +109,7 @@ public class CharacterSelectFrame extends JFrame {
 
 				// send character selected to server
 				try {
-					clientConnection.send(new Message(ClueGameConstants.IS_SELECTED_CHARACTER_AVAILABLE,
+					clientConnection.send(new Message(ClueGameConstants.REQUEST_IS_SELECTED_CHARACTER_AVAILABLE,
 							Integer.valueOf(characterSelected)));
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -172,7 +172,7 @@ public class CharacterSelectFrame extends JFrame {
 
 					// character will be chosen, tell server to mark this character as used
 					try {
-						clientConnection.send( new Message(ClueGameConstants.MARK_CHARACTER_AS_TAKEN,
+						clientConnection.send( new Message(ClueGameConstants.REQUEST_MARK_CHARACTER_AS_TAKEN,
 												Integer.valueOf(characterSelected)));
 						messageReceived = clientConnection.getMessage();
 					} catch (ClassNotFoundException | IOException e1) {

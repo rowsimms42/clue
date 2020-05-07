@@ -254,14 +254,9 @@ public class ClientFrame extends JFrame {
 			textAreaGameNote.setText("");
 		}
 	} 
-	public Boolean determineBounds(int x, int y)
-	{
-	if (x>=23 && y>=13 && x<=536 && y<=511)
-	
-		return true;
-	
-	else
-		return false;
+	public Boolean determineBounds(int x, int y){
+		
+		return (x>=23 && y>=13 && x<=536 && y<=511);
 	}
 	
 		//*client manager can update console log as well

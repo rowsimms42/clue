@@ -11,7 +11,8 @@ public class GameState {
 	private int numberOfPlayers;
 	private HashMap<Long, Player> playerMap;
 	
-	private ArrayList<Card> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
+	private ArrayList<Card> weaponCardDeck, suspectCardDeck, 
+							roomCardDeck, envelopeDeck, combinedDeck;
 	
 	public GameState(){
 		
@@ -42,59 +43,9 @@ public class GameState {
 		
 		playerMap = new HashMap<Long, Player>();
 
-		//TODO initialize more variables as needed
-		
-		weaponCardDeck = new ArrayList<Card>();
-		weaponCardDeck.add(new WeaponCard("Pipe", 1, 1));
-		weaponCardDeck.add(new WeaponCard("Candle Stick", 2, 1));
-		weaponCardDeck.add(new WeaponCard("Revolver", 3, 1));
-		weaponCardDeck.add(new WeaponCard("Wrench", 4, 1));
-		weaponCardDeck.add(new WeaponCard("Knife", 5, 1));
-		weaponCardDeck.add(new WeaponCard("Rope", 6, 1));
-		Collections.shuffle(weaponCardDeck);
-
-
-		//evenlop set up for weapon
-		Random random = new Random();
-		int rand = random.nextInt(weaponCardDeck.size()); 
-		envelopeDeck.add(weaponCardDeck.get(rand));
-		weaponCardDeck.remove(rand); 
-
-	// ArrayList<Cards> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
-
-		suspectCardDeck = new ArrayList<Card>();
-		suspectCardDeck.add(new SuspectCard("Colonel Mustard", 1, 2));
-		suspectCardDeck.add(new SuspectCard("Miss Scarlet", 2, 2));
-		suspectCardDeck.add(new SuspectCard("Professor Plum", 3, 2));
-		suspectCardDeck.add(new SuspectCard("Mr. Green", 4, 2));
-		suspectCardDeck.add(new SuspectCard("Mrs. White", 5, 2));
-		suspectCardDeck.add(new SuspectCard("Mrs. Peacock", 6, 2));
-		Collections.shuffle(suspectCardDeck);
-
-			//evenlop set up for suspects
-		//Random random = new Random();
-		int srand = random.nextInt(suspectCardDeck.size()); 
-		envelopeDeck.add(suspectCardDeck.get(srand));
-		suspectCardDeck.remove(srand); 
-
-		roomCardDeck = new ArrayList<Card>();
-		roomCardDeck.add(new RoomCard("Conservatory", 1, 3));
-		roomCardDeck.add(new RoomCard("Billiard Room", 2, 3));
-		roomCardDeck.add(new RoomCard("Study Room", 3, 3));
-		roomCardDeck.add(new RoomCard("Hall", 4, 3));
-		roomCardDeck.add(new RoomCard("Lounge", 5, 3));
-		roomCardDeck.add(new RoomCard("Dining Room", 6, 3));
-		roomCardDeck.add(new RoomCard("Kitchen", 7, 3));
-		roomCardDeck.add(new RoomCard("Ballroom", 8, 3));
-		roomCardDeck.add(new RoomCard("Library", 9, 3));
-		Collections.shuffle(roomCardDeck);
-
-
-		// final card for evenlop, adds the room card
-		int	Rrand = random.nextInt(roomCardDeck.size());
-		envelopeDeck.add(roomCardDeck.get(Rrand));
-		roomCardDeck.remove(Rrand); 
-
+		weaponCardDeck  = createAndFillWeaponCardDeck();
+		roomCardDeck    = createAndFillRoomCardDeck();
+		suspectCardDeck = createAndFillSuspectCardDeck();
 
 	}
 
@@ -144,11 +95,48 @@ public class GameState {
 
 	public int rollDice(){
 		Random rand = new Random();
-
 		int dice_1 = rand.nextInt(7);
 		int dice_2 = rand.nextInt(7);
-
 		return dice_1 + dice_2;
+	}
+	
+	private ArrayList<Card> createAndFillWeaponCardDeck(){
+		ArrayList<Card> weaponsList = new ArrayList<Card>();
+		weaponsList.add(new WeaponCard("Pipe", 1, 1));
+		weaponsList.add(new WeaponCard("Candle Stick", 2, 1));
+		weaponsList.add(new WeaponCard("Revolver", 3, 1));
+		weaponsList.add(new WeaponCard("Wrench", 4, 1));
+		weaponsList.add(new WeaponCard("Knife", 5, 1));
+		weaponsList.add(new WeaponCard("Rope", 6, 1));
+		Collections.shuffle(weaponsList);
+		return weaponsList;
+	}
+	
+	private ArrayList<Card> createAndFillRoomCardDeck(){
+		ArrayList<Card> roomList = new ArrayList<Card>();
+		roomList.add(new RoomCard("Conservatory", 1, 3));
+		roomList.add(new RoomCard("Billiard Room", 2, 3));
+		roomList.add(new RoomCard("Study Room", 3, 3));
+		roomList.add(new RoomCard("Hall", 4, 3));
+		roomList.add(new RoomCard("Lounge", 5, 3));
+		roomList.add(new RoomCard("Dining Room", 6, 3));
+		roomList.add(new RoomCard("Kitchen", 7, 3));
+		roomList.add(new RoomCard("Ballroom", 8, 3));
+		roomList.add(new RoomCard("Library", 9, 3));
+		Collections.shuffle(roomList);
+		return roomList;	
+	}
+	
+	private ArrayList<Card> createAndFillSuspectCardDeck(){
+		ArrayList<Card> suspectList = new ArrayList<Card>();
+		suspectList.add(new SuspectCard("Colonel Mustard", 1, 2));
+		suspectList.add(new SuspectCard("Miss Scarlet", 2, 2));
+		suspectList.add(new SuspectCard("Professor Plum", 3, 2));
+		suspectList.add(new SuspectCard("Mr. Green", 4, 2));
+		suspectList.add(new SuspectCard("Mrs. White", 5, 2));
+		suspectList.add(new SuspectCard("Mrs. Peacock", 6, 2));
+		Collections.shuffle(suspectList);
+		return suspectList;
 	}
 	
 } //end class
