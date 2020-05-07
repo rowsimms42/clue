@@ -11,7 +11,7 @@ public class GameState {
 	private int numberOfPlayers;
 	private HashMap<Long, Player> playerMap;
 	
-	private ArrayList<Card> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
+	//private ArrayList<Card> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
 	
 	public GameState(){
 		
@@ -40,7 +40,9 @@ public class GameState {
 			availableCharactersArray[i] = true;
 		}
 		
+		
 		playerMap = new HashMap<Long, Player>();
+		/*
 
 		//TODO initialize more variables as needed
 		
@@ -94,7 +96,7 @@ public class GameState {
 		int	Rrand = random.nextInt(roomCardDeck.size());
 		envelopeDeck.add(roomCardDeck.get(Rrand));
 		roomCardDeck.remove(Rrand); 
-
+*/
 
 	}
 

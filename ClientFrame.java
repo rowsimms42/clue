@@ -23,6 +23,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 
 public class ClientFrame extends JFrame {
 
@@ -36,6 +38,12 @@ public class ClientFrame extends JFrame {
 	int rows = 24;
 	int coloums = 25;
 	String value;
+	//gameboard
+	final ImageIcon gameboard;
+
+	//**miss scarlett's starting location for now as a test case
+    int xe = 320;
+    int ye = 544;
 
 	/**
 	 * Create the frame.
@@ -110,10 +118,12 @@ public class ClientFrame extends JFrame {
 			    }
 			}
 		});
-
-		lblNewLabel.setIcon(new ImageIcon("resources\\board.jpg"));
+		gameboard = new ImageIcon("resources\\board.jpg");
+		int w = gameboard.getIconWidth();
+		int h = gameboard.getIconHeight();
+		setPreferredSize(new Dimension(w, h)); 
+	    BoardPanel.add(lblNewLabel);
 		lblNewLabel.setBounds(6, 6, 569, 523);
-		BoardPanel.add(lblNewLabel);
 		
 		JButton btnNewButton = new JButton("Suggest");
 		btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -141,6 +151,22 @@ public class ClientFrame extends JFrame {
 		btnRollDice.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnRollDice.setBounds(579, 306, 99, 30);
 		BoardPanel.add(btnRollDice);
+
+		JButton up = new JButton("up");
+		up.setBounds(594, 88, 74, 21);
+		BoardPanel.add(up);
+		
+		JButton down = new JButton("down");
+		down.setBounds(594, 129, 74, 21);
+		BoardPanel.add(down);
+		
+		JButton right = new JButton("right");
+		right.setBounds(594, 167, 72, 21);
+		BoardPanel.add(right);
+		
+		JButton left = new JButton("left");
+		left.setBounds(596, 206, 72, 21);
+		BoardPanel.add(left);
 		
 		log_text_area = new JTextArea(10,60);
 		log_text_area.setEditable(false);
@@ -224,6 +250,65 @@ public class ClientFrame extends JFrame {
 				addToNotebook(textAreaGameNote.getText());
 			}
 		}); //end button action listener
+
+		//** action listeners for buttons
+				
+		down.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ye+=20;
+				repaint();
+				
+			}
+		});
+		
+		up.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ye-=20;
+				/*
+				if (moveAmount >= diceRollAmount)
+				{
+					print to console log no more moves
+					return;
+				}
+				
+				
+				tempI = i;
+				tempI--;
+				send tempI to server;
+				message = received message;
+				
+				if message.getData() == false
+				{
+					print to console (cannot move there)
+				}
+				else
+				{
+					send to server(confirm location change)
+					i = tempI;
+					ye-=20;
+					repaint();
+					moveCount++;
+				}
+				*/
+				repaint();
+			}
+		});
+		
+		right.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				xe+=21;
+				repaint();
+				
+			}
+		});
+		
+		left.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				xe-=21;
+				repaint();
+			}
+		});
+	    
 	
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -254,14 +339,34 @@ public class ClientFrame extends JFrame {
 			textAreaGameNote.setText("");
 		}
 	} 
+
+	//@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		g.drawImage(gameboard.getImage(), 15, 67, null);
+		Rectangle bounds = getBounds(xe, ye);
+		g.setColor(Color.red);
+		g.fillRect((int)bounds.getX(), (int)bounds.getY(), (int)bounds.getHeight(), (int)bounds.getWidth());
+ 	}
+	
+ 	private Rectangle getBounds(int x, int y)
+ 	{
+	 	//will have to mod equation
+	 	x=x+20;
+	 	y=y+20;
+	 	return new Rectangle(x,y,20,20);
+ 	}
+ 
+
+
 	public Boolean determineBounds(int x, int y)
 	{
-	if (x>=23 && y>=13 && x<=536 && y<=511)
+		if (x>=23 && y>=13 && x<=536 && y<=511)
 	
-		return true;
+			return true;
 	
-	else
-		return false;
+		else
+			return false;
 	}
 	
 		//*client manager can update console log as well
