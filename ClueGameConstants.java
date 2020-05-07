@@ -10,21 +10,21 @@ public final class ClueGameConstants {
 		
 		public static final int REQUEST_AVAILABLE_CHARACTERS = 11;
 
-		public static final int AVAILABLE_CHARACTERS = 12;
+		public static final int REPLY_FROM_SERVER_AVAILABLE_CHARACTERS = 12;
 		
 		public static final int CONFIRM_INDEX_AVAILABLE = 13;
 	
-		public static final int MARK_CHARACTER_AS_TAKEN = 14;
+		public static final int REQUEST_MARK_CHARACTER_AS_TAKEN = 14;
 	
 		public static final int REQUEST_INDEED_CHARACTER_AVAILABLE = 15;
 	
-		public static final int IS_SELECTED_CHARACTER_AVAILABLE = 16;
+		public static final int REQUEST_IS_SELECTED_CHARACTER_AVAILABLE = 16;
 
 		public static final int REPLY_FROM_SERVER_IS_CHARACTER_AVAILABLE = 17;
 
 		public static final int REPLY_FROM_SERVER_IS_CHARACTER_INDEED_AVAILABLE = 18;
 
-		public static final int CONFIRM_CHARACTER_SELECTED = 19;
+		public static final int REPLY_FROM_SERVER_CONFIRM_CHARACTER_SELECTED = 19;
 
 		public static final int REQUEST_PLAYER_ID = 20;
 
@@ -38,9 +38,9 @@ public final class ClueGameConstants {
 
 		public static final int EMPTY_TILE = 25;
 
-		public static final int GET_DICE_ROLL = 26;
+		public static final int REQUEST_DICE_ROLL = 26;
 
-		public static final int DICE_ROLL_FROM_SERVER = 27;
+		public static final int REPLY_FROM_SERVER_DICE_ROLL= 27;
 
 		
 		public static final int UNSELECTABLE_TILE = -1;
