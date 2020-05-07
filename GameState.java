@@ -11,12 +11,9 @@ public class GameState {
 	private int numberOfPlayers;
 	private HashMap<Long, Player> playerMap;
 	
-<<<<<<< HEAD
-	//private ArrayList<Card> weaponCardDeck, suspectCardDeck, roomCardDeck, envelopeDeck; 
-=======
+
 	private ArrayList<Card> weaponCardDeck, suspectCardDeck, 
 							roomCardDeck, envelopeDeck, combinedDeck;
->>>>>>> df0bf0f0e55157777d2c19218741369c60156a07
 	
 	public GameState(){
 		
@@ -45,11 +42,8 @@ public class GameState {
 			availableCharactersArray[i] = true;
 		}
 		
-		
 		playerMap = new HashMap<Long, Player>();
-		/*
-
-<<<<<<< HEAD
+		
 		//TODO initialize more variables as needed
 		
 		weaponCardDeck = new ArrayList<Card>();
@@ -102,12 +96,11 @@ public class GameState {
 		int	Rrand = random.nextInt(roomCardDeck.size());
 		envelopeDeck.add(roomCardDeck.get(Rrand));
 		roomCardDeck.remove(Rrand); 
-*/
-=======
+
+
 		weaponCardDeck  = createAndFillWeaponCardDeck();
 		roomCardDeck    = createAndFillRoomCardDeck();
 		suspectCardDeck = createAndFillSuspectCardDeck();
->>>>>>> df0bf0f0e55157777d2c19218741369c60156a07
 
 	}
 
