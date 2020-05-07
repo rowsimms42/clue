@@ -339,7 +339,6 @@ public class ClientFrame extends JFrame {
 			textAreaGameNote.setText("");
 		}
 	} 
-<<<<<<< HEAD
 
 	//@Override
 	public void paint(Graphics g) {
@@ -359,20 +358,9 @@ public class ClientFrame extends JFrame {
  	}
  
 
-
-	public Boolean determineBounds(int x, int y)
-	{
-		if (x>=23 && y>=13 && x<=536 && y<=511)
-	
-			return true;
-	
-		else
-			return false;
-=======
 	public Boolean determineBounds(int x, int y){
 		
 		return (x>=23 && y>=13 && x<=536 && y<=511);
->>>>>>> df0bf0f0e55157777d2c19218741369c60156a07
 	}
 	
 		//*client manager can update console log as well
