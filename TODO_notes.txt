@@ -3,6 +3,18 @@ Test commits
 just testing this to make sure i have this working right fell free to ignore this
 
 
+player class:
+starting location for each player
+
+number of moves on client side
+
+server sends back array of bool values indicated the funcitonality of each button 
+    location of grid coordinates store the following information
+        map, with strings as key, bool as value. 
+
+gui sends next location to server
+    in response, server sends back 4 element map, with left, right, up, down strings mapped to boolean values
+
 
 
 TODO: 
