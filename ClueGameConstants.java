@@ -7,6 +7,12 @@ public final class ClueGameConstants {
 		public static final int MAX_CHARACTERS = 6;
 		
 		public static final int MIN_CHARACTERS = 3;
+
+		public static final int BOARD_ROWS = 25;
+
+		public static final int BOARD_COLS = 24;
+
+
 		
 		public static final int REQUEST_AVAILABLE_CHARACTERS = 11;
 
@@ -45,6 +51,10 @@ public final class ClueGameConstants {
 		public static final int REQUEST_PLAYERS_CHARACTER = 28;
 		
 		public static final int REPLY_FROM_SERVER_PLAYERS_CHARACTER = 29;
+
+		public static final int GET_MOVEMENT_BUTTON_VALUES = 30;
+
+		public static final int MOVEMENT_BUTTON_VALUES = 31;
 
 		
 		public static final int UNSELECTABLE_TILE = -1;
