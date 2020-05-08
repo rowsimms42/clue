@@ -39,9 +39,8 @@ public class ClientFrame extends JFrame {
 	int rows = 24;
 	int coloums = 25;
 	String value;
-	final ImageIcon gameboard;
+	private final BoardPanel gameBoardPanel;
 
-	//**miss scarlett's starting location for now as a test case
     int xe = 0;
     int ye = 0;
 
@@ -50,8 +49,9 @@ public class ClientFrame extends JFrame {
 	 */
 	public ClientFrame(Client player) {
 		client = player;
-		//setServerConnection(serverConnection);
 		
+		//setServerConnection(serverConnection);
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 950, 800);
 		contentPane = new JPanel();
@@ -62,111 +62,6 @@ public class ClientFrame extends JFrame {
 		
 		noteStringBuilder = new StringBuilder();
 		logStringBuilder  = new StringBuilder();
-		
-		JPanel BoardPanel = new JPanel();
-		BoardPanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		BoardPanel.setBackground(Color.PINK);
-		BoardPanel.setBounds(6, 37, 688, 535);
-		contentPane.add(BoardPanel);
-		BoardPanel.setLayout(null);
-		
-		//***** determine x and y coordinates *****//
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int p_x = e.getX();
-			    int p_y = e.getY();
-			    
-			    boolean valid = determineBounds(p_x,p_y);
-			    
-			    if (valid == false)
-			    {
-			    
-			    	log_text_area.setText("Invalid tile.");
-			    }
-			    else
-			    {		    
-			    	int pixal_with;
-			    	pixal_with = 20;
-			    	int x = e.getX() - 30; // off set by 30
-			    	int y = e.getY() - 13; // off set by 13
-			    	int x_mod = x%20;
-			    	int y_mod = y%20;
-			    	int x_coord = x/pixal_with;
-			    	int y_coord = y/pixal_with;
-			    	int gx = x_coord;
-			    	int gy = y_coord;
-	        	
-			    	if(x_mod >= 2 || x_mod <= 17  || y_mod >= 2 || y_mod <= 17)
-			    	{
-			    		if(x_coord <= 23 || y_coord <= 24)
-			    		{
-			    			gx = x_coord;
-			    			gy = y_coord;
-			    		}
-					}
-
-					value = RoomClick.checker(gx, gy);
-					System.out.println(value);
-
-			    	String xc=String.valueOf(gx); 
-			    	String yc=String.valueOf(gy);  
-			    	String s = (", ");
-			    	String coordinates = xc.concat(s).concat(yc);			    
-			    	log_text_area.setText(coordinates);
-			    }
-			}
-		});
-		gameboard = new ImageIcon("resources\\board.jpg");
-		int w = gameboard.getIconWidth();
-		int h = gameboard.getIconHeight();
-		setPreferredSize(new Dimension(w, h)); 
-	    BoardPanel.add(lblNewLabel);
-		lblNewLabel.setBounds(6, 6, 569, 523);
-		
-		JButton btnNewButton = new JButton("Suggest");
-		btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnNewButton.setBounds(579, 349, 99, 30);
-		BoardPanel.add(btnNewButton);
-		
-		JButton btnAccuse = new JButton("Accuse");
-		btnAccuse.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnAccuse.setBounds(579, 389, 99, 30);
-		BoardPanel.add(btnAccuse);
-		
-		JButton btnShortcut = new JButton("Shortcut");
-		btnShortcut.setForeground(Color.BLACK);
-		btnShortcut.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnShortcut.setBounds(579, 431, 99, 30);
-		BoardPanel.add(btnShortcut);
-		
-		JButton btnEndTurn = new JButton("End Turn");
-		btnEndTurn.setForeground(Color.RED);
-		btnEndTurn.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnEndTurn.setBounds(579, 471, 99, 30);
-		BoardPanel.add(btnEndTurn);
-		
-		JButton btnRollDice = new JButton("Roll Dice");
-		btnRollDice.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnRollDice.setBounds(579, 306, 99, 30);
-		BoardPanel.add(btnRollDice);
-
-		JButton up = new JButton("up");
-		up.setBounds(594, 88, 74, 21);
-		BoardPanel.add(up);
-		
-		JButton down = new JButton("down");
-		down.setBounds(594, 129, 74, 21);
-		BoardPanel.add(down);
-		
-		JButton right = new JButton("right");
-		right.setBounds(594, 167, 72, 21);
-		BoardPanel.add(right);
-		
-		JButton left = new JButton("left");
-		left.setBounds(596, 206, 72, 21);
-		BoardPanel.add(left);
 		
 		log_text_area = new JTextArea(10,60);
 		log_text_area.setEditable(false);
@@ -222,14 +117,6 @@ public class ClientFrame extends JFrame {
 		menuBar.setBounds(6, 6, 132, 22);
 		contentPane.add(menuBar);
 		
-		//FOR TESTING
-		//log_text_area.setText(Integer.toString(serverConnection.getPortNumber()));
-		
-		JButton btnShowCards = new JButton("Show Cards");
-		btnShowCards.setForeground(new Color(0, 0, 255));
-		btnShowCards.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnShowCards.setBounds(774, 357, 117, 29);
-		contentPane.add(btnShowCards);
 		
 		//request and receive the character the player has chosen
 		try {
@@ -241,7 +128,7 @@ public class ClientFrame extends JFrame {
 		} catch (ClassNotFoundException | IOException e1) {
 			e1.printStackTrace();
 		}
-				
+		
 		//display the character properties in the console log
 		assignedCharacter = (Characters) messageRecieved.getData();
 		addToLogConsole(assignedCharacter.getName());
@@ -249,6 +136,10 @@ public class ClientFrame extends JFrame {
 		ye = assignedCharacter.getyStarting();
 		String startPointsStr = "Starting points: " + xe + " " + ye;
 		addToLogConsole(startPointsStr);
+
+		gameBoardPanel = new BoardPanel(player, this, assignedCharacter);
+		contentPane.add(gameBoardPanel);
+		gameBoardPanel.setLayout(null);
 		
 		//display the character name in the console log
 		//addToLogConsole(String.valueOf(messageRecieved.getData()));
@@ -259,73 +150,13 @@ public class ClientFrame extends JFrame {
 			}
 		}); //end button action listener
 
-		//** action listeners for buttons
-				
-		down.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ye+=20;
-				repaint();
-				
-			}
-		});
-		
-		up.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ye-=20;
-				/*
-				if (moveAmount >= diceRollAmount)
-				{
-					print to console log no more moves
-					return;
-				}
-				
-				
-				tempI = i;
-				tempI--;
-				send tempI to server;
-				message = received message;
-				
-				if message.getData() == false
-				{
-					print to console (cannot move there)
-				}
-				else
-				{
-					send to server(confirm location change)
-					i = tempI;
-					ye-=20;
-					repaint();
-					moveCount++;
-				}
-				*/
-				repaint();
-			}
-		});
-		
-		right.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				xe+=21;
-				repaint();
-				
-			}
-		});
-		
-		left.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				xe-=21;
-				repaint();
-			}
-		});
-	    
-	
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		//setVisible(true); 
-		
 	} 
 
-	private void addToLogConsole(String input){
+	protected void addToLogConsole(String input){
 		logStringBuilder.append(input + "\n");
 		log_text_area.setText(logStringBuilder.toString());
 	}
@@ -347,29 +178,5 @@ public class ClientFrame extends JFrame {
 			textAreaGameNote.setText("");
 		}
 	} 
-
-	//@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		g.drawImage(gameboard.getImage(), 15, 67, null);
-		Rectangle bounds = getBounds(xe, ye);
-		g.setColor(new Color(assignedCharacter.getColor()));
-		g.fillRect((int)bounds.getX(), (int)bounds.getY(), (int)bounds.getHeight(), (int)bounds.getWidth());
- 	}
-	
- 	private Rectangle getBounds(int x, int y)
- 	{
-	 	//will have to mod equation
-	 	x=x+20;
-	 	y=y+20;
-	 	return new Rectangle(x,y,20,20);
- 	}
- 
-
-	public Boolean determineBounds(int x, int y){
-		
-		return (x>=23 && y>=13 && x<=536 && y<=511);
-	}
-	
 		//*client manager can update console log as well
 } //end class

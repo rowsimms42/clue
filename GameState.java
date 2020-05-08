@@ -149,12 +149,12 @@ public class GameState {
 		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS;i++) {
 			String charName = ClueGameConstants.CHARACTER_NAMES_ARRAY[i];
 			switch(i) {
-				case 0 : characterMap.put(charName, new Characters(charName, 261123, 111,222)); break;
-				case 1 : characterMap.put(charName, new Characters(charName, 10290172,333,444)); break;
-				case 2 : characterMap.put(charName, new Characters(charName, 16777212,555,600)); break;
-				case 3 : characterMap.put(charName, new Characters(charName, 16576515,245,345)); break;
-				case 4 : characterMap.put(charName, new Characters(charName, 16515918,400,500)); break;
-				case 5 : characterMap.put(charName, new Characters(charName, 234748, 341,410)); break;
+				case 0 : characterMap.put(charName, new Characters(charName, 261123, 9, 24)); break; //green
+				case 1 : characterMap.put(charName, new Characters(charName, 10290172, 0, 5)); break; //plum
+				case 2 : characterMap.put(charName, new Characters(charName, 16777212, 14, 24)); break; //white
+				case 3 : characterMap.put(charName, new Characters(charName, 16576515, 23, 7)); break; //mustard
+				case 4 : characterMap.put(charName, new Characters(charName, 16515918, 16, 0)); break; //scarlett
+				case 5 : characterMap.put(charName, new Characters(charName, 234748, 0, 18)); break; //peacock
 				default: //nothing
 					
 			}
