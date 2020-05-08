@@ -1,3 +1,4 @@
+
 public final class ClueGameConstants {
 	
 		public static final int PORT = 6060;
@@ -7,11 +8,11 @@ public final class ClueGameConstants {
 		public static final int MAX_CHARACTERS = 6;
 		
 		public static final int MIN_CHARACTERS = 3;
-
+		
 		public static final int BOARD_ROWS = 25;
-
+		
 		public static final int BOARD_COLS = 24;
-
+		
 		public static final int REQUEST_AVAILABLE_CHARACTERS = 11;
 
 		public static final int REPLY_FROM_SERVER_AVAILABLE_CHARACTERS = 12;
@@ -49,10 +50,10 @@ public final class ClueGameConstants {
 		public static final int REQUEST_PLAYERS_CHARACTER = 28;
 		
 		public static final int REPLY_FROM_SERVER_PLAYERS_CHARACTER = 29;
-
-		public static final int GET_MOVEMENT_BUTTON_VALUES = 30;
-
-		public static final int MOVEMENT_BUTTON_VALUES = 31;
+		
+		public static final int REQUEST_MOVEMENT_BUTTON_VALUES = 30;
+		
+		public static final int REPLY_FROM_SERVER_MOVEMENT_BUTTON_VALUES = 31;
 
 		public static final int UNSELECTABLE_TILE = -1;
 
@@ -60,29 +61,33 @@ public final class ClueGameConstants {
 										"Miss Scarlett", "Mrs. Peacock"};
 
 		public static enum ROOMS{
-			Conservatory(new Rect(0,5,20,23), new Rect(0,4,19,19)),
-			Billard(new Rect(0, 5, 12, 16), new Rect(0, 5, 12, 16)),
-			Library(new Rect(1,5,6,10), new Rect(0,6,7,9)),
-			Study(new Rect(0, 5, 0, 3), new Rect(0, 6, 0, 0)),
-			Ballroom(new Rect(8, 15, 17, 22), new Rect(10,13,23,23)),
-			Hall(new Rect(9, 14, 0, 6), new Rect(9, 14, 0, 6)),
-			StairCase(new Rect(10,13, 8, 14), new Rect(10,13, 8, 14)),
-			Lounge(new Rect(17, 23, 1, 5), new Rect(18,23,0,0)),
-			Kitchen(new Rect(18, 22, 18, 23), new Rect(23, 23, 19, 23)),
-			DinningHall(new Rect(16,23,9,14), new Rect(19,23,15,15));
+			Conservatory(new Rect(0,5,20,23), new Rect(1,4,19,23), 0),
+			Billard(new Rect(0, 5, 12, 16), new Rect(0, 5, 12, 16), 1),
+			Library(new Rect(1,5,6,10), new Rect(0,6,7,9), 2),
+			Study(new Rect(0, 5, 0, 3), new Rect(0, 6, 1, 3), 3),
+			Ballroom(new Rect(8, 15, 17, 22), new Rect(10,13,17,23), 4),
+			Hall(new Rect(9, 14, 1, 6), new Rect(9, 14, 1, 6), 5),
+			StairCase(new Rect(9,13, 8, 11), new Rect(9,13, 8, 11), 6),
+			Lounge(new Rect(18, 23, 0, 5), new Rect(17,23,1,5), 7),
+			Kitchen(new Rect(18, 22, 18, 23), new Rect(18, 23, 18, 23), 8),
+			DinningHall(new Rect(16,23,9,14), new Rect(19,23,9,15), 9),
+			Logo(new Rect(9,13, 12, 14), new Rect(9,13,12,4), 10);
 
 			private Rect rect1, rect2;
+			private int id;
 
-			ROOMS(Rect rect1, Rect rect2){
+			ROOMS(Rect rect1, Rect rect2, int id){
 				this.rect1 = rect1;
 				this.rect2 = rect2;
+				this.id = id;
 			}
 
 			public Boolean isInRoom(int x, int y){
 				return rect1.isWithIn(x, y) || rect2.isWithIn(x,y);
 			}
+			public int getID() {return id;}
 		};
-
+		
 		public static enum DOORS{
 			STUDY_DOOR1(3,6,0, 3),
 			LIBRARY_DOOR1(8,6,2,2),
@@ -115,4 +120,4 @@ public final class ClueGameConstants {
 			public int getRoomNumber() {return roomNumber;}
 		};
 		
-} //end class
+	} //end class
