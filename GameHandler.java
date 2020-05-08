@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public class GameHandler {
 
     GameState gameState;
@@ -88,7 +90,14 @@ public class GameHandler {
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYERS_CHARACTER, 
             								(Characters)tempCharacter);
             	return returnMessage;
-            	
+            
+            /**
+             * Needs to be tested with GUI implementation. Test of gamestate function in main of GameState
+             */
+            case ClueGameConstants.GET_MOVEMENT_BUTTON_VALUES:
+                int[] locCoords = (int[]) msgObj.getData();
+                HashMap<String, Boolean> buttonValues = gameState.getNextMoves(locCoords);
+                returnMessage = new Message(ClueGameConstants.MOVEMENT_BUTTON_VALUES, buttonValues);
             default:
                 return msgObj; //returns same object sent
         }
