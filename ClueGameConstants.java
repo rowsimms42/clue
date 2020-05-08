@@ -12,8 +12,6 @@ public final class ClueGameConstants {
 
 		public static final int BOARD_COLS = 24;
 
-
-		
 		public static final int REQUEST_AVAILABLE_CHARACTERS = 11;
 
 		public static final int REPLY_FROM_SERVER_AVAILABLE_CHARACTERS = 12;
@@ -56,9 +54,7 @@ public final class ClueGameConstants {
 
 		public static final int MOVEMENT_BUTTON_VALUES = 31;
 
-		
 		public static final int UNSELECTABLE_TILE = -1;
-
 
 		public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
 										"Miss Scarlett", "Mrs. Peacock"};
@@ -86,5 +82,37 @@ public final class ClueGameConstants {
 				return rect1.isWithIn(x, y) || rect2.isWithIn(x,y);
 			}
 		};
+
+		public static enum DOORS{
+			STUDY_DOOR1(3,6,0, 3),
+			LIBRARY_DOOR1(8,6,2,2),
+			LIBRARY_DOOR2(10,3,0,2),
+			BILLARD_DOOR1(12,1,1,10),
+			BILLARD_DOOR2(15,5,2,10),
+			CONSERVATORY_DOOR1(19,4,2,6),
+			HALL_DOOR1(4,9,3,5),
+			HALL_DOOR2(6,11,0,5),
+			HALL_DOOR3(6,12,0,5),
+			BALLROOM_DOOR1(19,8,3,4),
+			BALLROOM_DOOR2(17,9,1,4),
+			BALLROOM_DOOR3(17,14,1,4),
+			BALLROOM_DOOR4(19,15,2,4),
+			LOUNGE_DOOR1(5,17,0,7),
+			DINNING_DOOR1(9,17,1,9),
+			DINNING_DOOR2(12,16,3,9),
+			KITCHEN_DOOR1(18,19,1,8);
 		
-	} //end class
+			private int row, col, direction, roomNumber;
+			DOORS(int row, int col, int direction, int roomNumber){
+				this.row = row;
+				this.col = col;
+				this.direction = direction;
+				this.roomNumber = roomNumber;
+			}
+			public int getRow() {return row;}
+			public int getCol() {return col;}
+			public int getDirection() {return direction;}
+			public int getRoomNumber() {return roomNumber;}
+		};
+		
+} //end class
