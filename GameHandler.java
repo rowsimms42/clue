@@ -94,10 +94,10 @@ public class GameHandler {
             /**
              * Needs to be tested with GUI implementation. Test of gamestate function in main of GameState
              */
-            case ClueGameConstants.GET_MOVEMENT_BUTTON_VALUES:
+            case ClueGameConstants.REQUEST_MOVEMENT_BUTTON_VALUES:
                 int[] locCoords = (int[]) msgObj.getData();
                 HashMap<String, Boolean> buttonValues = gameState.getNextMoves(locCoords);
-                returnMessage = new Message(ClueGameConstants.MOVEMENT_BUTTON_VALUES, buttonValues);
+                returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_MOVEMENT_BUTTON_VALUES, buttonValues);
             default:
                 return msgObj; //returns same object sent
         }
