@@ -96,7 +96,7 @@ public class GameHandler {
              */
             case ClueGameConstants.REQUEST_MOVEMENT_BUTTON_VALUES:
                 int[] locCoords = (int[]) msgObj.getData();
-                HashMap<String, Boolean> buttonValues = gameState.getNextMoves(locCoords);
+                HashMap<String, Boolean> buttonValues = gameState.getAvailableMoves(locCoords);
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_MOVEMENT_BUTTON_VALUES, buttonValues);
             default:
                 return msgObj; //returns same object sent

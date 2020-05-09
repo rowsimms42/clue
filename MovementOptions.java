@@ -1,3 +1,6 @@
+import java.util.HashMap;
+
+
 public class MovementOptions{
 
 
@@ -154,7 +157,7 @@ public class MovementOptions{
 		return returnMap;
     }
     
-    public HashMap<String, Boolean> getNextMoves(int[] location, int[][] boardcoords){
+    public HashMap<String, Boolean> getNextMoves(int[] location){
 		
 		HashMap<String, Boolean> availableMoves = null;
 		
@@ -209,7 +212,7 @@ public class MovementOptions{
 				availableMoves = setMovesLR();
 				break;
 			default:
-				availableMoves = setMovesNone();
+				//availableMoves = setMovesNone();
 				System.out.println("Error in getNextMoves switch statement");
 				break;
 		}
