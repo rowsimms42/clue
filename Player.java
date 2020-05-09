@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Player implements Serializable{
 
     private Characters playerCharacter;
-    private int[] locationArray = {getCurrentXLocation(),getCurrentYLocation()};
+    private int[] locationArray = {0,0};
     private long Id;
     private ArrayList<Card> playerCardDeck;
     private int currentXLocation, currentYLocation;
@@ -48,11 +48,11 @@ public class Player implements Serializable{
     }
 
     public void setCurrentXLocation(int value){
-        currentXLocation = value;
+        locationArray[0] = currentXLocation = value;
     }
 
     public void setCurrentYLocation(int value){
-        currentYLocation = value;
+        locationArray[1] = currentYLocation = value;
     }
 
     public int getCurrentXLocation(){
