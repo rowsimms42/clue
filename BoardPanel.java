@@ -26,7 +26,7 @@ public class BoardPanel extends JPanel {
     Message messageReceived;
     final int LEFT = 0,  RIGHT = 1, UP = 2, DOWN = 3;
     //HashMap<String, Boolean> buttonValues;
-    String buttonValues;
+    String btnValues;
     
     boolean[] boolMovements;
     JButton[] movementButtons;
@@ -140,6 +140,7 @@ public class BoardPanel extends JPanel {
         btnRollDice.setBounds(579, 306, 99, 30);
         this.add(btnRollDice);
 
+        /*
         try {
             requestBtns(currentXgrid,currentYgrid);
         } catch (ClassNotFoundException e1) {
@@ -149,14 +150,13 @@ public class BoardPanel extends JPanel {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
-
+*/
         movementButtons[DOWN].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 yC += 20;
                 currentYgrid++;
                 repaint();
-                
-                
+                /*
                 try {
                     requestBtns(currentXgrid, currentYgrid);
                 } catch (ClassNotFoundException e1) {
@@ -166,6 +166,7 @@ public class BoardPanel extends JPanel {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }   
+                */
 /*
                 boolMovements[UP] = false;
                 boolMovements[DOWN] = false;
@@ -186,6 +187,7 @@ public class BoardPanel extends JPanel {
             yC-=20;
             currentYgrid--;
                 repaint();
+                /*
                 try {
                     requestBtns(currentXgrid, currentYgrid);
                 } catch (ClassNotFoundException e1) {
@@ -196,6 +198,7 @@ public class BoardPanel extends JPanel {
                     e1.printStackTrace();
                 }   
                 enableOrdisableBtns(boolMovements);
+                */
         }
     });
     
@@ -205,6 +208,7 @@ public class BoardPanel extends JPanel {
             repaint();
             currentXgrid++;
                 repaint();
+                /*
                 try {
                     requestBtns(currentXgrid, currentYgrid);
                 } catch (ClassNotFoundException e1) {
@@ -216,6 +220,7 @@ public class BoardPanel extends JPanel {
                 }   
                 enableOrdisableBtns(boolMovements);
                 //movementButtons[RIGHT].setEnabled(false);
+                */
         }
     });
     
@@ -225,6 +230,7 @@ public class BoardPanel extends JPanel {
             repaint();
             currentXgrid--;
                 repaint();
+                /*
                 try {
                     requestBtns(currentXgrid, currentYgrid);
                 } catch (ClassNotFoundException e1) {
@@ -234,7 +240,8 @@ public class BoardPanel extends JPanel {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }   
-                enableOrdisableBtns(boolMovements);
+                */
+                //enableOrdisableBtns(boolMovements);
         }
     });
 }
@@ -261,6 +268,7 @@ private Boolean determineBounds(int x, int y)
     return (x>=23 && y>=13 && x<=536 && y<=511);
 }
 
+/*
 private void requestBtns(int x, int y) throws IOException, ClassNotFoundException
 {
     coords[0] = x;
@@ -275,10 +283,11 @@ private void requestBtns(int x, int y) throws IOException, ClassNotFoundExceptio
     // Receive message with available connections from the server
     messageReceived = client.getMessage();
     // Get available connections from the message
-    buttonValues =  (String) messageReceived.getData();
+    btnValues =  (String) messageReceived.getData();
     //System.out.println(Collections.singletonList(buttonValues));
-    System.out.println(buttonValues);
+    clientFrame.addToLogConsole(btnValues);
 
+*/
 
 	/*
     for( Map.Entry<String, Boolean> v : buttonValues.entrySet() ) {
@@ -286,11 +295,12 @@ private void requestBtns(int x, int y) throws IOException, ClassNotFoundExceptio
             System.out.println(v.getKey());
         }
 	 }
-	 */
+	 
     
 
     //final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
 }
+
 
 private void enableOrdisableBtns(boolean boolMovements[])
 {
@@ -299,12 +309,13 @@ private void enableOrdisableBtns(boolean boolMovements[])
     movementButtons[DOWN].setEnabled(boolMovements[DOWN]);
     movementButtons[LEFT].setEnabled(boolMovements[LEFT]);
     movementButtons[RIGHT].setEnabled(boolMovements[RIGHT]);
-    movementButtons[RIGHT].setEnabled(false);
+    movementButtons[RIGHT].setEnabled(boolMovements[RIGHT]);
 
 
                 
 
 }
+*/
 } // end class
 
 
