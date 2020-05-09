@@ -1,4 +1,7 @@
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
+
 
 public class GameHandler {
 
@@ -96,8 +99,35 @@ public class GameHandler {
              */
             case ClueGameConstants.REQUEST_MOVEMENT_BUTTON_VALUES:
                 int[] locCoords = (int[]) msgObj.getData();
+                System.out.println("coord1: " + locCoords[0]);
+                System.out.println("coord2: " + locCoords[1]);
                 HashMap<String, Boolean> buttonValues = gameState.getAvailableMoves(locCoords);
-                returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_MOVEMENT_BUTTON_VALUES, buttonValues);
+                StringBuilder sb = new StringBuilder();
+                for (String value : buttonValues.keySet()){
+                    boolean val = buttonValues.get(value);
+
+                    if (val == false)
+                    {
+                        int a = 0;
+                        sb.append(a);
+                    }
+                    else
+                    {
+                        int b = 1;
+                        sb.append(b);
+                    }
+                }
+
+                System.out.println(sb);
+                /*
+                if (buttonValues == null)
+                {
+                    System.out.println("button values was null");
+                }
+                */
+                System.out.println("in game handler...");
+                System.out.println(Collections.singletonList(buttonValues));
+                returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_MOVEMENT_BUTTON_VALUES, String.valueOf(sb));
             default:
                 return msgObj; //returns same object sent
         }

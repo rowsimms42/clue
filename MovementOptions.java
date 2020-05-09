@@ -1,3 +1,5 @@
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 
@@ -155,10 +157,21 @@ public class MovementOptions{
 		returnMap.put("up", true);
 		returnMap.put("down", true);
 		return returnMap;
+	}
+
+	private HashMap<String, Boolean> setMovesNone() {
+		HashMap <String, Boolean> returnMap = new HashMap<>();
+		returnMap.put("left", false);
+		returnMap.put("right", false);
+		returnMap.put("up", false);
+		returnMap.put("down", false);
+		return returnMap;
     }
+	
     
     public HashMap<String, Boolean> getNextMoves(int[] location){
-		
+		System.out.println("in get nextmoves...");
+		System.out.println(Arrays.toString(location));
 		HashMap<String, Boolean> availableMoves = null;
 		
 		if(location.length > 2){
@@ -167,7 +180,10 @@ public class MovementOptions{
 		}
 		int a = location[0];
 		int b = location [1];
-		int loc = boardcoords[a][b];
+		System.out.println("column: " + a );
+		System.out.println("row: " + b);
+		int loc = boardcoords[b][a];
+		System.out.println(loc);
 		switch (loc) {
 			case 1:
 				availableMoves = setMovesR();
@@ -212,10 +228,13 @@ public class MovementOptions{
 				availableMoves = setMovesLR();
 				break;
 			default:
-				//availableMoves = setMovesNone();
+				availableMoves = setMovesNone();
 				System.out.println("Error in getNextMoves switch statement");
 				break;
 		}
+		//System.out.println(Collections.singletonList(availableMoves));
+
+		
         return availableMoves;
     }
 

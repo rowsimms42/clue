@@ -105,7 +105,14 @@ public class GameState {
 	}
 
 	public HashMap<String, Boolean> getAvailableMoves(int[] locations){
+		//return movementOptions.getNextMoves(locations);
+		//System.out.println("in gamestate...");
+		//System.out.println(Arrays.toString(locations));
+		//HashMap<String, Boolean> btnValues = movementOptions.getNextMoves(locations);
+		//System.out.println(Collections.singletonList(btnValues));
+		//return btnValues;
 		return movementOptions.getNextMoves(locations);
+
 	}
 	
 	private ArrayList<Card> createAndFillWeaponCardDeck(){
