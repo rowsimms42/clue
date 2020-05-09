@@ -33,12 +33,10 @@ public class GameState {
 
 	public void initializeVariables(){
 
-		//initBoardCoords();
 		movementOptions = new MovementOptions();
-		boardcoords = initBoardCoords();
+		boardcoords = movementOptions.initBoardCoords();
 	
 		availableCharacters = 0;
-
 		numberOfPlayers = 0;
 		
 		availableCharactersArray = new Boolean[ ClueGameConstants.MAX_CHARACTERS ];
@@ -107,8 +105,8 @@ public class GameState {
 		return dice_1 + dice_2;
 	}
 
-	public HashMap<String, Boolean> getAvailableMoves(int[] locations){
-		return movementOptions.getNextMoves(locations);
+	public HashMap<String, Boolean> getAvailableMoves(int[] locations, int[][] boardCoords){
+		return movementOptions.getNextMoves(locations, boardCoords);
 	}
 	
 	private ArrayList<Card> createAndFillWeaponCardDeck(){
