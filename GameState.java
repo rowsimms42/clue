@@ -11,7 +11,6 @@ public class GameState {
 	private int numberOfPlayers;
 	private HashMap<Long, Player> playerMap;
 	private HashMap<String, Characters> characterMap;
-	private int[][] boardcoords; //= new int[ClueGameConstants.BOARD_ROWS][ClueGameConstants.BOARD_COLS];
 	private MovementOptions movementOptions;
 	
 	private ArrayList<Card> weaponCardDeck, suspectCardDeck, 
@@ -34,7 +33,7 @@ public class GameState {
 	public void initializeVariables(){
 
 		movementOptions = new MovementOptions();
-		boardcoords = movementOptions.initBoardCoords();
+		movementOptions.initBoardCoords();
 	
 		availableCharacters = 0;
 		numberOfPlayers = 0;
@@ -105,8 +104,8 @@ public class GameState {
 		return dice_1 + dice_2;
 	}
 
-	public HashMap<String, Boolean> getAvailableMoves(int[] locations, int[][] boardCoords){
-		return movementOptions.getNextMoves(locations, boardCoords);
+	public HashMap<String, Boolean> getAvailableMoves(int[] locations){
+		return movementOptions.getNextMoves(locations);
 	}
 	
 	private ArrayList<Card> createAndFillWeaponCardDeck(){

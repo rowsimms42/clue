@@ -2,9 +2,11 @@ public class MovementOptions{
 
 
     private int xLoc, yLoc;
+    private int[][] boardcoords;
+
 
     public MovementOptions(){
-
+        boardcoords = new int[ClueGameConstants.BOARD_ROWS][ClueGameConstants.BOARD_COLS];
     }
 
     public void setXLoc(int x){xLoc = x;}
@@ -14,6 +16,8 @@ public class MovementOptions{
     public void setYLoc(int y){yLoc = y;}
 
     public int getYLoc(){return yLoc;}
+
+    public int[][] getBoardCoords(){return boardcoords;}
 
     private HashMap<String, Boolean> setMovesU() {
 		HashMap <String, Boolean> returnMap = new HashMap<>();
@@ -150,7 +154,7 @@ public class MovementOptions{
 		return returnMap;
     }
     
-    public HashMap<String, Boolean> getNextMoves(int[] location){
+    public HashMap<String, Boolean> getNextMoves(int[] location, int[][] boardcoords){
 		
 		HashMap<String, Boolean> availableMoves = null;
 		
@@ -212,8 +216,8 @@ public class MovementOptions{
         return availableMoves;
     }
 
-    public int[][] initBoardCoords(){
-        int[][] boardcoords = new int[ClueGameConstants.BOARD_ROWS][ClueGameConstants.BOARD_COLS];
+    public void initBoardCoords(){
+        //int[][] boardcoords = new int[ClueGameConstants.BOARD_ROWS][ClueGameConstants.BOARD_COLS];
 		//Right only
 		boardcoords[5][0] = 1;
 		boardcoords[11][1] = 1;
@@ -457,8 +461,6 @@ public class MovementOptions{
 
 		boardcoords[23][8] = 14;
         boardcoords[23][15] = 14;
-        
-        return boardcoords;
     }
 
 }//end class
