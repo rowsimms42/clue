@@ -39,6 +39,10 @@ public class Player implements Serializable{
         setCurrentXLocation(playerLocation[yLoc]);
     }
 
+    public int[] getLocationArray(){
+        return locationArray;
+    }
+
     public ArrayList<Card> getPlayerDeck(){
         return playerCardDeck;
     }
