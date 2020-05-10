@@ -8,7 +8,7 @@ public class Player implements Serializable{
     private int[] locationArray = {0,0};
     private long Id;
     private ArrayList<Card> playerCardDeck;
-    private int currentColumnLocation, currentRowLocation;
+    private int currentXLocation, currentYLocation;
     
     public Player(long Id){
         this.Id = Id;
@@ -47,11 +47,11 @@ public class Player implements Serializable{
     }
 
     public void setCurrentXLocation(int value){
-        locationArray[0] = currentColumnLocation = value;
+        locationArray[0] = currentXLocation = value;
     }
 
     public void setCurrentYLocation(int value){
-        locationArray[1] = currentRowLocation = value;
+        locationArray[1] = currentYLocation = value;
     }
 
     public int getCurrentXLocation(){
