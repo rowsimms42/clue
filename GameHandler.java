@@ -101,6 +101,8 @@ public class GameHandler {
                 int[] locCoords = (int[]) msgObj.getData();
                 System.out.println("coord1: " + locCoords[0]);
                 System.out.println("coord2: " + locCoords[1]);
+                //tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
+                //tempPlayer.setLocation(locCoords);
                 HashMap<String, Boolean> buttonValues = gameState.getAvailableMoves(locCoords);
                 StringBuilder sb = new StringBuilder();
                 for (String value : buttonValues.keySet()){
