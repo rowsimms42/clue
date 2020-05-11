@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 
 
@@ -266,9 +265,10 @@ public class MovementOptions{
 		
 		//left and down
 		boardcoords[1][8] = 6;
+		boardcoords[6][22] = 6;
 		boardcoords[23][9] = 6;
 		boardcoords[15][18] = 6;
-		boardcoords[6][22] = 6;
+		boardcoords[16][22] = 6;
 		
 		//right and up
 		boardcoords[6][6] = 7;
@@ -453,6 +453,9 @@ public class MovementOptions{
 		boardcoords[16][17] = 13;
 		boardcoords[16][18] = 13;
 
+		boardcoords[17][17] = 13;
+
+		boardcoords[15][8] = 13;
 		boardcoords[15][14] = 13;
 		boardcoords[15][15] = 13;
 
