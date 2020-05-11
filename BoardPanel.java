@@ -140,7 +140,7 @@ public class BoardPanel extends JPanel {
         btnRollDice.setBounds(579, 306, 99, 30);
         this.add(btnRollDice);
 
-        /*
+        
         try {
             requestBtns(currentXgrid,currentYgrid);
         } catch (ClassNotFoundException e1) {
@@ -150,7 +150,7 @@ public class BoardPanel extends JPanel {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
-*/
+
         movementButtons[DOWN].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 yC += 20;
@@ -268,7 +268,7 @@ private Boolean determineBounds(int x, int y)
     return (x>=23 && y>=13 && x<=536 && y<=511);
 }
 
-/*
+
 private void requestBtns(int x, int y) throws IOException, ClassNotFoundException
 {
     coords[0] = x;
@@ -286,8 +286,9 @@ private void requestBtns(int x, int y) throws IOException, ClassNotFoundExceptio
     btnValues =  (String) messageReceived.getData();
     //System.out.println(Collections.singletonList(buttonValues));
     clientFrame.addToLogConsole(btnValues);
+}
 
-*/
+
 
 	/*
     for( Map.Entry<String, Boolean> v : buttonValues.entrySet() ) {

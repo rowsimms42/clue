@@ -101,8 +101,8 @@ public class GameHandler {
                 int[] locCoords = (int[]) msgObj.getData();
                 System.out.println("coord1: " + locCoords[0]);
                 System.out.println("coord2: " + locCoords[1]);
-                //tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-                //tempPlayer.setLocation(locCoords);
+                tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
+                tempPlayer.setLocation(locCoords);
                 HashMap<String, Boolean> buttonValues = gameState.getAvailableMoves(locCoords);
                 StringBuilder sb = new StringBuilder();
                 for (String value : buttonValues.keySet()){
@@ -121,15 +121,10 @@ public class GameHandler {
                 }
 
                 System.out.println(sb);
-                /*
-                if (buttonValues == null)
-                {
-                    System.out.println("button values was null");
-                }
-                */
                 System.out.println("in game handler...");
                 System.out.println(Collections.singletonList(buttonValues));
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_MOVEMENT_BUTTON_VALUES, String.valueOf(sb));
+                return returnMessage;
             default:
                 return msgObj; //returns same object sent
         }
