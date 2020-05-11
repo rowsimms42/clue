@@ -24,13 +24,10 @@ public class BoardPanel extends JPanel {
     ClientFrame clientFrame;
     Characters assignedCharacter;
     Message messageReceived;
-    final int LEFT = 0,  RIGHT = 1, UP = 2, DOWN = 3;
-    //HashMap<String, Boolean> buttonValues;
+    final int LEFT = 0, RIGHT = 1, UP = 2, DOWN = 3;
     String btnValues;
-    
-    boolean[] boolMovements;
     JButton[] movementButtons;
-    private int[] coords;
+    char[] cArray;
 
     int xC = 0; // Player class sends starting coordinates. xe=xe*21, ye=ye*20;
     int yC = 0;
@@ -44,9 +41,8 @@ public class BoardPanel extends JPanel {
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBackground(Color.PINK);
         this.setBounds(6, 37, 688, 535);
-        boolMovements = new boolean[4];
         movementButtons = new JButton[4];
-		coords = new int[2];
+        cArray = new char[4];
 
         xC = assignedCharacter.getxStarting() * 21;
         yC = assignedCharacter.getyStarting() * 20;
@@ -140,9 +136,8 @@ public class BoardPanel extends JPanel {
         btnRollDice.setBounds(579, 306, 99, 30);
         this.add(btnRollDice);
 
-        
         try {
-            requestBtns(currentXgrid,currentYgrid);
+            requestBtns(currentXgrid, currentYgrid);
         } catch (ClassNotFoundException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
@@ -151,117 +146,100 @@ public class BoardPanel extends JPanel {
             e1.printStackTrace();
         }
 
+        enableOrdisableBtns(movementButtons, cArray);
+
         movementButtons[DOWN].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 yC += 20;
                 currentYgrid++;
                 repaint();
-                /*
-                try {
-                    requestBtns(currentXgrid, currentYgrid);
-                } catch (ClassNotFoundException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }   
-                */
-/*
-                boolMovements[UP] = false;
-                boolMovements[DOWN] = false;
-                boolMovements[RIGHT] = true;
-                boolMovements[LEFT] = true;
-                movementButtons[UP].setEnabled(boolMovements[UP]);
-                movementButtons[DOWN].setEnabled(boolMovements[DOWN]);
-                movementButtons[LEFT].setEnabled(boolMovements[LEFT]);
-                movementButtons[RIGHT].setEnabled(boolMovements[RIGHT]);
-                movementButtons[RIGHT].setEnabled(false);
-    */            
-                
-        }
-    });
-    
-    movementButtons[UP].addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            yC-=20;
-            currentYgrid--;
-                repaint();
-                /*
-                try {
-                    requestBtns(currentXgrid, currentYgrid);
-                } catch (ClassNotFoundException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }   
-                enableOrdisableBtns(boolMovements);
-                */
-        }
-    });
-    
-    movementButtons[RIGHT].addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            xC+=21;
-            repaint();
-            currentXgrid++;
-                repaint();
-                /*
-                try {
-                    requestBtns(currentXgrid, currentYgrid);
-                } catch (ClassNotFoundException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }   
-                enableOrdisableBtns(boolMovements);
-                //movementButtons[RIGHT].setEnabled(false);
-                */
-        }
-    });
-    
-    movementButtons[LEFT].addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            xC-=21;
-            repaint();
-            currentXgrid--;
-                repaint();
-                /*
-                try {
-                    requestBtns(currentXgrid, currentYgrid);
-                } catch (ClassNotFoundException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }   
-                */
-                //enableOrdisableBtns(boolMovements);
-        }
-    });
-}
 
-    //@Override
+                try {
+                    requestBtns(currentXgrid, currentYgrid);
+                } catch (ClassNotFoundException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                enableOrdisableBtns(movementButtons, cArray);
+            }
+        });
+
+        movementButtons[UP].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                yC -= 20;
+                currentYgrid--;
+                repaint();
+
+                try {
+                    requestBtns(currentXgrid, currentYgrid);
+                } catch (ClassNotFoundException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                enableOrdisableBtns(movementButtons, cArray);
+            }
+        });
+
+        movementButtons[RIGHT].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                xC += 21;
+                repaint();
+                currentXgrid++;
+
+                try {
+                    requestBtns(currentXgrid, currentYgrid);
+                } catch (ClassNotFoundException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                enableOrdisableBtns(movementButtons, cArray);
+            }
+        });
+
+        movementButtons[LEFT].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                xC -= 21;
+                repaint();
+                currentXgrid--;
+
+                try {
+                    requestBtns(currentXgrid, currentYgrid);
+                } catch (ClassNotFoundException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                enableOrdisableBtns(movementButtons, cArray);
+            }
+        });
+    }
+
+    // @Override
     public void paint(Graphics g) {
         super.paint(g);
         g.drawImage(gameboard.getImage(), 0, 0, null);
         Rectangle bounds = getBounds(xC, yC);
         g.setColor(new Color(assignedCharacter.getColor()));
-        g.fillRect((int)bounds.getX(), (int)bounds.getY(), (int)bounds.getHeight(), (int)bounds.getWidth());
- }
-    
- private Rectangle getBounds(int x, int y)
- {
-     //offset
-     x=x+30;
-     y=y+16;
-     return new Rectangle(x,y,20,20);
- }
+        g.fillRect((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getHeight(), (int) bounds.getWidth());
+    }
+
+    private Rectangle getBounds(int x, int y) {
+        //offset
+        x=x+30;
+        y=y+16;
+        return new Rectangle(x,y,20,20);
+    }
  
 private Boolean determineBounds(int x, int y)
 {
@@ -271,6 +249,8 @@ private Boolean determineBounds(int x, int y)
 
 private void requestBtns(int x, int y) throws IOException, ClassNotFoundException
 {
+    int[] coords = new int[2];
+
     coords[0] = x;
     coords[1] = y;
     String xc = String.valueOf(coords[0]);
@@ -284,39 +264,48 @@ private void requestBtns(int x, int y) throws IOException, ClassNotFoundExceptio
     messageReceived = client.getMessage();
     // Get available connections from the message
     btnValues =  (String) messageReceived.getData();
+    //put string into array
+    cArray = btnValues.toCharArray();
     //System.out.println(Collections.singletonList(buttonValues));
     clientFrame.addToLogConsole(btnValues);
 }
 
-
-
-	/*
-    for( Map.Entry<String, Boolean> v : buttonValues.entrySet() ) {
-        if( v.getValue() ) {
-            System.out.println(v.getKey());
-        }
-	 }
-	 
-    
-
-    //final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
-}
-
-
-private void enableOrdisableBtns(boolean boolMovements[])
+private void enableOrdisableBtns(JButton movementButtons[], char cArray[])
 {
-    
-    movementButtons[UP].setEnabled(boolMovements[UP]);
-    movementButtons[DOWN].setEnabled(boolMovements[DOWN]);
-    movementButtons[LEFT].setEnabled(boolMovements[LEFT]);
-    movementButtons[RIGHT].setEnabled(boolMovements[RIGHT]);
-    movementButtons[RIGHT].setEnabled(boolMovements[RIGHT]);
-
-
-                
-
+    if (cArray[0] == '1')
+    {
+        movementButtons[LEFT].setEnabled(true);
+    }
+    else if (cArray[0] == '0')
+    {
+        movementButtons[LEFT].setEnabled(false);
+    } 
+    if (cArray[1] == '1')
+    {
+        movementButtons[RIGHT].setEnabled(true);
+    }
+    else if (cArray[1] == '0')
+    {
+        movementButtons[RIGHT].setEnabled(false);
+    }
+    if (cArray[2] == '1')
+    {
+        movementButtons[UP].setEnabled(true);
+    }
+    else if (cArray[2] == '0')
+    {
+        movementButtons[UP].setEnabled(false);
+    }
+    if (cArray[3] == '1')
+    {
+        movementButtons[DOWN].setEnabled(true);
+    }
+    else if (cArray[3] == '0')
+    {
+        movementButtons[DOWN].setEnabled(false);
+    }
 }
-*/
+
 } // end class
 
 
