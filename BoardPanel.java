@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.basic.BasicArrowButton;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -24,9 +26,11 @@ public class BoardPanel extends JPanel {
     ClientFrame clientFrame;
     Characters assignedCharacter;
     Message messageReceived;
-    final int LEFT = 0, RIGHT = 1, UP = 2, DOWN = 3;
+    //final int LEFT = 0, RIGHT = 1, UP = 2, DOWN = 3;
+    final int WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
     String btnValues;
-    JButton[] movementButtons;
+    //JButton[] movementButtons;
+    BasicArrowButton[] movementButtons;
     char[] cArray;
 
     int xC = 0; // Player class sends starting coordinates. xe=xe*21, ye=ye*20;
@@ -41,7 +45,8 @@ public class BoardPanel extends JPanel {
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBackground(Color.PINK);
         this.setBounds(6, 37, 688, 535);
-        movementButtons = new JButton[4];
+        //movementButtons = new JButton[4];
+        //movementButtons = new BasicArrowButton[4];
         cArray = new char[4];
 
         xC = assignedCharacter.getxStarting() * 21;
@@ -92,48 +97,61 @@ public class BoardPanel extends JPanel {
         this.add(lblNewLabel);
         lblNewLabel.setBounds(6, 6, 569, 523);
 
-        JButton[] movementButtons = new JButton[4];
-        movementButtons[UP] = new JButton("Up");
-        movementButtons[UP].setBounds(594, 88, 74, 21);
-        this.add(movementButtons[UP]);
+        BasicArrowButton[] movementButtons = new BasicArrowButton[4];
+        movementButtons[NORTH] = new BasicArrowButton(BasicArrowButton.NORTH);
+        movementButtons[NORTH].setBounds(613, 74, 26, 23);
+        this.add(movementButtons[NORTH]);
 
-        movementButtons[DOWN] = new JButton("Down");
-        movementButtons[DOWN].setBounds(594, 129, 74, 21);
-        this.add(movementButtons[DOWN]);
+        movementButtons[SOUTH] = new BasicArrowButton(BasicArrowButton.SOUTH);
+        movementButtons[SOUTH].setBounds(613, 136, 26, 23);
+        this.add(movementButtons[SOUTH]);
 
-        movementButtons[RIGHT] = new JButton("Right");
-        movementButtons[RIGHT].setBounds(594, 167, 74, 21);
-        this.add(movementButtons[RIGHT]);
+        movementButtons[EAST] = new BasicArrowButton(BasicArrowButton.EAST);
+        movementButtons[EAST].setBounds(639, 106, 26, 23);
+        this.add(movementButtons[EAST]);
 
-        movementButtons[LEFT] = new JButton("Left");
-        movementButtons[LEFT].setBounds(594, 206, 74, 21);
-        this.add(movementButtons[LEFT]);
+        movementButtons[WEST] = new BasicArrowButton(BasicArrowButton.WEST);
+        movementButtons[WEST].setBounds(587, 106, 26, 23);
+        this.add(movementButtons[WEST]);
+
+        JButton btnEnterRoom = new JButton("Enter Room");
+        btnEnterRoom.setForeground(new Color(128, 0, 128));
+        btnEnterRoom.setFont(new Font("SansSerif", Font.BOLD, 10));
+        btnEnterRoom.setBounds(579, 340, 99, 23);
+        this.add(btnEnterRoom);
+
+        JButton btnExitRoom = new JButton("Exit Room");
+        btnExitRoom.setForeground(new Color(128, 0, 128));
+        btnExitRoom.setFont(new Font("SansSerif", Font.BOLD, 10));
+        btnExitRoom.setBounds(579, 375, 99, 23);
+        this.add(btnExitRoom);
 
         JButton btnSuggest = new JButton("Suggest");
-        btnSuggest.setFont(new Font("SansSerif", Font.BOLD, 12));
-        btnSuggest.setBounds(579, 349, 99, 30);
+        btnSuggest.setFont(new Font("SansSerif", Font.BOLD, 10));
+        btnSuggest.setBounds(579, 410, 99, 23);
         this.add(btnSuggest);
 
         JButton btnAccuse = new JButton("Accuse");
-        btnAccuse.setFont(new Font("SansSerif", Font.BOLD, 12));
-        btnAccuse.setBounds(579, 389, 99, 30);
+        btnAccuse.setFont(new Font("SansSerif", Font.BOLD, 10));
+        btnAccuse.setBounds(579, 445, 99, 23);
         this.add(btnAccuse);
 
         JButton btnShortcut = new JButton("Shortcut");
         btnShortcut.setForeground(Color.BLACK);
-        btnShortcut.setFont(new Font("SansSerif", Font.BOLD, 12));
-        btnShortcut.setBounds(579, 431, 99, 30);
+        btnShortcut.setFont(new Font("SansSerif", Font.BOLD, 10));
+        btnShortcut.setBounds(579, 480, 99, 23);
         this.add(btnShortcut);
 
         JButton btnEndTurn = new JButton("End Turn");
         btnEndTurn.setForeground(Color.RED);
-        btnEndTurn.setFont(new Font("SansSerif", Font.BOLD, 12));
-        btnEndTurn.setBounds(579, 471, 99, 30);
+        btnEndTurn.setFont(new Font("SansSerif", Font.BOLD, 10));
+        btnEndTurn.setBounds(579, 243, 99, 23);
         this.add(btnEndTurn);
 
         JButton btnRollDice = new JButton("Roll Dice");
-        btnRollDice.setFont(new Font("SansSerif", Font.BOLD, 12));
-        btnRollDice.setBounds(579, 306, 99, 30);
+        btnRollDice.setForeground(new Color(0,128,0));
+        btnRollDice.setFont(new Font("SansSerif", Font.BOLD, 10));
+        btnRollDice.setBounds(579, 208, 99, 23);
         this.add(btnRollDice);
 
         //request movement options at launch
@@ -145,7 +163,7 @@ public class BoardPanel extends JPanel {
         
         enableOrdisableBtns(movementButtons, cArray);
 
-        movementButtons[DOWN].addActionListener(new ActionListener() {
+        movementButtons[SOUTH].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 yC += 20;
                 currentYgrid++;
@@ -161,7 +179,7 @@ public class BoardPanel extends JPanel {
             }
         });
 
-        movementButtons[UP].addActionListener(new ActionListener() {
+        movementButtons[NORTH].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 yC -= 20;
                 currentYgrid--;
@@ -177,7 +195,7 @@ public class BoardPanel extends JPanel {
             }
         });
 
-        movementButtons[RIGHT].addActionListener(new ActionListener() {
+        movementButtons[EAST].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 xC += 21;
                 repaint();
@@ -193,7 +211,7 @@ public class BoardPanel extends JPanel {
             }
         });
 
-        movementButtons[LEFT].addActionListener(new ActionListener() {
+        movementButtons[WEST].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 xC -= 21;
                 repaint();
@@ -251,7 +269,7 @@ public class BoardPanel extends JPanel {
         clientFrame.addToLogConsole(btnValues);
     }
 
-    private void enableOrdisableBtns(JButton movementButtons[], char cArray[]){
+    private void enableOrdisableBtns(BasicArrowButton movementButtons[], char cArray[]){
     	/*
 		boolean []moveOptions = {false,false,false,false};
     	for(int i = 0; i < 4; i++) {
@@ -266,41 +284,41 @@ public class BoardPanel extends JPanel {
     	movementButtons[UP].setEnabled(moveOptions[UP]);
     	movementButtons[DOWN].setEnabled(moveOptions[DOWN]); */
 	
-    	if (cArray[LEFT] == '1')
+    	if (cArray[WEST] == '1')
     	{
-    		movementButtons[LEFT].setEnabled(true);
+    		movementButtons[WEST].setEnabled(true);
     	}
-    	else if (cArray[LEFT] == '0')
+    	else if (cArray[WEST] == '0')
     	{
-    		movementButtons[LEFT].setEnabled(false);
+    		movementButtons[WEST].setEnabled(false);
     	} 
-    	if (cArray[RIGHT] == '1')
+    	if (cArray[EAST] == '1')
     	{
-    		movementButtons[RIGHT].setEnabled(true);
+    		movementButtons[EAST].setEnabled(true);
     	}
-    	else if (cArray[RIGHT] == '0')
+    	else if (cArray[EAST] == '0')
     	{
-    		movementButtons[RIGHT].setEnabled(false);
+    		movementButtons[EAST].setEnabled(false);
     	}
-    	if (cArray[UP] == '1')
+    	if (cArray[NORTH] == '1')
     	{
-    		movementButtons[UP].setEnabled(true);
+    		movementButtons[NORTH].setEnabled(true);
     	}
-    	else if (cArray[UP] == '0')
+    	else if (cArray[NORTH] == '0')
     	{
-    		movementButtons[UP].setEnabled(false);
+    		movementButtons[NORTH].setEnabled(false);
     	}
-    	if (cArray[DOWN] == '1')
+    	if (cArray[SOUTH] == '1')
     	{
-    		movementButtons[DOWN].setEnabled(true);
+    		movementButtons[SOUTH].setEnabled(true);
     	}
-    	else if (cArray[DOWN] == '0')
+    	else if (cArray[SOUTH] == '0')
     	{
-    		movementButtons[DOWN].setEnabled(false);
+    		movementButtons[SOUTH].setEnabled(false);
     	}
     }
 
-    private void requestBtnsAndEnableOrDisable(int x, int y, JButton movementButtons[], char cArray[]) {
+    private void requestBtnsAndEnableOrDisable(int x, int y, BasicArrowButton movementButtons[], char cArray[]) {
     	
     }
 
