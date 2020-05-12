@@ -33,7 +33,7 @@ public class GameState {
 	public void initializeVariables(){
 
 		movementOptions = new MovementOptions(this);
-		movementOptions.initBoardCoords();
+		//movementOptions.initBoardCoords();
 	
 		availableCharacters = 0;
 		numberOfPlayers = 0;
