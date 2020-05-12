@@ -9,7 +9,7 @@ public class GameState {
 	private int availableCharacters;
 	private Boolean availableCharactersArray[];
 	private int numberOfPlayers;
-	private HashMap<Long, Player> playerMap;
+	protected HashMap<Long, Player> playerMap;
 	private HashMap<String, Characters> characterMap;
 	private MovementOptions movementOptions;
 	
@@ -32,7 +32,7 @@ public class GameState {
 
 	public void initializeVariables(){
 
-		movementOptions = new MovementOptions();
+		movementOptions = new MovementOptions(this);
 		movementOptions.initBoardCoords();
 	
 		availableCharacters = 0;
