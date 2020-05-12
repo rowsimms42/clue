@@ -32,9 +32,8 @@ public class GameState {
 
 	public void initializeVariables(){
 
-		movementOptions = new MovementOptions(this);
-		//movementOptions.initBoardCoords();
-	
+		movementOptions = new MovementOptions();
+		
 		availableCharacters = 0;
 		numberOfPlayers = 0;
 		
@@ -111,7 +110,7 @@ public class GameState {
 		//HashMap<String, Boolean> btnValues = movementOptions.getNextMoves(locations);
 		//System.out.println(Collections.singletonList(btnValues));
 		//return btnValues;
-		return movementOptions.getNextMoves(locations);
+		return movementOptions.getNextMoves(locations, this);
 
 	}
 	

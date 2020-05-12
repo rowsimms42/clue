@@ -12,11 +12,15 @@ public class MovementOptions{
 	GameState gameState;
 
 
-    public MovementOptions(GameState gamestate){
-		this.gameState = gamestate;
+    public MovementOptions(){
+	
 		initBoardCoords();
     }
 
+    public void setGameState(GameState gameState) {
+    	this.gameState = gameState;
+    }
+    
     public void setXLoc(int x){xLoc = x;}
 
     public int getXLoc(){return xLoc;}
@@ -27,7 +31,8 @@ public class MovementOptions{
 
 	public int[][] getBoardCoords(){return boardcoords;}
 	
-	public HashMap<String, Boolean> getNextMoves(int[] location){
+	public HashMap<String, Boolean> getNextMoves(int[] location, GameState gameState){
+		setGameState(gameState);
 		System.out.println("in get nextmoves...");
 		System.out.println(Arrays.toString(location));
 		availableMoves = null;
