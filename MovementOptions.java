@@ -1,11 +1,11 @@
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 
-public class MovementOptions {
+public class MovementOptions{
 
-
-    private int xLoc, yLoc;
+	private int xLoc, yLoc;
 	private int[][] boardcoords = new int[25][24];
 	HashMap<String, Boolean> availableMoves = new HashMap<String, Boolean>();
 
@@ -15,7 +15,6 @@ public class MovementOptions {
     public MovementOptions(GameState gamestate){
 		this.gameState = gamestate;
 		initBoardCoords();
-        //boardcoords = new int[ClueGameConstants.BOARD_ROWS][ClueGameConstants.BOARD_COLS];
     }
 
     public void setXLoc(int x){xLoc = x;}
@@ -97,7 +96,7 @@ public class MovementOptions {
 		// check each player's x and y location
 		// if location is 1+ or 1- in either direction 
 		// that direction in availableMoves<> is set to false
-		for(Player player : gameState.playerMap.values()){
+		for(Player player : gameState.getPlayerMap().values()){
 			//players are on the same row
 			if(player.getCurrentXLocation() == a){
 				if(player.getCurrentYLocation() + 1 == b){
@@ -515,5 +514,5 @@ public class MovementOptions {
 		boardcoords[23][8] = 14;
         boardcoords[23][15] = 14;
     }
-
+   
 }//end class

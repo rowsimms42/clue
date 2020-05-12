@@ -9,7 +9,7 @@ public class GameState {
 	private int availableCharacters;
 	private Boolean availableCharactersArray[];
 	private int numberOfPlayers;
-	protected HashMap<Long, Player> playerMap;
+	private HashMap<Long, Player> playerMap;
 	private HashMap<String, Characters> characterMap;
 	private MovementOptions movementOptions;
 	
@@ -106,7 +106,7 @@ public class GameState {
 
 	public HashMap<String, Boolean> getAvailableMoves(int[] locations){
 		//return movementOptions.getNextMoves(locations);
-		//System.out.println("in gamestate...");
+		//System.out.println("in game state...");
 		//System.out.println(Arrays.toString(locations));
 		//HashMap<String, Boolean> btnValues = movementOptions.getNextMoves(locations);
 		//System.out.println(Collections.singletonList(btnValues));
