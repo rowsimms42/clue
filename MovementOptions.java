@@ -2,15 +2,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 
-public class MovementOptions{
+public class MovementOptions {
 
 
     private int xLoc, yLoc;
-    private int[][] boardcoords;
+	private int[][] boardcoords = new int[25][24];
+	HashMap<String, Boolean> availableMoves = new HashMap<String, Boolean>();
+
+	GameState gameState;
 
 
-    public MovementOptions(){
-        boardcoords = new int[ClueGameConstants.BOARD_ROWS][ClueGameConstants.BOARD_COLS];
+    public MovementOptions(GameState gamestate){
+		this.gameState = gamestate;
+		initBoardCoords();
+        //boardcoords = new int[ClueGameConstants.BOARD_ROWS][ClueGameConstants.BOARD_COLS];
     }
 
     public void setXLoc(int x){xLoc = x;}
@@ -21,7 +26,97 @@ public class MovementOptions{
 
     public int getYLoc(){return yLoc;}
 
-    public int[][] getBoardCoords(){return boardcoords;}
+	public int[][] getBoardCoords(){return boardcoords;}
+	
+	public HashMap<String, Boolean> getNextMoves(int[] location){
+		System.out.println("in get nextmoves...");
+		System.out.println(Arrays.toString(location));
+		availableMoves = null;
+		
+		if(location.length > 2){
+			System.out.println("Error in passing location x,y");
+			return null;
+		}
+		int a = location[0];
+		int b = location [1];
+		System.out.println("column: " + a );
+		System.out.println("row: " + b);
+		int loc = boardcoords[b][a];
+		System.out.println(loc);
+		switch (loc) {
+			case 1:
+				availableMoves = setMovesR();
+				break;
+			case 2:
+				availableMoves = setMovesL();
+				break;
+			case 3:
+				availableMoves = setMovesD();
+				break;
+			case 4:
+				availableMoves = setMovesU();
+				break;
+			case 5:
+				availableMoves = setMovesRD();
+				break;
+			case 6:
+				availableMoves = setMovesLD();
+				break;
+			case 7:
+				availableMoves = setMovesUR();
+				break;
+			case 8:
+				availableMoves = setMovesUL();
+				break;
+			case 9: 
+				availableMoves = setMovesRLD();
+				break;
+			case 10:
+				availableMoves = setMovesULR();
+				break;
+			case 11:
+				availableMoves = setMovesURD();
+				break;
+			case 12:
+				availableMoves = setMovesUDL();
+				break;
+			case 13:
+				availableMoves = setMovesLRUD();
+				break;
+			case 14:
+				availableMoves = setMovesLR();
+				break;
+			default:
+				availableMoves = setMovesNone();
+				System.out.println("Error in getNextMoves switch statement");
+				break;
+		}
+		//System.out.println(Collections.singletonList(availableMoves));
+
+		// cycle through all players in player map
+		// check each player's x and y location
+		// if location is 1+ or 1- in either direction 
+		// that direction in availableMoves<> is set to false
+		for(Player player : gameState.playerMap.values()){
+			//players are on the same row
+			if(player.getCurrentXLocation() == a){
+				if(player.getCurrentYLocation() + 1 == b){
+					availableMoves.replace("up", false);
+				} else if(player.getCurrentYLocation() - 1 == b){
+					availableMoves.replace("down", false);
+				}
+			} 
+			//players are on the same column
+			if(player.getCurrentYLocation() == b){
+				if(player.getCurrentXLocation() + 1 == a){
+					availableMoves.replace("left", false);
+				} else if(player.getCurrentXLocation() - 1 == a){
+					availableMoves.replace("right", false);
+				}
+			}
+		}
+        return availableMoves;
+    }
 
     private HashMap<String, Boolean> setMovesU() {
 		HashMap <String, Boolean> returnMap = new HashMap<>();
@@ -68,14 +163,14 @@ public class MovementOptions{
 		return returnMap;
 	}
 
-	private HashMap<String, Boolean> setMovesUD() {
-		HashMap <String, Boolean> returnMap = new HashMap<>();
-		returnMap.put("left", false);
-		returnMap.put("right", false);
-		returnMap.put("up", true);
-		returnMap.put("down", true);
-		return returnMap;
-	}
+	// private HashMap<String, Boolean> setMovesUD() {
+	// 	HashMap <String, Boolean> returnMap = new HashMap<>();
+	// 	returnMap.put("left", false);
+	// 	returnMap.put("right", false);
+	// 	returnMap.put("up", true);
+	// 	returnMap.put("down", true);
+	// 	return returnMap;
+	// }
 
 	private HashMap<String, Boolean> setMovesUL() {
 		HashMap <String, Boolean> returnMap = new HashMap<>();
@@ -168,74 +263,7 @@ public class MovementOptions{
     }
 	
     
-    public HashMap<String, Boolean> getNextMoves(int[] location){
-		System.out.println("in get nextmoves...");
-		System.out.println(Arrays.toString(location));
-		HashMap<String, Boolean> availableMoves = null;
-		
-		if(location.length > 2){
-			System.out.println("Error in passing location x,y");
-			return null;
-		}
-		int a = location[0];
-		int b = location [1];
-		System.out.println("column: " + a );
-		System.out.println("row: " + b);
-		int loc = boardcoords[b][a];
-		System.out.println(loc);
-		switch (loc) {
-			case 1:
-				availableMoves = setMovesR();
-				break;
-			case 2:
-				availableMoves = setMovesL();
-				break;
-			case 3:
-				availableMoves = setMovesD();
-				break;
-			case 4:
-				availableMoves = setMovesU();
-				break;
-			case 5:
-				availableMoves = setMovesRD();
-				break;
-			case 6:
-				availableMoves = setMovesLD();
-				break;
-			case 7:
-				availableMoves = setMovesUR();
-				break;
-			case 8:
-				availableMoves = setMovesUL();
-				break;
-			case 9: 
-				availableMoves = setMovesRLD();
-				break;
-			case 10:
-				availableMoves = setMovesULR();
-				break;
-			case 11:
-				availableMoves = setMovesURD();
-				break;
-			case 12:
-				availableMoves = setMovesUDL();
-				break;
-			case 13:
-				availableMoves = setMovesLRUD();
-				break;
-			case 14:
-				availableMoves = setMovesLR();
-				break;
-			default:
-				availableMoves = setMovesNone();
-				System.out.println("Error in getNextMoves switch statement");
-				break;
-		}
-		//System.out.println(Collections.singletonList(availableMoves));
-
-		
-        return availableMoves;
-    }
+   
 
     public void initBoardCoords(){
         //int[][] boardcoords = new int[ClueGameConstants.BOARD_ROWS][ClueGameConstants.BOARD_COLS];
