@@ -33,8 +33,8 @@ public class CharacterSelectFrame extends JFrame {
 	private Color[] colorArray = { new Color(0, 204, 102), new Color(204, 0, 204), Color.WHITE, new Color(204, 204, 0),
 			new Color(204, 0, 0), Color.BLUE };
 	// FOR Testing
-	private String imageNameArray[] = { "resources\\green.png", "resources\\plum.png", "resources\\white.png",
-			"resources\\mustard.png", "resources\\scarlett.png", "resources\\peacock.png" };
+	private String imageNameArray[] = { "resources/green.png", "resources/plum.png", "resources/white.png",
+			"resources/mustard.png", "resources/scarlett.png", "resources/peacock.png" };
 
 	Client clientConnection;
 	Message messageReceived = null;;
@@ -42,39 +42,16 @@ public class CharacterSelectFrame extends JFrame {
 	private int characterSelected = 0;
 	private int availableCharacters = 0;
 	private boolean availableCharactersArray[] = { true, true, true, true, true, true };
-	private boolean isValidCharacterSelected = false;
+	private boolean isAvailableCharacter = false, isCharacterIndeedAvailable = false;
+	
 
 	public CharacterSelectFrame(Client clientConnection) throws IOException, ClassNotFoundException {
+		// the player is the new Thread that connects with the server
+		this.clientConnection = clientConnection; 
 
-		this.clientConnection = clientConnection; // the player is the new Thread that connects with the server
-
-		// Build the frame and its components
-		setTitle("Character Select");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 400, 650);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-
-		btnAdvance = new JButton("Advance");
-		btnAdvance.setBounds(126, 571, 117, 29);
-		btnAdvance.setEnabled(false);
-		contentPane.add(btnAdvance);
-
-		characterPanel = new JPanel();
-		characterPanel.setBounds(6, 6, 388, 480);
-		contentPane.add(characterPanel);
-		characterPanel.setLayout(new GridLayout(3, 2));
-
-		textAreaCharacterFrameInfo = new JTextArea();
-		textAreaCharacterFrameInfo.setEditable(false);
-		textAreaCharacterFrameInfo.setBounds(6, 498, 388, 59);
-		contentPane.add(textAreaCharacterFrameInfo);
-
-		// Create, assign, fill the character panels
-		initCharacterPanels();
-
+		//initialize all the gui components
+		initComponents();
+		
 		// At this point we should be connected to the server
 		// but if we are not then reconnect or quit the game
 		if (!clientConnection.isPlayerConnected()) {
@@ -98,41 +75,29 @@ public class CharacterSelectFrame extends JFrame {
 		characterPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
-				/*
-				 * determine which character was selected based on which panel was clicked on.
-				 * characterSelected will be values 1 - 6.
-				 */
+				//determine which character was selected based on which panel was clicked on.
+				//characterSelected will be values 1 - 6.
 				int x_coordinate = e.getX();
 				int y_coordinate = e.getY();
 				characterSelected = determinePanelClickedOn(x_coordinate, y_coordinate);
 
-				// send character selected to server
+				// send character selected to server for availability check
 				try {
 					clientConnection.send(new Message(ClueGameConstants.REQUEST_IS_SELECTED_CHARACTER_AVAILABLE,
-							Integer.valueOf(characterSelected)));
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+							          Integer.valueOf(characterSelected)));
+					
+					messageReceived = clientConnection.getMessage();
+					isAvailableCharacter = (Boolean) messageReceived.getData();
+				} catch (ClassNotFoundException | IOException e1) {
 					e1.printStackTrace();
 				}
 				
-				// receive message from server if the selected character is available
-				try {
-					messageReceived = clientConnection.getMessage();
-				} catch (ClassNotFoundException | IOException e3) {
-					// TODO Auto-generated catch block
-					e3.printStackTrace();
-				}
 				
-				boolean isAvailableCharacter = (Boolean) messageReceived.getData();
-
 				if (!isAvailableCharacter) {
 					// ----Character became unavailable-----
-
 					try {
 						showCharacterUsedandNewAvailableRequest();
 					} catch (ClassNotFoundException | IOException e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
 				} else {
@@ -145,48 +110,37 @@ public class CharacterSelectFrame extends JFrame {
 		}); // end Panel mouse listener
 
 		// Button listener -------------------------------------------------
-
-		
-
 		btnAdvance.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				// send message to re-confirm with the server that the selected character is
 				// indeed available
 				try {
 					clientConnection.send(new Message(ClueGameConstants.REQUEST_INDEED_CHARACTER_AVAILABLE,
-								Integer.valueOf(characterSelected)));
-					
+								Integer.valueOf(characterSelected)));	
 					// receive message from server with character availability confirmation
 					messageReceived = clientConnection.getMessage();
+					isCharacterIndeedAvailable = (Boolean) messageReceived.getData();
 				} catch (ClassNotFoundException | IOException e2) {
-					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
 				
-				
-				boolean isCharacterIndeedAvailable = (Boolean) messageReceived.getData();
-
 				if (isCharacterIndeedAvailable) {
 					// ---selected character confirmed to be available-----
-
 					// character will be chosen, tell server to mark this character as used
 					try {
 						clientConnection.send( new Message(ClueGameConstants.REQUEST_MARK_CHARACTER_AS_TAKEN,
 												Integer.valueOf(characterSelected)));
 						messageReceived = clientConnection.getMessage();
 					} catch (ClassNotFoundException | IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					
 					final Client clientConnectionPassed = clientConnection;
-					// TODO set the player's character
 					setVisible(false);
 					// transition to the next frame
-					new ClientFrame(clientConnectionPassed).setVisible(true);
+					new ClientFrame(clientConnectionPassed);
 				} else {
 					// ----selected character was confirmed not to be available---
-
 					// Show JOptionpane message window that character is already chosen
 					String characterAlreadySelectedStr = 
 							ClueGameConstants.CHARACTER_NAMES_ARRAY[characterSelected - 1]
@@ -198,19 +152,15 @@ public class CharacterSelectFrame extends JFrame {
 					try {
 						requestAvailableCharactersAndUpdate();
 					} catch (ClassNotFoundException | IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
 					// update panel with available/unavailable characters
 					updatePanelArrayUsedCharacters();
-
 					// disable this button
 					btnAdvance.setEnabled(false);
 				}
 			}
 		}); // end button listener
-		setVisible(true); // set the character select frame to visibility to true
 	} // end constructor
 
 	private void requestAvailableCharactersAndUpdate() throws IOException, ClassNotFoundException {
@@ -219,7 +169,7 @@ public class CharacterSelectFrame extends JFrame {
 		// Receive message with available connections from the server
 		messageReceived = clientConnection.getMessage();
 		// Get available connections from the message
-		 availableCharacters = (Integer) messageReceived.getData();
+		availableCharacters = (Integer) messageReceived.getData();
 	}
 
 	/*
@@ -231,11 +181,10 @@ public class CharacterSelectFrame extends JFrame {
 		for (int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			boolean isBitSet = isNthBitSet(availableCharacters, i + 1);
 			if (isBitSet) {
-				ImageIcon unavail = new ImageIcon("resources\\unavailable.png");
+				ImageIcon unavail = new ImageIcon(getClass().getResource("resources/unavailable.png"));
 				JLabel unavailLabel = new JLabel(unavail);
 				characterPanelArray[i].remove(characterImageLabel[i]);
 				characterPanelArray[i].add(unavailLabel);
-
 				// Mark character as unavailable in array
 				availableCharactersArray[i] = false;
 			}
@@ -275,7 +224,7 @@ public class CharacterSelectFrame extends JFrame {
 		characterImageArray = new ImageIcon[ClueGameConstants.MAX_CHARACTERS];
 		for (int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
 			characterPanelArray[i] = new JPanel();
-			characterImageArray[i] = new ImageIcon(imageNameArray[i]);
+			characterImageArray[i] = new ImageIcon(getClass().getResource(imageNameArray[i]));
 			//characterImageLabel[i] = new JLabel(ClueGameConstants.CHARACTER_NAMES_ARRAY[i]);
 			characterImageLabel[i] = new JLabel(characterImageArray[i]);
 
@@ -296,7 +245,6 @@ public class CharacterSelectFrame extends JFrame {
 	}
 
 	private boolean isNthBitSet(int number, int n) {
-
 		return (((number >> (n - 1)) & 1) == 1);
 	}
 
@@ -361,6 +309,36 @@ public class CharacterSelectFrame extends JFrame {
 	public Client startNewConnection() throws UnknownHostException, ClassNotFoundException {
 		Client player = new Client();
 		return player;
+	}
+	
+	private void initComponents() {
+		// Build the frame and its components
+		setTitle("Character Select");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 400, 650);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		//create advance button and set properties
+		btnAdvance = new JButton("Advance");
+		btnAdvance.setBounds(126, 571, 117, 29);
+		btnAdvance.setEnabled(false);
+		contentPane.add(btnAdvance);
+		//create character panel and set properties
+		characterPanel = new JPanel();
+		characterPanel.setBounds(6, 6, 388, 480);
+		contentPane.add(characterPanel);
+		characterPanel.setLayout(new GridLayout(3, 2));
+		//create the character text area and set properties
+		textAreaCharacterFrameInfo = new JTextArea();
+		textAreaCharacterFrameInfo.setEditable(false);
+		textAreaCharacterFrameInfo.setBounds(6, 498, 388, 59);
+		contentPane.add(textAreaCharacterFrameInfo);
+		// Create, assign, fill the character panels
+		initCharacterPanels();
+		// set the character select frame to visibility to true
+		setVisible(true); 
 	}
 
 } //end class

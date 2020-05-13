@@ -30,98 +30,39 @@ public class ClientFrame extends JFrame {
 
 	private JPanel contentPane;
 	private StringBuilder noteStringBuilder, logStringBuilder;
-	private int noteCounter = 0;
 	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote;
+	private JScrollPane scrollPane, scrollPaneNotesAdded;
+	private JLabel lblConsoleLog, lblAddGameNote, lblGameNotes;
+	private JMenuBar menuBar;
+	private JMenu gameMenu;
+	private JMenuItem gameRulesMenuItem, seeCardDeckMenuItem;
+	private JButton btnAddNote;
 	Message messageRecieved;
 	Client client;
 	RoomClick roomClick;
-	Characters assignedCharacter;
+	Player currentPlayer;
+	private int noteCounter = 0;
 	int rows = 24;
 	int coloums = 25;
 	String value;
 	private final BoardPanel gameBoardPanel;
-
     int xe = 0;
     int ye = 0;
 
 	/**
 	 * Create the frame.
 	 */
-	public ClientFrame(Client player) {
-		client = player;
+	public ClientFrame(Client clientConnection) {
+		client = clientConnection;
 		
-		//setServerConnection(serverConnection);
-
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 950, 800);
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 204, 204));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		//initialize all gui components minus the game board panel
+		initComponents();
 		
-		noteStringBuilder = new StringBuilder();
-		logStringBuilder  = new StringBuilder();
-		
-		log_text_area = new JTextArea(10,60);
-		log_text_area.setEditable(false);
-		log_text_area.setLineWrap(true);
-		
-		JScrollPane scrollPane = new JScrollPane(log_text_area);
-		scrollPane.setBounds(6, 613, 688, 159);
-		contentPane.add(scrollPane);
-		
-		JLabel lblConsoleLog = new JLabel("Console Log");
-		lblConsoleLog.setFont(new Font("SansSerif", Font.BOLD, 13));
-		lblConsoleLog.setBounds(6, 585, 80, 16);
-		contentPane.add(lblConsoleLog);
-		
-		JLabel lblAddGameNote = new JLabel("Add Game Note");
-		lblAddGameNote.setFont(new Font("SansSerif", Font.BOLD, 12));
-		lblAddGameNote.setBounds(774, 24, 113, 16);
-		contentPane.add(lblAddGameNote);
-		
-		textAreaGameNote = new JTextArea();
-		textAreaGameNote.setEditable(true);
-		textAreaGameNote.setLineWrap(true);
-		textAreaGameNote.setBounds(706, 52, 238, 98);
-		contentPane.add(textAreaGameNote);
-		
-		JButton btnAddNote = new JButton("Add Note");
-		btnAddNote.setFont(new Font("SansSerif", Font.BOLD, 12));
-		
-		btnAddNote.setBounds(770, 162, 117, 29);
-		contentPane.add(btnAddNote);
-		
-		JLabel lblGameNotes = new JLabel("Game Notes");
-		lblGameNotes.setFont(new Font("SansSerif", Font.BOLD, 12));
-		lblGameNotes.setBounds(784, 206, 80, 16);
-		contentPane.add(lblGameNotes);
-		
-		textAreaNotesAdded = new JTextArea(5, 10);
-		textAreaNotesAdded.setEditable(false);
-		textAreaNotesAdded.setLineWrap(true);
-		
-		JScrollPane scrollPaneNotesAdded = new JScrollPane(textAreaNotesAdded);
-		scrollPaneNotesAdded.setBounds(706, 234, 238, 111);
-		contentPane.add(scrollPaneNotesAdded);
-				
-		JMenuBar menuBar = new JMenuBar();
-		JMenu gameMenu = new JMenu("Options");
-		gameMenu.setFont(new Font("SansSerif", Font.BOLD, 12));
-		JMenuItem gameRulesMenuItem = new JMenuItem("Game Rules");
-		gameMenu.add(gameRulesMenuItem);
-		menuBar.add(gameMenu);
-		
-		menuBar.setToolTipText("Options");
-		menuBar.setBounds(6, 6, 132, 22);
-		contentPane.add(menuBar);
-		
-		
-		//request and receive the character the player has chosen
+		//request and receive the player object for this player
 		try {
-			client.send(new Message(ClueGameConstants.REQUEST_PLAYERS_CHARACTER, null));
+			client.send(new Message(ClueGameConstants.REQUEST_PLAYER_OBJECT, null));
 			messageRecieved = client.getMessage();
+			currentPlayer = (Player) messageRecieved.getData();
 			if(messageRecieved.getData() == null) 
 				System.out.println("No data");
 			
@@ -130,37 +71,33 @@ public class ClientFrame extends JFrame {
 		}
 		
 		//display the character properties in the console log
-		assignedCharacter = (Characters) messageRecieved.getData();
-		addToLogConsole(assignedCharacter.getName());
-		xe = assignedCharacter.getxStarting();
-		ye = assignedCharacter.getyStarting();
+		addToLogConsole(currentPlayer.getCharacter().getName());
+		xe = currentPlayer.getCharacter().getxStarting();
+		ye = currentPlayer.getCharacter().getyStarting();
 		String startPointsStr = "Starting points: " + xe + " " + ye;
 		addToLogConsole(startPointsStr);
-
-		gameBoardPanel = new BoardPanel(player, this, assignedCharacter);
+		
+		gameBoardPanel = new BoardPanel(clientConnection, this, currentPlayer);
 		contentPane.add(gameBoardPanel);
 		gameBoardPanel.setLayout(null);
-		
-		//display the character name in the console log
-		//addToLogConsole(String.valueOf(messageRecieved.getData()));
-	
+
 		btnAddNote.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addToNotebook(textAreaGameNote.getText());
 			}
 		}); //end button action listener
 
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(false);
+		
 		//setVisible(true); 
-	} 
+	} // end constructor
 
+	//add text to the console log
 	protected void addToLogConsole(String input){
 		logStringBuilder.append(input + "\n");
 		log_text_area.setText(logStringBuilder.toString());
 	}
 	
+	//add notes to the notebook
 	private void addToNotebook(String input){
 		String noteToAdd = input;
 		if(noteToAdd.isEmpty()) {
@@ -178,5 +115,78 @@ public class ClientFrame extends JFrame {
 			textAreaGameNote.setText("");
 		}
 	} 
-		//*client manager can update console log as well
+	
+	private void initComponents() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 950, 800);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(0, 204, 204));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		noteStringBuilder = new StringBuilder();
+		logStringBuilder  = new StringBuilder();
+		
+		log_text_area = new JTextArea(10,60);
+		log_text_area.setEditable(false);
+		log_text_area.setLineWrap(true);
+		
+		scrollPane = new JScrollPane(log_text_area);
+		scrollPane.setBounds(6, 613, 688, 159);
+		contentPane.add(scrollPane);
+		
+		lblConsoleLog = new JLabel("Console Log");
+		lblConsoleLog.setFont(new Font("SansSerif", Font.BOLD, 13));
+		lblConsoleLog.setBounds(6, 585, 80, 16);
+		contentPane.add(lblConsoleLog);
+		
+		lblAddGameNote = new JLabel("Add Game Note");
+		lblAddGameNote.setFont(new Font("SansSerif", Font.BOLD, 12));
+		lblAddGameNote.setBounds(774, 24, 113, 16);
+		contentPane.add(lblAddGameNote);
+		
+		textAreaGameNote = new JTextArea();
+		textAreaGameNote.setEditable(true);
+		textAreaGameNote.setLineWrap(true);
+		textAreaGameNote.setBounds(706, 52, 238, 98);
+		contentPane.add(textAreaGameNote);
+		
+		btnAddNote = new JButton("Add Note");
+		btnAddNote.setFont(new Font("SansSerif", Font.BOLD, 12));
+		
+		btnAddNote.setBounds(770, 162, 117, 29);
+		contentPane.add(btnAddNote);
+		
+		lblGameNotes = new JLabel("Game Notes");
+		lblGameNotes.setFont(new Font("SansSerif", Font.BOLD, 12));
+		lblGameNotes.setBounds(784, 206, 80, 16);
+		contentPane.add(lblGameNotes);
+		
+		textAreaNotesAdded = new JTextArea(5, 10);
+		textAreaNotesAdded.setEditable(false);
+		textAreaNotesAdded.setLineWrap(true);
+		
+		scrollPaneNotesAdded = new JScrollPane(textAreaNotesAdded);
+		scrollPaneNotesAdded.setBounds(706, 234, 238, 111);
+		contentPane.add(scrollPaneNotesAdded);
+				
+		menuBar = new JMenuBar();
+		gameMenu = new JMenu("Options");
+		gameMenu.setFont(new Font("SansSerif", Font.BOLD, 12));
+		gameRulesMenuItem = new JMenuItem("Game Rules");
+		seeCardDeckMenuItem = new JMenuItem("View Cards");
+		gameMenu.add(gameRulesMenuItem);
+		gameMenu.add(seeCardDeckMenuItem);
+		menuBar.add(gameMenu);
+		
+		menuBar.setToolTipText("Options");
+		menuBar.setBounds(6, 6, 132, 22);
+		contentPane.add(menuBar);
+		
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
+		setVisible(true);
+	}
 } //end class

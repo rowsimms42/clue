@@ -22,7 +22,7 @@ public class GameHandler {
         gameState.addPlayer(player, ID);
     }
 
-    /* return the number of players from the game state */
+    //return the number of players from the game state 
     public int getNumberOfCurrentPlayers(){
         return gameState.getNumberOfPlayers();
     }
@@ -117,6 +117,11 @@ public class GameHandler {
             case ClueGameConstants.REQUEST_PLAYER_MAP:
             	HashMap<Long, Player> playerMap = gameState.getPlayerMap();
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_MAP, playerMap);
+            	return returnMessage;
+            	
+            case ClueGameConstants.REQUEST_PLAYER_OBJECT:
+            	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_OBJECT, tempPlayer);
             	return returnMessage;
             	
             default:

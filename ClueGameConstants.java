@@ -59,6 +59,10 @@ public final class ClueGameConstants {
 		
 		public static final int REPLY_FROM_SERVER_PLAYER_MAP = 33;
 		
+		public static final int REQUEST_PLAYER_OBJECT = 34;
+		
+		public static final int REPLY_FROM_SERVER_PLAYER_OBJECT = 35;
+		
 		public static final int UNSELECTABLE_TILE = -1;
 
 		public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
