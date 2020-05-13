@@ -31,6 +31,7 @@ public class BoardPanel extends JPanel {
     String btnValues;
     //JButton[] movementButtons;
     BasicArrowButton[] movementButtons;
+    JButton[] roomButtons; //buttons to deal with rooms
     char[] cArray;
 
     int xC = 0; // Player class sends starting coordinates. xe=xe*21, ye=ye*20;
@@ -161,7 +162,7 @@ public class BoardPanel extends JPanel {
 			e2.printStackTrace();
 		}
         
-        enableOrdisableBtns(movementButtons, cArray);
+        enableOrdisableBtns(movementButtons, cArray);        
 
         movementButtons[SOUTH].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -225,6 +226,18 @@ public class BoardPanel extends JPanel {
                 
                 enableOrdisableBtns(movementButtons, cArray);
             }
+        });
+
+        //entering room function
+        btnEnterRoom.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+                int playerOrder = assignedCharacter.getRoomNumOrder();
+                String str = String.valueOf(playerOrder);
+                clientFrame.addToLogConsole("Room number order: " + str);
+
+                //
+
+        	}
         });
     }
 
