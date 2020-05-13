@@ -45,7 +45,9 @@ public class GameState {
 		weaponCardDeck  = createAndFillWeaponCardDeck();
 		roomCardDeck    = createAndFillRoomCardDeck();
 		suspectCardDeck = createAndFillSuspectCardDeck();
-
+		envelopeDeck  = createAndFillenvelopedeck(); 
+		combinedDeck = createAndFillCombinedDeck(); 
+	
 	}
 
 	public int getAvailableCharacters() {
@@ -153,6 +155,46 @@ public class GameState {
 		return suspectList;
 	}
 	
+	private ArrayList<Card> createAndFillenvelopedeck(){
+		ArrayList<Card> envelopeList = new ArrayList<Card>();
+		envelopeList.add(weaponCardDeck.get(0)); 
+		weaponCardDeck.remove(0); 
+		
+		envelopeList.add(suspectCardDeck.get(0)); 
+		suspectCardDeck.remove(0);
+
+		envelopeList.add(roomCardDeck.get(0)); 
+		roomCardDeck.remove(0);
+		return envelopeList;
+
+	}
+
+	private ArrayList<Card> createAndFillCombinedDeck(){
+		ArrayList<Card> combinedList = new ArrayList<Card>();
+		
+		for(Card card: weaponCardDeck ){ 
+
+			combinedList.add(card);
+
+		}
+		 weaponCardDeck.clear();
+
+		 for(Card card: suspectCardDeck ){ 
+
+			combinedList.add(card);
+		}
+		suspectCardDeck.clear();
+
+		for(Card card: roomCardDeck ){ 
+
+			combinedList.add(card);
+		}
+		roomCardDeck.clear();
+
+		Collections.shuffle(combinedList);
+		return combinedList; 
+	}
+
 	private HashMap<String, Characters> createAndbuildCharacterMap() {
 		HashMap<String, Characters> characterMap = new HashMap<String, Characters>();
 		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS;i++) {
@@ -170,4 +212,26 @@ public class GameState {
 		}
 		return characterMap;
 	}
+
+	public void dealCardsToPlayers() {	
+		
+		int i = 0; 
+
+		while(!combinedDeck.isEmpty()){	
+			for(long id: playerMap.keySet()){
+				if(combinedDeck.size() > 0 ){
+				
+					Player tempPlayer = playerMap.get(id);	
+					tempPlayer.getPlayerDeck().add(combinedDeck.get(i));					
+					combinedDeck.remove(i);
+					 		
+    			}	
+			}
+		}
+		
+	 }
+	 
+
 } //end class
+
+
