@@ -1,4 +1,5 @@
 
+/*
 public class GridMovement {
 	
 	private int columns = 24;
@@ -55,6 +56,7 @@ public class GridMovement {
 		/* if we got a 0, that means we couldn't go in that direction, so lets see if that direction is a doorway.
 		 * if its not a doorway, then must be a wall or another player at that location.
 		 */
+		/*
 		int[] movement = new int[4];
 		movement[UP]    = (movementGrid[yLocation][xLocation][UP]    != 0) ? 1 : investigateIndexes(yLocation-1,xLocation,UP);
 		movement[DOWN]  = (movementGrid[yLocation][xLocation][DOWN]  != 0) ? 1 : investigateIndexes(yLocation+1,xLocation,DOWN);
@@ -64,3 +66,4 @@ public class GridMovement {
 	}
 
 }
+*/

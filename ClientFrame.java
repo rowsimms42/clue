@@ -39,7 +39,6 @@ public class ClientFrame extends JFrame {
 	private JButton btnAddNote;
 	Message messageRecieved;
 	Client client;
-	RoomClick roomClick;
 	Player currentPlayer;
 	private int noteCounter = 0;
 	int rows = 24;

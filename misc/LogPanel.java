@@ -1,23 +1,18 @@
 
 //Contributors: Jonah Dubbs-Nadeau and Joseph Salazar
 
-import javax.swing.*;
-import java.awt.*;
-import java.lang.StringBuilder;
+
 
 /*
  * Class to display the console log in a JPanel 
  */
-
+/*
 public class LogPanel extends JPanel{
 	private JScrollPane log_scroll_pane = null;
     private JTextArea log_text_area     = null;
     private StringBuilder log_text      = null;
 
-    /*
-    Default constructor
-    Assembles all Swing components
-    */
+    
     public LogPanel() {
         setPreferredSize(new Dimension(950, 200));
         setBorder(BorderFactory.createTitledBorder("Log"));
@@ -53,8 +48,9 @@ public class LogPanel extends JPanel{
 
     /*
     So client manager can update the console log
-    */
+    
     public JTextArea getConsoleTextArea(){
         return log_text_area;
     }
 }
+*/

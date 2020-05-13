@@ -1,15 +1,13 @@
 
 //Contributors: Jonah Dubbs-Nadeau and Joseph Salazar
-
+/*
 import javax.swing.*;
 import java.lang.*;
 import java.nio.channels.NetworkChannel;
 import java.awt.event.*;
 import java.awt.*;
 
-/*
- * Class to display the notebook in a JPanel. 
- */
+
 
 public class NotebookPanel extends JPanel {
 	
@@ -23,10 +21,7 @@ public class NotebookPanel extends JPanel {
 	private JLabel add_note_label = null;
 	private int note_counter = 0;
 	
-	/*
-    Default constructor
-    Assembles all Swing components
-    */
+	
     public NotebookPanel() {
         setLayout(new GridLayout(8, 1));
         setBorder(BorderFactory.createTitledBorder("Clue Notebook"));
@@ -67,17 +62,12 @@ public class NotebookPanel extends JPanel {
         add(this.non_editable_scrollpane);
         add(this.submit_note_button);
         
-        /*
-        Button action handler to add notes to the JTex
-        */
+      
         submit_note_button.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 String note_to_add = editable_text_area.getText();
                 if(note_to_add.isEmpty()){
-                    /*
-                    Display JOptionPane with error message if editable_text_area
-                    contained no text. 
-                    */
+                    
                     JOptionPane.showMessageDialog(joption_pane_frame, "No Text Entered");
                 }
                 else{
@@ -96,16 +86,14 @@ public class NotebookPanel extends JPanel {
         
     } //end constructor
     
-    /*
-    Function to convert an integer to a string.
-    Parameters: integer number - the number to be 
-    converted to a string. 
-    */
+    
     private String noteCounterToString(int number){
     	return Integer.toString(number);
     }
 
-} //end class
+} 
+*/
+//end class
 
 //TODO display number of players(server connections). 
 
