@@ -21,8 +21,8 @@ public class BoardPanel extends JPanel {
     BasicArrowButton[] movementButtons;
     JLabel boardLabel;
     char[] cArray;
-    int xC = 0; //x coordinate to transfer tiles->pixels by multiplying by 21
-    int yC = 0; //y coordinate to transfer tiles->pixels by multiplying by 20
+    int xC = 0; //x coordinate for drawing on board
+    int yC = 0; //y coordinate for drawing on board
     int currentXgrid = 0; //x coordinate location for tile grid. this x coord is sent to server
     int currentYgrid = 0; //y coordinate location for tile grid. this y coord is sent to server
 
@@ -129,11 +129,8 @@ public class BoardPanel extends JPanel {
                 clientFrame.addToLogConsole(coordinates); //adds player location to console
 
         client.send(new Message(ClueGameConstants.REQUEST_MOVEMENT_BUTTON_VALUES, coords));
-        // Receive message for movement button values from the server
         messageReceived = client.getMessage();
-        // Get movement button values from the message
         btnValues =  (String) messageReceived.getData();
-        // put string into character array
         cArray = btnValues.toCharArray();
         //for debugging purposes, output string to console log
         clientFrame.addToLogConsole(btnValues); 
