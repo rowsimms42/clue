@@ -9,6 +9,10 @@ public class Player implements Serializable{
     private long Id;
     private ArrayList<Card> playerCardDeck;
     private int currentXLocation, currentYLocation;
+    /*Rooms in the ROOM enum have a id value of 1 - 10.
+    If player is in a room, then roomNumber will have a 
+    value between 1 - 10. If not in a room, then value is 0*/
+    private int roomNumber = 0; 
     
     public Player(long Id){
         this.Id = Id;
@@ -17,6 +21,14 @@ public class Player implements Serializable{
 
     public long getPlayerId(){
         return Id;
+    }
+    
+    public void setRoomLocation(int roomNumber){
+        this.roomNumber = roomNumber;
+    }
+
+    public int getRoomLocation(){
+        return roomNumber;
     }
 
     public void setCharacter(Characters character) {

@@ -65,17 +65,17 @@ public final class ClueGameConstants {
 										"Miss Scarlett", "Mrs. Peacock"};
 
 		public static enum ROOMS{
-			Conservatory(new Rect(0,5,20,23), new Rect(1,4,19,23), 0),
-			Billard(new Rect(0, 5, 12, 16), new Rect(0, 5, 12, 16), 1),
-			Library(new Rect(1,5,6,10), new Rect(0,6,7,9), 2),
-			Study(new Rect(0, 5, 0, 3), new Rect(0, 6, 1, 3), 3),
-			Ballroom(new Rect(8, 15, 17, 22), new Rect(10,13,17,23), 4),
-			Hall(new Rect(9, 14, 1, 6), new Rect(9, 14, 1, 6), 5),
-			StairCase(new Rect(9,13, 8, 11), new Rect(9,13, 8, 11), 6),
-			Lounge(new Rect(18, 23, 0, 5), new Rect(17,23,1,5), 7),
-			Kitchen(new Rect(18, 22, 18, 23), new Rect(18, 23, 18, 23), 8),
-			DinningHall(new Rect(16,23,9,14), new Rect(19,23,9,15), 9),
-			Logo(new Rect(9,13, 12, 14), new Rect(9,13,12,4), 10);
+			Conservatory(new Rect(0,5,20,23), new Rect(1,4,19,23), 1),
+			Billard(new Rect(0, 5, 12, 16), new Rect(0, 5, 12, 16), 2),
+			Library(new Rect(1,5,6,10), new Rect(0,6,7,9), 3),
+			Study(new Rect(0, 5, 0, 3), new Rect(0, 6, 1, 3), 4),
+			Ballroom(new Rect(8, 15, 17, 22), new Rect(10,13,17,23), 5),
+			Hall(new Rect(9, 14, 1, 6), new Rect(9, 14, 1, 6), 6),
+			StairCase(new Rect(9,13, 8, 11), new Rect(9,13, 8, 11), 7),
+			Lounge(new Rect(18, 23, 0, 5), new Rect(17,23,1,5), 8),
+			Kitchen(new Rect(18, 22, 18, 23), new Rect(18, 23, 18, 23), 9),
+			DinningHall(new Rect(16,23,9,14), new Rect(19,23,9,15), 10),
+			Logo(new Rect(9,13, 12, 14), new Rect(9,13,12,4), 11);
 
 			private Rect rect1, rect2;
 			private int id;
@@ -89,27 +89,36 @@ public final class ClueGameConstants {
 			public Boolean isInRoom(int x, int y){
 				return rect1.isWithIn(x, y) || rect2.isWithIn(x,y);
 			}
+
 			public int getID() {return id;}
+
+			public int getRoomId(int id){
+				for(ROOMS room :ROOMS.values()){
+					if(id == room.getID())
+						return room.getID();
+				}
+				return 0; //not found in room
+			}
 		};
 		
 		public static enum DOORS{
-			STUDY_DOOR1(3,6,0, 3),
-			LIBRARY_DOOR1(8,6,2,2),
-			LIBRARY_DOOR2(10,3,0,2),
-			BILLARD_DOOR1(12,1,1,10),
-			BILLARD_DOOR2(15,5,2,10),
-			CONSERVATORY_DOOR1(19,4,2,6),
-			HALL_DOOR1(4,9,3,5),
-			HALL_DOOR2(6,11,0,5),
-			HALL_DOOR3(6,12,0,5),
-			BALLROOM_DOOR1(19,8,3,4),
-			BALLROOM_DOOR2(17,9,1,4),
-			BALLROOM_DOOR3(17,14,1,4),
-			BALLROOM_DOOR4(19,15,2,4),
-			LOUNGE_DOOR1(5,17,0,7),
-			DINNING_DOOR1(9,17,1,9),
-			DINNING_DOOR2(12,16,3,9),
-			KITCHEN_DOOR1(18,19,1,8);
+			STUDY_DOOR1(3,6,0,4),
+			LIBRARY_DOOR1(8,6,2,3),
+			LIBRARY_DOOR2(10,3,0,3),
+			BILLARD_DOOR1(12,1,1,5),
+			BILLARD_DOOR2(15,5,2,5),
+			CONSERVATORY_DOOR1(19,4,2,1),
+			HALL_DOOR1(4,9,3,6),
+			HALL_DOOR2(6,11,0,6),
+			HALL_DOOR3(6,12,0,6),
+			BALLROOM_DOOR1(19,8,3,5),
+			BALLROOM_DOOR2(17,9,1,5),
+			BALLROOM_DOOR3(17,14,1,5),
+			BALLROOM_DOOR4(19,15,2,5),
+			LOUNGE_DOOR1(5,17,0,8),
+			DINNING_DOOR1(9,17,1,10),
+			DINNING_DOOR2(12,16,3,10),
+			KITCHEN_DOOR1(18,19,1,9);
 		
 			private int row, col, direction, roomNumber;
 			DOORS(int row, int col, int direction, int roomNumber){
