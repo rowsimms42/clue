@@ -45,9 +45,9 @@ public class GameState {
 		weaponCardDeck  = createAndFillWeaponCardDeck();
 		roomCardDeck    = createAndFillRoomCardDeck();
 		suspectCardDeck = createAndFillSuspectCardDeck();
-		envelopeDeck  = createAndFillenvelopedeck(); 
-		combinedDeck = createAndFillCombinedDeck(); 
-	
+		envelopeDeck    = createAndFillenvelopedeck(); 
+		combinedDeck    = createAndFillCombinedDeck();
+
 	}
 
 	public int getAvailableCharacters() {
@@ -157,44 +157,40 @@ public class GameState {
 	
 	private ArrayList<Card> createAndFillenvelopedeck(){
 		ArrayList<Card> envelopeList = new ArrayList<Card>();
+		//add the top card from the weapon card deck to the envelope
 		envelopeList.add(weaponCardDeck.get(0)); 
 		weaponCardDeck.remove(0); 
-		
+		//add the top card from the suspect card deck to the envelope
 		envelopeList.add(suspectCardDeck.get(0)); 
 		suspectCardDeck.remove(0);
-
+		//add the top card from the room card deck to the envelope
 		envelopeList.add(roomCardDeck.get(0)); 
 		roomCardDeck.remove(0);
 		return envelopeList;
-
 	}
-
+	
 	private ArrayList<Card> createAndFillCombinedDeck(){
 		ArrayList<Card> combinedList = new ArrayList<Card>();
-		
+		//transfer all cards from the weapon card desk to the combined deck
 		for(Card card: weaponCardDeck ){ 
-
 			combinedList.add(card);
-
 		}
-		 weaponCardDeck.clear();
-
-		 for(Card card: suspectCardDeck ){ 
-
+		weaponCardDeck.clear();
+		//transfer all cards from the suspect card desk to the combined deck
+		for(Card card: suspectCardDeck ){ 
 			combinedList.add(card);
 		}
 		suspectCardDeck.clear();
-
+		//transfer all cards from the room card desk to the combined deck
 		for(Card card: roomCardDeck ){ 
-
 			combinedList.add(card);
 		}
 		roomCardDeck.clear();
-
+		//shuffle the combined deck and return it
 		Collections.shuffle(combinedList);
 		return combinedList; 
 	}
-
+	
 	private HashMap<String, Characters> createAndbuildCharacterMap() {
 		HashMap<String, Characters> characterMap = new HashMap<String, Characters>();
 		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS;i++) {
@@ -212,26 +208,19 @@ public class GameState {
 		}
 		return characterMap;
 	}
-
+	
 	public void dealCardsToPlayers() {	
 		
-		int i = 0; 
-
+		final int TOP_OF_DECK = 0; 
 		while(!combinedDeck.isEmpty()){	
 			for(long id: playerMap.keySet()){
 				if(combinedDeck.size() > 0 ){
-				
 					Player tempPlayer = playerMap.get(id);	
-					tempPlayer.getPlayerDeck().add(combinedDeck.get(i));					
-					combinedDeck.remove(i);
-					 		
+					tempPlayer.getPlayerDeck().add(combinedDeck.get(TOP_OF_DECK));					
+					combinedDeck.remove(TOP_OF_DECK);	 		
     			}	
 			}
 		}
-		
 	 }
-	 
-
+	
 } //end class
-
-
