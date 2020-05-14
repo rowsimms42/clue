@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 
 
@@ -90,6 +89,26 @@ public class MovementOptions{
 			case 14:
 				availableMoves = setMovesLR();
 				break;
+			case 15:
+				availableMoves = setMovesWithDoorLRD();
+				break;
+			case 16:
+				availableMoves = setMovesWithDoorLUD();
+				break;
+			case 17:
+				availableMoves = setMovesWithDoorLR();
+				break;
+			case 18:
+				availableMoves = setMovesWithDoorRUD();
+				break;
+			case 19:
+				availableMoves = setMovesWithDoorLRU();
+				break;
+			case 20:
+				availableMoves = setMovesWithDoorRU();
+				break;
+			case 21:
+				availableMoves = setMovesWithDoorR();
 			default:
 				availableMoves = setMovesNone();
 				System.out.println("Error in getNextMoves switch statement");
@@ -167,21 +186,13 @@ public class MovementOptions{
 		return returnMap;
 	}
 
-	// private HashMap<String, Boolean> setMovesUD() {
-	// 	HashMap <String, Boolean> returnMap = new HashMap<>();
-	// 	returnMap.put("left", false);
-	// 	returnMap.put("right", false);
-	// 	returnMap.put("up", true);
-	// 	returnMap.put("down", true);
-	// 	return returnMap;
-	// }
-
 	private HashMap<String, Boolean> setMovesUL() {
 		HashMap <String, Boolean> returnMap = new HashMap<>();
 		returnMap.put("left", true);
 		returnMap.put("right", false);
 		returnMap.put("up", true);
 		returnMap.put("down", false);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 	
@@ -191,6 +202,7 @@ public class MovementOptions{
 		returnMap.put("right", true);
 		returnMap.put("up", false);
 		returnMap.put("down", true);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -200,6 +212,7 @@ public class MovementOptions{
 		returnMap.put("right", true);
 		returnMap.put("up", false);
 		returnMap.put("down", false);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -209,6 +222,7 @@ public class MovementOptions{
 		returnMap.put("right", false);
 		returnMap.put("up", false);
 		returnMap.put("down", true);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -218,6 +232,7 @@ public class MovementOptions{
 		returnMap.put("right", true);
 		returnMap.put("up", true);
 		returnMap.put("down", true);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -227,6 +242,7 @@ public class MovementOptions{
 		returnMap.put("right", false);
 		returnMap.put("up", true);
 		returnMap.put("down", true);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -236,6 +252,7 @@ public class MovementOptions{
 		returnMap.put("right", true);
 		returnMap.put("up", false);
 		returnMap.put("down", true);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -245,6 +262,7 @@ public class MovementOptions{
 		returnMap.put("right", true);
 		returnMap.put("up", true);
 		returnMap.put("down", false);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -254,26 +272,100 @@ public class MovementOptions{
 		returnMap.put("right", true);
 		returnMap.put("up", true);
 		returnMap.put("down", true);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
+
+	private HashMap<String, Boolean> setMovesWithDoorLRD() {
+		HashMap <String, Boolean> returnMap = new HashMap<>();
+		returnMap.put("left", true);
+		returnMap.put("right", true);
+		returnMap.put("up", false);
+		returnMap.put("down", true);
+		returnMap.put("door", true);
+		return returnMap;
+	}
+
+	private HashMap<String, Boolean> setMovesWithDoorLUD() {
+		HashMap <String, Boolean> returnMap = new HashMap<>();
+		returnMap.put("left", true);
+		returnMap.put("right", false);
+		returnMap.put("up", false);
+		returnMap.put("down", true);
+		returnMap.put("door", true);
+		return returnMap;
+	}
+
+	private HashMap<String, Boolean> setMovesWithDoorLR() {
+		HashMap <String, Boolean> returnMap = new HashMap<>();
+		returnMap.put("left", true);
+		returnMap.put("right", true);
+		returnMap.put("up", false);
+		returnMap.put("down", false);
+		returnMap.put("door", false);
+		return returnMap;
+	}
+
+		
+	private HashMap<String, Boolean> setMovesWithDoorRUD() {
+		HashMap <String, Boolean> returnMap = new HashMap<>();
+		returnMap.put("left", false);
+		returnMap.put("right", true);
+		returnMap.put("up", true);
+		returnMap.put("down", true);
+		returnMap.put("door", true);
+		return returnMap;
+	}
+
+		
+	private HashMap<String, Boolean> setMovesWithDoorLRU() {
+		HashMap <String, Boolean> returnMap = new HashMap<>();
+		returnMap.put("left", true);
+		returnMap.put("right", true);
+		returnMap.put("up", true);
+		returnMap.put("down", false);
+		returnMap.put("door", true);
+		return returnMap;
+	}
+
+	
+	private HashMap<String, Boolean> setMovesWithDoorRU() {
+		HashMap <String, Boolean> returnMap = new HashMap<>();
+		returnMap.put("left", false);
+		returnMap.put("right", true);
+		returnMap.put("up", true);
+		returnMap.put("down", false);
+		returnMap.put("door", true);
+		return returnMap;
+	}
+
+	private HashMap<String, Boolean> setMovesWithDoorR() {
+		HashMap <String, Boolean> returnMap = new HashMap<>();
+		returnMap.put("left", false);
+		returnMap.put("right", true);
+		returnMap.put("up", false);
+		returnMap.put("down", false);
+		returnMap.put("door", true);
+		return returnMap;
+	}
+		
 	private HashMap<String, Boolean> setMovesNone() {
 		HashMap <String, Boolean> returnMap = new HashMap<>();
 		returnMap.put("left", false);
 		returnMap.put("right", false);
 		returnMap.put("up", false);
 		returnMap.put("down", false);
+		returnMap.put("door", false);
 		return returnMap;
     }
 	
     
-   
 
     public void initBoardCoords(){
         //int[][] boardcoords = new int[ClueGameConstants.BOARD_ROWS][ClueGameConstants.BOARD_COLS];
 		//Right only
 		boardcoords[5][0] = 1;
-		boardcoords[11][1] = 1;
 		boardcoords[18][0] = 1;
 		
 		//left only
@@ -304,7 +396,6 @@ public class MovementOptions{
 		
 		//right and up
 		boardcoords[6][6] = 7;
-		boardcoords[19][5] = 7;
 		boardcoords[22][6] = 7;
 		boardcoords[23][7] = 7;
 		
@@ -318,10 +409,8 @@ public class MovementOptions{
 		boardcoords[4][3] = 9;
 		boardcoords[4][4] = 9;
 		boardcoords[4][5] = 9;
-		boardcoords[4][6] = 9;
 
 		boardcoords[6][17] = 9;
-		boardcoords[6][18] = 9;
 		boardcoords[6][19] = 9;
 		boardcoords[6][20] = 9;
 		boardcoords[6][21] = 9;
@@ -354,24 +443,20 @@ public class MovementOptions{
 		boardcoords[5][5] = 10;
 
 		boardcoords[8][16] = 10;
-		boardcoords[8][17] = 10;
 		boardcoords[8][18] = 10;
 		boardcoords[8][19] = 10;
 		boardcoords[8][20] = 10;
 		boardcoords[8][21] = 10;
 
 		boardcoords[16][8] = 10;
-		boardcoords[16][9] = 10;
 		boardcoords[16][10] = 10;
 		boardcoords[16][11] = 10;
 		boardcoords[16][12] = 10;
 		boardcoords[16][13] = 10;
-		boardcoords[16][14] = 10;
 		boardcoords[16][15] = 10;
 		boardcoords[16][15] = 10;
 
 		boardcoords[17][18] = 10;
-		boardcoords[17][19] = 10;
 		boardcoords[17][20] = 10;
 		boardcoords[17][21] = 10;
 		boardcoords[17][22] = 10;
@@ -387,13 +472,11 @@ public class MovementOptions{
 		boardcoords[3][7] = 11;
 
 		boardcoords[7][7] = 11;
-		boardcoords[8][7] = 11;
 		boardcoords[9][7] = 11;
 
 		boardcoords[12][6] = 11;
 		boardcoords[13][6] = 11;
 		boardcoords[14][6] = 11;
-		boardcoords[15][6] = 11;
 		boardcoords[16][6] = 11;
 
 		boardcoords[20][6] = 11;
@@ -423,7 +506,6 @@ public class MovementOptions{
 		//up down left
 		boardcoords[2][8] = 12;
 		boardcoords[3][8] = 12;
-		boardcoords[4][8] = 12;
 		boardcoords[5][8] = 12;
 		boardcoords[6][8] = 12;
 
@@ -437,7 +519,6 @@ public class MovementOptions{
 
 		boardcoords[17][7] = 12;
 		boardcoords[18][7] = 12;
-		boardcoords[19][7] = 12;
 		boardcoords[20][7] = 12;
 		boardcoords[21][7] = 12;
 		boardcoords[22][7] = 12;
@@ -451,7 +532,6 @@ public class MovementOptions{
 		boardcoords[9][15] = 12;
 		boardcoords[10][15] = 12;
 		boardcoords[11][15] = 12;
-		boardcoords[12][15] = 12;
 		boardcoords[13][15] = 12;
 		boardcoords[14][15] = 12;
 
@@ -507,17 +587,45 @@ public class MovementOptions{
 		//left right
 		boardcoords[7][9] = 14;
 		boardcoords[7][10] = 14;
-		boardcoords[7][11] = 14;
-		boardcoords[7][12] = 14;
 		boardcoords[7][13] = 14;
 
 		boardcoords[11][2] = 14;
-		boardcoords[11][3] = 14;
 		boardcoords[11][4] = 14;
 		boardcoords[11][5] = 14;
 
 		boardcoords[23][8] = 14;
-        boardcoords[23][15] = 14;
+		boardcoords[23][15] = 14;
+		
+		//left right down door
+		boardcoords[4][6] = 15;
+		boardcoords[6][18] = 15;
+
+		//left up down door
+		boardcoords[4][8] = 16;
+		boardcoords[12][15] = 16;
+		boardcoords[19][7] = 16;
+
+		//left right door
+		boardcoords[7][11] = 17;
+		boardcoords[7][12] = 17;
+		boardcoords[11][3] = 17;
+
+		//right up down door
+		boardcoords[8][7] = 18;
+		boardcoords[15][6] = 18;
+		boardcoords[19][15] = 18;
+
+		//left right up door
+		boardcoords[8][17] = 19;
+		boardcoords[16][9] = 19;
+		boardcoords[16][14] = 19;
+		boardcoords[17][19] = 19;
+
+		//right up door
+		boardcoords[19][5] = 20;
+
+		//right door
+		boardcoords[11][1] = 21;
     }
    
 }//end class

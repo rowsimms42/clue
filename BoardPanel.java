@@ -1,11 +1,17 @@
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.LineBorder;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 public class BoardPanel extends JPanel {
@@ -16,7 +22,7 @@ public class BoardPanel extends JPanel {
     ClientFrame clientFrame;
     Player currentPlayer; //Characters now in Player class. Access specific character by currentPlayer.getCharacter(). ...
     Message messageReceived;
-    final int WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
+    final int WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3, ENTER_ROOM = 4;
     String btnValues;
     BasicArrowButton[] movementButtons;
     JLabel boardLabel;
@@ -138,8 +144,8 @@ public class BoardPanel extends JPanel {
 
     private void enableOrdisableBtns(JButton movementButtons[], char cArray[]){
     	//WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
-		boolean []moveOptions = {false,false,false,false};
-    	for(int i = 0; i < 4; i++) {
+		boolean []moveOptions = {false,false,false,false,false};
+    	for(int i = 0; i < moveOptions.length; i++) {
     		if(cArray[i] == '1')
     			moveOptions[i] = true;
     		else
@@ -148,7 +154,8 @@ public class BoardPanel extends JPanel {
     	movementButtons[WEST].setEnabled(moveOptions[WEST]);
     	movementButtons[EAST].setEnabled(moveOptions[EAST]);
     	movementButtons[NORTH].setEnabled(moveOptions[NORTH]);
-    	movementButtons[SOUTH].setEnabled(moveOptions[SOUTH]); 
+        movementButtons[SOUTH].setEnabled(moveOptions[SOUTH]);
+        movementButtons[ENTER_ROOM].setEnabled((moveOptions[ENTER_ROOM])); 
     }
 
     public void requestBtnsCall(int currentXgrid, int currentYgrid)
