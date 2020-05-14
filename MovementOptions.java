@@ -296,7 +296,7 @@ public class MovementOptions{
 		HashMap <String, Boolean> returnMap = new HashMap<>();
 		returnMap.put("left", true);
 		returnMap.put("right", false);
-		returnMap.put("up", false);
+		returnMap.put("up", true);
 		returnMap.put("down", true);
 		returnMap.put("door", true);
 		return returnMap;
@@ -308,7 +308,7 @@ public class MovementOptions{
 		returnMap.put("right", true);
 		returnMap.put("up", false);
 		returnMap.put("down", false);
-		returnMap.put("door", false);
+		returnMap.put("door", true);
 		return returnMap;
 	}
 
@@ -603,7 +603,7 @@ public class MovementOptions{
 		
 		//left right down door
 		boardcoords[4][6] = 15;
-		boardcoords[6][18] = 15;
+		boardcoords[6][17] = 15;
 
 		//left up down door
 		boardcoords[4][8] = 16;
@@ -618,7 +618,7 @@ public class MovementOptions{
 		//right up down door
 		boardcoords[8][7] = 18;
 		boardcoords[15][6] = 18;
-		boardcoords[19][15] = 18;
+		boardcoords[19][16] = 18;
 
 		//left right up door
 		boardcoords[8][17] = 19;
