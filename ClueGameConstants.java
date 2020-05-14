@@ -63,6 +63,10 @@ public final class ClueGameConstants {
 		
 		public static final int REPLY_FROM_SERVER_PLAYER_OBJECT = 35;
 		
+		public static final int REQUEST_MARK_PLAYER_END_TURN = 36;
+		
+		public static final int REPLY_FROM_SERVER_CONFIRM_PLAYER_END_TURN = 37;
+		
 		public static final int UNSELECTABLE_TILE = -1;
 
 		public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
@@ -83,16 +87,20 @@ public final class ClueGameConstants {
 
 			private Rect rect1, rect2;
 			private int id;
+			//private double []graphicsPoints;
 
 			ROOMS(Rect rect1, Rect rect2, int id){
 				this.rect1 = rect1;
 				this.rect2 = rect2;
 				this.id = id;
+				//this.graphicsPoints = graphicsPoints;
 			}
 
 			public Boolean isInRoom(int x, int y){
 				return rect1.isWithIn(x, y) || rect2.isWithIn(x,y);
 			}
+			
+			//public double[] getGraphicsPointsArray() {return graphicsPoints;}
 
 			public int getID() {return id;}
 
