@@ -147,6 +147,7 @@ public class MovementOptions{
 		returnMap.put("right", false);
 		returnMap.put("up", true);
 		returnMap.put("down", false);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -156,6 +157,7 @@ public class MovementOptions{
 		returnMap.put("right", true);
 		returnMap.put("up", false);
 		returnMap.put("down", false);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -165,6 +167,7 @@ public class MovementOptions{
 		returnMap.put("right", false);
 		returnMap.put("up", false);
 		returnMap.put("down", true);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -174,6 +177,7 @@ public class MovementOptions{
 		returnMap.put("right", false);
 		returnMap.put("up", false);
 		returnMap.put("down", false);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 
@@ -183,6 +187,7 @@ public class MovementOptions{
 		returnMap.put("right", true);
 		returnMap.put("up", true);
 		returnMap.put("down", false);
+		returnMap.put("door", false);
 		return returnMap;
 	}
 

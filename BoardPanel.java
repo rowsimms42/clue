@@ -22,10 +22,14 @@ public class BoardPanel extends JPanel {
     ClientFrame clientFrame;
     Player currentPlayer; //Characters now in Player class. Access specific character by currentPlayer.getCharacter(). ...
     Message messageReceived;
-    final int WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3, ENTER_ROOM = 4;
+    //final int WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3, ENTER_ROOM = 4;
+    final int WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3; 
+    final int ENTER_ROOM = 0;
     String btnValues;
     BasicArrowButton[] movementButtons;
     JLabel boardLabel;
+    JButton[] roomButtons;
+
     char[] cArray;
     int xC = 0; //x coordinate for drawing on board
     int yC = 0; //y coordinate for drawing on board
@@ -47,7 +51,7 @@ public class BoardPanel extends JPanel {
         this.add(boardLabel);
         boardLabel.setBounds(6, 6, 569, 523); 
 
-        cArray = new char[4];
+        cArray = new char[5];
 
         xC = currentPlayer.getCharacter().getxStarting() * 21;
         yC = currentPlayer.getCharacter().getyStarting() * 20;
@@ -57,7 +61,7 @@ public class BoardPanel extends JPanel {
 
         //request movement options at launch
         requestBtnsCall(currentXgrid, currentYgrid);
-        enableOrdisableBtns(movementButtons, cArray);
+        enableOrdisableBtns(movementButtons, roomButtons, cArray);
         
         /*TODO ----- TESTING IF WE CAN RECIEVE PLAYER MAP
         try {
@@ -73,7 +77,7 @@ public class BoardPanel extends JPanel {
                 currentYgrid++;
                 repaint();
                 requestBtnsCall(currentXgrid, currentYgrid);
-                enableOrdisableBtns(movementButtons, cArray);
+                enableOrdisableBtns(movementButtons, roomButtons, cArray);
             }
         });
 
@@ -83,7 +87,7 @@ public class BoardPanel extends JPanel {
                 currentYgrid--;
                 repaint();
                 requestBtnsCall(currentXgrid, currentYgrid);
-                enableOrdisableBtns(movementButtons, cArray);
+                enableOrdisableBtns(movementButtons, roomButtons, cArray);
             }
         });
 
@@ -93,7 +97,7 @@ public class BoardPanel extends JPanel {
                 repaint();
                 currentXgrid++;
                 requestBtnsCall(currentXgrid, currentYgrid);
-                enableOrdisableBtns(movementButtons, cArray);
+                enableOrdisableBtns(movementButtons, roomButtons, cArray);
             }
         });
 
@@ -103,7 +107,7 @@ public class BoardPanel extends JPanel {
                 repaint();
                 currentXgrid--;
                 requestBtnsCall(currentXgrid, currentYgrid);
-                enableOrdisableBtns(movementButtons, cArray);
+                enableOrdisableBtns(movementButtons, roomButtons, cArray);
             }
         });
     } //end constructor
@@ -138,24 +142,44 @@ public class BoardPanel extends JPanel {
         messageReceived = client.getMessage();
         btnValues =  (String) messageReceived.getData();
         cArray = btnValues.toCharArray();
+
         //for debugging purposes, output string to console log
         clientFrame.addToLogConsole(btnValues); 
     }
 
-    private void enableOrdisableBtns(JButton movementButtons[], char cArray[]){
+    private void enableOrdisableBtns(JButton movementButtons[], JButton roomButtons[], char cArray[]){
     	//WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
-		boolean []moveOptions = {false,false,false,false,false};
-    	for(int i = 0; i < moveOptions.length; i++) {
-    		if(cArray[i] == '1')
-    			moveOptions[i] = true;
-    		else
-    			moveOptions[i] = false;
-    	}
+        boolean []moveOptions = {false,false,false,false};
+        boolean []roomOptions = {false};
+        int i=1;
+
+        if (cArray[0] == '1')
+        {
+            roomOptions[0] = true;
+        }
+        else 
+        {
+            roomOptions[0] = false;
+        }
+        
+        for (int j=0; j<moveOptions.length; j++)
+        {
+            if (cArray[i] == '1')
+            {
+                moveOptions[j] = true;
+            }
+            else
+            {
+                moveOptions[j] = false;
+            }
+            i++;
+        }
+
     	movementButtons[WEST].setEnabled(moveOptions[WEST]);
     	movementButtons[EAST].setEnabled(moveOptions[EAST]);
     	movementButtons[NORTH].setEnabled(moveOptions[NORTH]);
         movementButtons[SOUTH].setEnabled(moveOptions[SOUTH]);
-        movementButtons[ENTER_ROOM].setEnabled((moveOptions[ENTER_ROOM])); 
+        roomButtons[ENTER_ROOM].setEnabled(roomOptions[ENTER_ROOM]);    
     }
 
     public void requestBtnsCall(int currentXgrid, int currentYgrid)
@@ -195,12 +219,21 @@ public class BoardPanel extends JPanel {
         movementButtons[WEST] = new BasicArrowButton(BasicArrowButton.WEST);
         movementButtons[WEST].setBounds(587, 106, 26, 23);
         this.add(movementButtons[WEST]);
+
+        roomButtons = new JButton[1];
+        roomButtons[ENTER_ROOM] = new JButton("Enter Room");
+        roomButtons[ENTER_ROOM] .setForeground(new Color(128, 0, 128));
+        roomButtons[ENTER_ROOM] .setFont(new Font("SansSerif", Font.BOLD, 10));
+        roomButtons[ENTER_ROOM] .setBounds(579, 340, 99, 23);
+        this.add(roomButtons[ENTER_ROOM]);
         
-        JButton btnEnterRoom = new JButton("Enter Room");
+        /*
+        btnEnterRoom = new JButton("Enter Room");
         btnEnterRoom.setForeground(new Color(128, 0, 128));
         btnEnterRoom.setFont(new Font("SansSerif", Font.BOLD, 10));
         btnEnterRoom.setBounds(579, 340, 99, 23);
         this.add(btnEnterRoom);
+        */
         
         JButton btnExitRoom = new JButton("Exit Room");
         btnExitRoom.setForeground(new Color(128, 0, 128));

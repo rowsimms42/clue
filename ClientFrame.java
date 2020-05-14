@@ -36,7 +36,7 @@ public class ClientFrame extends JFrame {
 	private JMenuBar menuBar;
 	private JMenu gameMenu;
 	private JMenuItem gameRulesMenuItem, seeCardDeckMenuItem;
-	private JButton btnAddNote;
+	private JButton btnAddNote, startBtn;
 	Message messageRecieved;
 	Client client;
 	Player currentPlayer;
@@ -56,6 +56,14 @@ public class ClientFrame extends JFrame {
 		
 		//initialize all gui components minus the game board panel
 		initComponents();
+		
+		//call to server asking if 
+
+		//start button
+		startBtn.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
 		
 		//request and receive the player object for this player
 		try {
@@ -123,6 +131,11 @@ public class ClientFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+
+		startBtn = new JButton("Start Game");
+        startBtn.setFont(new Font("SansSerif", Font.BOLD, 12));
+        startBtn.setBounds(109, 579, 105, 28);
+		contentPane.add(startBtn);
 		
 		noteStringBuilder = new StringBuilder();
 		logStringBuilder  = new StringBuilder();
