@@ -13,6 +13,8 @@ public class Player implements Serializable{
     If player is in a room, then roomNumber will have a 
     value between 1 - 10. If not in a room, then value is 0*/
     private int roomNumber = 0; 
+    private boolean isPlayerTurn = false;
+    
     
     public Player(long Id){
         this.Id = Id;
@@ -29,6 +31,14 @@ public class Player implements Serializable{
 
     public int getRoomLocation(){
         return roomNumber;
+    }
+    
+    public void setIsPlayerTurn(boolean value) {
+    	isPlayerTurn = value;
+    }
+    
+    public boolean getIsPlayerTurn() {
+    	return isPlayerTurn;
     }
 
     public void setCharacter(Characters character) {

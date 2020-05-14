@@ -15,6 +15,7 @@ public class GameState {
 	
 	private ArrayList<Card> weaponCardDeck, suspectCardDeck, 
 							roomCardDeck, envelopeDeck, combinedDeck;
+	private ArrayList<Integer> playerTurnOrder;
 	
 	public GameState(){
 		initializeVariables();
@@ -33,6 +34,7 @@ public class GameState {
 	public void initializeVariables(){
 
 		movementOptions = new MovementOptions();
+		playerTurnOrder = new ArrayList<>();
 		
 		availableCharacters = 0;
 		numberOfPlayers = 0;
@@ -47,9 +49,13 @@ public class GameState {
 		suspectCardDeck = createAndFillSuspectCardDeck();
 		envelopeDeck    = createAndFillenvelopedeck(); 
 		combinedDeck    = createAndFillCombinedDeck();
-
 	}
 
+	public void addTurnOrder(int n) {
+		playerTurnOrder.add(n);
+		Collections.sort(playerTurnOrder);
+	}
+	
 	public int getAvailableCharacters() {
 		return availableCharacters;
 	}
@@ -196,14 +202,13 @@ public class GameState {
 		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS;i++) {
 			String charName = ClueGameConstants.CHARACTER_NAMES_ARRAY[i];
 			switch(i) {
-				case 0 : characterMap.put(charName, new Characters(charName, 261123, 9, 24, 1)); break; //green
-				case 1 : characterMap.put(charName, new Characters(charName, 10290172, 0, 5, 2)); break; //plum
+				case 0 : characterMap.put(charName, new Characters(charName, 261123, 9, 24, 4)); break; //green
+				case 1 : characterMap.put(charName, new Characters(charName, 10290172, 0, 5, 6)); break; //plum
 				case 2 : characterMap.put(charName, new Characters(charName, 16777212, 14, 24, 3)); break; //white
-				case 3 : characterMap.put(charName, new Characters(charName, 16576515, 23, 7, 4)); break; //mustard
-				case 4 : characterMap.put(charName, new Characters(charName, 16515918, 16, 0, 5)); break; //scarlett
-				case 5 : characterMap.put(charName, new Characters(charName, 234748, 0, 18, 6)); break; //peacock
+				case 3 : characterMap.put(charName, new Characters(charName, 16576515, 23, 7, 2)); break; //mustard
+				case 4 : characterMap.put(charName, new Characters(charName, 16515918, 16, 0, 1)); break; //scarlett
+				case 5 : characterMap.put(charName, new Characters(charName, 234748, 0, 18, 5)); break; //peacock
 				default: //nothing
-					
 			}
 		}
 		return characterMap;
