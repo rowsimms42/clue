@@ -73,34 +73,34 @@ public final class ClueGameConstants {
 										"Miss Scarlett", "Mrs. Peacock"};
 
 		public static enum ROOMS{
-			Conservatory(new Rect(0,5,20,23), new Rect(1,4,19,23), 1),
-			Billard(new Rect(0, 5, 12, 16), new Rect(0, 5, 12, 16), 2),
-			Library(new Rect(1,5,6,10), new Rect(0,6,7,9), 3),
-			Study(new Rect(0, 5, 0, 3), new Rect(0, 6, 1, 3), 4),
-			Ballroom(new Rect(8, 15, 17, 22), new Rect(10,13,17,23), 5),
-			Hall(new Rect(9, 14, 1, 6), new Rect(9, 14, 1, 6), 6),
-			StairCase(new Rect(9,13, 8, 11), new Rect(9,13, 8, 11), 7),
-			Lounge(new Rect(18, 23, 0, 5), new Rect(17,23,1,5), 8),
-			Kitchen(new Rect(18, 22, 18, 23), new Rect(18, 23, 18, 23), 9),
-			DinningHall(new Rect(16,23,9,14), new Rect(19,23,9,15), 10),
-			Logo(new Rect(9,13, 12, 14), new Rect(9,13,12,4), 11);
+			Conservatory(new Rect(0,5,20,23), new Rect(1,4,19,23), 1, new double[]{1,2,3,4,5,6}),
+			Billard(new Rect(0, 5, 12, 16), new Rect(0, 5, 12, 16), 2, new double[]{0,0}),
+			Library(new Rect(1,5,6,10), new Rect(0,6,7,9), 3, new double[]{0,0}),
+			Study(new Rect(0, 5, 0, 3), new Rect(0, 6, 1, 3), 4, new double[]{0,0}),
+			Ballroom(new Rect(8, 15, 17, 22), new Rect(10,13,17,23), 5, new double[]{0,0}),
+			Hall(new Rect(9, 14, 1, 6), new Rect(9, 14, 1, 6), 6, new double[]{0,0}),
+			StairCase(new Rect(9,13, 8, 11), new Rect(9,13, 8, 11), 7, new double[]{0,0}),
+			Lounge(new Rect(18, 23, 0, 5), new Rect(17,23,1,5), 8, new double[]{0,0}),
+			Kitchen(new Rect(18, 22, 18, 23), new Rect(18, 23, 18, 23), 9, new double[]{0,0}),
+			DinningHall(new Rect(16,23,9,14), new Rect(19,23,9,15), 10, new double[]{0,0}),
+			Logo(new Rect(9,13, 12, 14), new Rect(9,13,12,4), 11, new double[]{0,0});
 
 			private Rect rect1, rect2;
 			private int id;
-			//private double []graphicsPoints;
+			private double []graphicsPoints;
 
-			ROOMS(Rect rect1, Rect rect2, int id){
+			ROOMS(Rect rect1, Rect rect2, int id, double[] graphicsPoints){
 				this.rect1 = rect1;
 				this.rect2 = rect2;
 				this.id = id;
-				//this.graphicsPoints = graphicsPoints;
+				this.graphicsPoints = graphicsPoints;
 			}
 
 			public Boolean isInRoom(int x, int y){
 				return rect1.isWithIn(x, y) || rect2.isWithIn(x,y);
 			}
 			
-			//public double[] getGraphicsPointsArray() {return graphicsPoints;}
+			public double[] getGraphicsPointsArray() {return graphicsPoints;}
 
 			public int getID() {return id;}
 
@@ -114,23 +114,23 @@ public final class ClueGameConstants {
 		};
 		
 		public static enum DOORS{
-			STUDY_DOOR1(3,6,0,4),
-			LIBRARY_DOOR1(8,6,2,3),
-			LIBRARY_DOOR2(10,3,0,3),
-			BILLARD_DOOR1(12,1,1,5),
-			BILLARD_DOOR2(15,5,2,5),
-			CONSERVATORY_DOOR1(19,4,2,1),
-			HALL_DOOR1(4,9,3,6),
-			HALL_DOOR2(6,11,0,6),
-			HALL_DOOR3(6,12,0,6),
-			BALLROOM_DOOR1(19,8,3,5),
-			BALLROOM_DOOR2(17,9,1,5),
-			BALLROOM_DOOR3(17,14,1,5),
-			BALLROOM_DOOR4(19,15,2,5),
-			LOUNGE_DOOR1(5,17,0,8),
-			DINNING_DOOR1(9,17,1,10),
-			DINNING_DOOR2(12,16,3,10),
-			KITCHEN_DOOR1(18,19,1,9);
+			STUDY_DOOR1(6,4,0,4),
+			LIBRARY_DOOR1(7,8,2,3),
+			LIBRARY_DOOR2(3,11,0,3),
+			BILLARD_DOOR1(1,11,1,2),
+			BILLARD_DOOR2(6,15,2,2),
+			CONSERVATORY_DOOR1(5,19,2,1),
+			HALL_DOOR1(8,4,3,6),
+			HALL_DOOR2(11,7,0,6),
+			HALL_DOOR3(12,7,0,6),
+			BALLROOM_DOOR1(7,19,3,5),
+			BALLROOM_DOOR2(9,16,1,5),
+			BALLROOM_DOOR3(14,16,1,5),
+			BALLROOM_DOOR4(16,19,2,5),
+			LOUNGE_DOOR1(17,6,0,8),
+			DINNING_DOOR1(17,8,1,10),
+			DINNING_DOOR2(15,12,3,10),
+			KITCHEN_DOOR1(19,17,1,9);
 		
 			private int row, col, direction, roomNumber;
 			DOORS(int row, int col, int direction, int roomNumber){

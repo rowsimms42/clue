@@ -20,4 +20,5 @@ public class Characters implements Serializable{
 	public int getxStarting() {return xStarting;}
 	public int getyStarting() {return yStarting;}
 	public int getTurnOrder() {return turnOrder;}
+
 }

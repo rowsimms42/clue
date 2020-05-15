@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 
+
 public class BoardPanel extends JPanel {
 
 	final ImageIcon gameboard;
@@ -110,8 +111,108 @@ public class BoardPanel extends JPanel {
                 enableOrdisableBtns(movementButtons, roomButtons, cArray);
             }
         });
-    } //end constructor
 
+        roomButtons[ENTER_ROOM].addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+                //figure out which room
+                int roomNumber = getDoorId(currentXgrid, currentYgrid);
+                int roomDirection = getDirection(currentXgrid, currentYgrid);
+                drawInRoom(roomNumber, roomDirection);
+                String rn = String.valueOf(roomNumber);
+                String rd = String.valueOf(roomDirection);
+                clientFrame.addToLogConsole("room Number: " + rn + "room direction: " + rd);
+        	}
+        });
+        
+    } 
+
+    private int getDoorId(int row, int col) {
+		for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
+			if(door.getRow() == row && door.getCol() == col) 
+				return door.getRoomNumber();
+		}
+		return 0; 
+    }
+    
+    private int getDirection(int row, int col) {
+		for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
+			if(door.getRow() == row && door.getCol() == col) 
+				return door.getDirection();
+		}
+		return 0;
+    }
+
+    public void drawInRoom(int roomNumber, int roomDirection)
+    {
+        //c:1 ; billiard:2; lib:3; study:4; ball: 5; hall:6; lounge:8; kitchen:9; dining: 10; 
+        //room direction 0=up; 1=down; 2=left; 3=right
+        int multiplier = 0;
+        if (roomNumber == 1) //conservatory down 2, left turn over num
+        {
+            multiplier = currentPlayer.getCharacter().getTurnOrder()-1;
+            yC += 20*2;
+            xC -= 21 * multiplier;
+            currentYgrid = currentYgrid+2;
+            currentXgrid = currentXgrid - multiplier;
+        }
+        if (roomNumber == 10) //dining room
+        {
+            multiplier = currentPlayer.getCharacter().getTurnOrder();
+            if (roomDirection == 1)
+            {
+                yC += 20*2;
+                currentYgrid = currentYgrid+2;
+            }
+            xC += 21 * multiplier;
+            currentXgrid = currentXgrid - multiplier;
+        }
+        if (roomNumber == 4) //study //up 2, left multiplier
+        {
+            multiplier = currentPlayer.getCharacter().getTurnOrder();
+            yC-=20*2;
+            xC-= 21* multiplier;
+            currentYgrid = currentYgrid+2;
+            currentXgrid = currentXgrid - multiplier;
+        }
+        if (roomNumber == 8) //lounge //right 2, up mult
+        {
+            multiplier = currentPlayer.getCharacter().getTurnOrder();
+            yC -= 20*multiplier;
+            xC += 21*2;
+            currentYgrid = currentYgrid - multiplier;
+            currentXgrid = currentXgrid + 2;
+        }
+        if (roomNumber == 3) //library
+        {
+            multiplier = currentPlayer.getCharacter().getTurnOrder();
+            if (roomDirection == 0)
+            {
+                yC-= 20*2; //up 2
+                xC+= 21*3; //right 3
+                currentXgrid = currentXgrid+3;
+                xC-= 21*multiplier; //left by 6
+                currentYgrid = currentYgrid+2;
+            }
+            else
+            {
+                xC-= 21*multiplier;
+            }
+            currentXgrid = currentXgrid - multiplier;
+        }
+        if (roomNumber == 9) //kitchen
+        {
+            multiplier = currentPlayer.getCharacter().getTurnOrder();
+            yC+= 20* multiplier;
+            xC+= 21;
+            currentYgrid = currentYgrid + multiplier;
+            currentXgrid++;
+        }
+
+        repaint();
+        requestBtnsCall(currentXgrid, currentYgrid);
+        enableOrdisableBtns(movementButtons, roomButtons, cArray);
+    }
+    
     // @Override
     public void paint(Graphics g) {
         super.paint(g);
