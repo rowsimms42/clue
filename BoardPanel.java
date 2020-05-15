@@ -188,7 +188,7 @@ public class BoardPanel extends JPanel {
                 currentYgrid = currentYgrid+2;
             }
             xC += 21 * multiplier;
-            currentXgrid = currentXgrid - multiplier;
+            currentXgrid = currentXgrid + multiplier;
         }
         if (roomNumber == 4) //study //up 2, left multiplier
         {
@@ -283,7 +283,7 @@ public class BoardPanel extends JPanel {
                     currentXgrid--;
                 }
                 yC+= 20*multiplier;
-                currentYgrid = currentYgrid - multiplier;
+                currentYgrid = currentYgrid + multiplier;
             }
         }
         repaint();
