@@ -109,6 +109,7 @@ public class MovementOptions{
 				break;
 			case 21:
 				availableMoves = setMovesWithDoorR();
+				break;
 			default:
 				availableMoves = setMovesNone();
 				System.out.println("Error in getNextMoves switch statement");
