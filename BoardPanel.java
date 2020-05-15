@@ -31,8 +31,10 @@ public class BoardPanel extends JPanel {
     JLabel boardLabel;
     JButton[] enterButton;
     JButton[] roomButtons; //to hold buttons in room
+    JButton btnRollDice;
+    int dice_roll_value = 0;
 
-    char[] cArray;
+    char[] cArray_movement_enter;
     int xC = 0; //x coordinate for drawing on board
     int yC = 0; //y coordinate for drawing on board
     int currentXgrid = 0; //x coordinate location for tile grid. this x coord is sent to server
@@ -53,7 +55,7 @@ public class BoardPanel extends JPanel {
         this.add(boardLabel);
         boardLabel.setBounds(6, 6, 569, 523); 
 
-        cArray = new char[5];
+        cArray_movement_enter = new char[5];
 
         xC = currentPlayer.getCharacter().getxStarting() * 21;
         yC = currentPlayer.getCharacter().getyStarting() * 20;
@@ -63,7 +65,7 @@ public class BoardPanel extends JPanel {
 
         //request movement options at launch
         requestBtnsCall(currentXgrid, currentYgrid);
-        enableOrdisableBtns(movementButtons, enterButton, cArray);
+        enableOrdisableBtns(movementButtons, enterButton, cArray_movement_enter);
         
         /*TODO ----- TESTING IF WE CAN RECIEVE PLAYER MAP
         try {
@@ -79,7 +81,7 @@ public class BoardPanel extends JPanel {
                 currentYgrid++;
                 repaint();
                 requestBtnsCall(currentXgrid, currentYgrid);
-                enableOrdisableBtns(movementButtons, enterButton, cArray);
+                enableOrdisableBtns(movementButtons, enterButton, cArray_movement_enter);
             }
         });
 
@@ -89,7 +91,7 @@ public class BoardPanel extends JPanel {
                 currentYgrid--;
                 repaint();
                 requestBtnsCall(currentXgrid, currentYgrid);
-                enableOrdisableBtns(movementButtons, enterButton, cArray);
+                enableOrdisableBtns(movementButtons, enterButton, cArray_movement_enter);
             }
         });
 
@@ -99,7 +101,7 @@ public class BoardPanel extends JPanel {
                 repaint();
                 currentXgrid++;
                 requestBtnsCall(currentXgrid, currentYgrid);
-                enableOrdisableBtns(movementButtons, enterButton, cArray);
+                enableOrdisableBtns(movementButtons, enterButton, cArray_movement_enter);
             }
         });
 
@@ -109,7 +111,7 @@ public class BoardPanel extends JPanel {
                 repaint();
                 currentXgrid--;
                 requestBtnsCall(currentXgrid, currentYgrid);
-                enableOrdisableBtns(movementButtons, enterButton, cArray);
+                enableOrdisableBtns(movementButtons, enterButton, cArray_movement_enter);
             }
         });
 
@@ -123,10 +125,30 @@ public class BoardPanel extends JPanel {
                 String rd = String.valueOf(roomDirection);
                 clientFrame.addToLogConsole("room Number: " + rn + "room direction: " + rd);
                 requestBtnsCall(currentXgrid, currentYgrid);
-                enableOrdisableBtns(movementButtons, enterButton, cArray);
+                enableOrdisableBtns(movementButtons, enterButton, cArray_movement_enter);
+        	}
+        });
+
+        btnRollDice.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+                try {
+                    requestDiceRoll(dice_roll_value);
+                } catch (IOException | ClassNotFoundException e1) {
+                    e1.printStackTrace();
+                }
         	}
         });
     } 
+
+    private void requestDiceRoll(int dice_roll_value) throws IOException, ClassNotFoundException
+    {
+        client.send(new Message(ClueGameConstants.REQUEST_DICE_ROLL, null));
+        messageReceived = client.getMessage();
+        dice_roll_value =  (int) messageReceived.getData();
+        //output value from server
+        String str = String.valueOf(dice_roll_value);
+        clientFrame.addToLogConsole("Dice roll: " + str); 
+    }
 
     private int getDoorId(int row, int col) {
 		for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
@@ -296,18 +318,18 @@ public class BoardPanel extends JPanel {
         client.send(new Message(ClueGameConstants.REQUEST_MOVEMENT_BUTTON_VALUES, coords));
         messageReceived = client.getMessage();
         btnValues =  (String) messageReceived.getData();
-        cArray = btnValues.toCharArray();
+        cArray_movement_enter = btnValues.toCharArray();
         //for debugging purposes, output string to console log
         clientFrame.addToLogConsole(btnValues); 
     }
 
-    private void enableOrdisableBtns(JButton movementButtons[], JButton enterButton[], char cArray[]){
+    private void enableOrdisableBtns(JButton movementButtons[], JButton enterButton[], char cArray_movement_enter[]){
     	//WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
         boolean []moveOptions = {false,false,false,false};
         boolean []roomOptions = {false};
         int i=1;
 
-        if (cArray[0] == '1')
+        if (cArray_movement_enter[0] == '1')
         {
             roomOptions[0] = true;
         }
@@ -318,7 +340,7 @@ public class BoardPanel extends JPanel {
         
         for (int j=0; j<moveOptions.length; j++)
         {
-            if (cArray[i] == '1')
+            if (cArray_movement_enter[i] == '1')
             {
                 moveOptions[j] = true;
             }
@@ -409,7 +431,7 @@ public class BoardPanel extends JPanel {
         btnEndTurn.setBounds(579, 243, 99, 23);
         this.add(btnEndTurn);
 
-        JButton btnRollDice = new JButton("Roll Dice");
+        btnRollDice = new JButton("Roll Dice");
         btnRollDice.setForeground(new Color(0,128,0));
         btnRollDice.setFont(new Font("SansSerif", Font.BOLD, 10));
         btnRollDice.setBounds(579, 208, 99, 23);
