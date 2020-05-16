@@ -36,9 +36,10 @@ public class ClientFrame extends JFrame {
 	private JMenuBar menuBar;
 	private JMenu gameMenu;
 	private JMenuItem gameRulesMenuItem, seeCardDeckMenuItem;
-	private JButton btnAddNote, startBtn;
+	private JButton btnAddNote;
 	Message messageRecieved;
 	Client client;
+	RoomClick roomClick;
 	Player currentPlayer;
 	private int noteCounter = 0;
 	int rows = 24;
@@ -57,14 +58,7 @@ public class ClientFrame extends JFrame {
 		//initialize all gui components minus the game board panel
 		initComponents();
 		
-		//call to server asking if 
-
-		//start button
-		startBtn.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
-        });
-		
+		//----ask if we can start
 		//request and receive the player object for this player
 		try {
 			client.send(new Message(ClueGameConstants.REQUEST_PLAYER_OBJECT, null));
@@ -93,8 +87,33 @@ public class ClientFrame extends JFrame {
 				addToNotebook(textAreaGameNote.getText());
 			}
 		}); //end button action listener
-
 		
+		gameRulesMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				class GameRules extends JFrame{
+					public GameRules() {
+						setResizable(false);
+						setTitle("Clue Game Rules");
+						getContentPane().setLayout(null);
+						setBounds(6,6,329,493);
+						JPanel gameRulesPanel = new JPanel();
+						gameRulesPanel.setBounds(6, 6, 327, 491);
+						getContentPane().add(gameRulesPanel);
+						JTextArea textArea = new JTextArea(40,15);
+						textArea.setLineWrap(true);
+						textArea.setEditable(false);
+						JScrollPane scrollPane = new JScrollPane(textArea);
+						scrollPane.setBounds(6,6, 325, 489);
+						getContentPane().add(scrollPane);
+						textArea.setText("Someone add game rules....");
+						setLocationRelativeTo(null);
+						setVisible(true);
+					}
+				} //end of inner game rules class
+				new GameRules();
+			}
+		});
+
 		//setVisible(true); 
 	} // end constructor
 
@@ -131,11 +150,6 @@ public class ClientFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
-		startBtn = new JButton("Start Game");
-        startBtn.setFont(new Font("SansSerif", Font.BOLD, 12));
-        startBtn.setBounds(109, 579, 105, 28);
-		contentPane.add(startBtn);
 		
 		noteStringBuilder = new StringBuilder();
 		logStringBuilder  = new StringBuilder();
