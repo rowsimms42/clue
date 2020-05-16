@@ -1,25 +1,34 @@
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class GameHandler {
 
     GameState gameState;
+    //System.out.println(gameState);
     int characterIndex;
-
+    HashMap<Long, Player> playerMapTemp;
     GameHandler(GameState gameState){
+    	//System.out.println("Game state: " + gameState);
         this.gameState = gameState;
+        playerMapTemp = new HashMap<Long, Player>();
     }
 
+    public GameState getGameState() {
+    	return this.gameState;
+    }
+    
     /* Increment the number of players in the game state class */
     public void incrementAmountOfPlayers(){
         gameState.setNumberOfPlayers( gameState.getNumberOfPlayers() + 1);
     }
 
     //add player to the game state
-    public void addPlayerToGame(Player player, long ID){
-        gameState.addPlayer(player, ID);
+    public void addPlayerToGame(long ID, Player player){
+        gameState.addPlayer(ID, player);
+        System.out.println("Adding player to gamestate address: " + gameState);
     }
 
     //return the number of players from the game state 
@@ -32,6 +41,7 @@ public class GameHandler {
         Message returnMessage;
         Player tempPlayer;
         Characters tempCharacter;
+        HashMap<Long, Player> playerMapTemp = new  HashMap<Long, Player>();
 
         int msgID = msgObj.getMessageID();
         System.out.println("Incoming to server MessageID: " + msgID);
@@ -63,47 +73,29 @@ public class GameHandler {
                 tempCharacter = (Characters) gameState.getCharacterMap().get(gameState.getCharacterName(characterIndex));
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
                 tempPlayer.setCharacter(tempCharacter);
+                gameState.addTurnOrder(tempPlayer.getCharacter().getTurnOrder());
                 System.out.println("Character chosen: " + tempPlayer.getName());
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_CHARACTER_SELECTED, null);
                 System.out.println("Client wants server to mark character is taken");
                 return returnMessage;
-
+                
             case ClueGameConstants.REQUEST_PLAYER_ID:
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_ID, 
                                             Long.valueOf(tempPlayer.getPlayerId()));
-                return returnMessage;
-
-            case ClueGameConstants.REQUEST_PLAYER_NAME:
-                tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-                System.out.println("Player name: " + tempPlayer.getName());
-                returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_NAME, 
-                                            tempPlayer.getName());
-                return returnMessage;
-
+                return returnMessage; 
+            
             case ClueGameConstants.REQUEST_DICE_ROLL:
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_DICE_ROLL, 
                                             Integer.valueOf(gameState.rollDice()));
                 return returnMessage;
-                
-            case ClueGameConstants.REQUEST_PLAYERS_CHARACTER:
-            	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-            	tempCharacter = tempPlayer.getCharacter();
-            	System.out.println("Character to be sent: " + tempCharacter.getName());
-            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYERS_CHARACTER, 
-            								(Characters)tempCharacter);
-            	return returnMessage;
-            
-            
+             
             case ClueGameConstants.REQUEST_MOVEMENT_BUTTON_VALUES:
                 int[] locCoords = (int[]) msgObj.getData();
-                //System.out.println("coord1: " + locCoords[0]);
-                //System.out.println("coord2: " + locCoords[1]);
-                tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
+                tempPlayer = new Player((Player) gameState.getPlayerMap().get(threadID));
                 tempPlayer.setLocation(locCoords);
-                //HashMap<String, Boolean> buttonValues = gameState.getAvailableMoves(locCoords);
+                gameState.getPlayerMap().put(threadID, tempPlayer);
                 HashMap<String, Boolean> buttonValues = gameState.getAvailableMoves(tempPlayer.getLocationArray());
-
                 StringBuilder sb = new StringBuilder();
                 for (String value : buttonValues.keySet()){
                     boolean val = buttonValues.get(value);
@@ -117,14 +109,38 @@ public class GameHandler {
                 return returnMessage;
                 
             case ClueGameConstants.REQUEST_PLAYER_MAP:
-            	HashMap<Long, Player> playerMap = gameState.getPlayerMap();
-            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_MAP, playerMap);
+            	playerMapTemp.clear();
+            	playerMapTemp.putAll(gameState.getPlayerMap());
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_MAP, 
+            			playerMapTemp);
             	return returnMessage;
             	
             case ClueGameConstants.REQUEST_PLAYER_OBJECT:
             	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_OBJECT, tempPlayer);
             	return returnMessage;
+            
+            	/*
+            case ClueGameConstants.REQUEST_IS_CURRENT_TURN:
+            	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
+            	boolean isTurn = tempPlayer.getIsPlayerTurn();
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_IS_PLAYER_TURN, 
+            								Boolean.valueOf(isTurn));
+            	return returnMessage;
+            
+            case ClueGameConstants.REQUEST_MARK_PLAYER_END_TURN:
+            	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
+            	tempPlayer.setIsPlayerTurn(false);
+            	Put tempPlayer back into the map
+            	int nextTurnOrder = from something
+            	get the next player based on the turn order
+            	set next players isPlayerTurn to true;
+            	put him back into the map
+            	nextPlayer.setIsPlayerTurn(true); 
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_PLAYER_END_TURN,null);
+            	return returnMessage;*/
+            
+            
             	
             default:
                 return msgObj; //returns same object sent

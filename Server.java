@@ -6,8 +6,8 @@ import java.util.Iterator;
 
 public class Server extends Thread
 {
-    private GameHandler gameHandler;
-    private GameState gameState;
+    private final GameHandler gameHandler;
+    private final GameState gameState;
     private ServerSocket serverSocket;
     private boolean running = false;
     public static ArrayList<Socket> clientSocketList = new ArrayList<Socket>();
@@ -27,7 +27,7 @@ public class Server extends Thread
     {
         try
         {
-            serverSocket = new ServerSocket( 55332);
+            serverSocket = new ServerSocket( 55440);
             this.start();
         }
         catch (IOException e)

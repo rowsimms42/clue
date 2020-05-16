@@ -3,21 +3,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameState {
 	
 	private int availableCharacters;
 	private Boolean availableCharactersArray[];
 	private int numberOfPlayers;
-	private HashMap<Long, Player> playerMap;
+	private final ConcurrentHashMap<Long, Player> playerMap ;
 	private HashMap<String, Characters> characterMap;
 	private MovementOptions movementOptions;
-	
 	private ArrayList<Card> weaponCardDeck, suspectCardDeck, 
 							roomCardDeck, envelopeDeck, combinedDeck;
 	private ArrayList<Integer> playerTurnOrder;
 	
 	public GameState(){
+		playerMap = new ConcurrentHashMap<Long, Player>(); //<- has to be here
 		initializeVariables();
 	}
 	
@@ -42,7 +43,6 @@ public class GameState {
 		availableCharactersArray = new Boolean[ ClueGameConstants.MAX_CHARACTERS ];
 		Arrays.fill(availableCharactersArray, true);
 		
-		playerMap = new HashMap<Long, Player>();
 		characterMap    = createAndbuildCharacterMap();
 		weaponCardDeck  = createAndFillWeaponCardDeck();
 		roomCardDeck    = createAndFillRoomCardDeck();
@@ -84,13 +84,13 @@ public class GameState {
 		return numberOfPlayers;
 	}
 	
-	public void addPlayer(Player player, long threadID){
+	public void addPlayer(long threadID, Player player){
 		playerMap.put(threadID, player);
 	}
 
-	public HashMap<Long, Player> getPlayerMap(){
+	public ConcurrentHashMap<Long, Player> getPlayerMap() {
 		return playerMap;
-	} 
+	}
 	
 	public HashMap<String, Characters> getCharacterMap() {
 		return characterMap;
@@ -112,14 +112,7 @@ public class GameState {
 	}
 
 	public HashMap<String, Boolean> getAvailableMoves(int[] locations){
-		//return movementOptions.getNextMoves(locations);
-		//System.out.println("in game state...");
-		//System.out.println(Arrays.toString(locations));
-		//HashMap<String, Boolean> btnValues = movementOptions.getNextMoves(locations);
-		//System.out.println(Collections.singletonList(btnValues));
-		//return btnValues;
 		return movementOptions.getNextMoves(locations, this);
-
 	}
 	
 	private ArrayList<Card> createAndFillWeaponCardDeck(){

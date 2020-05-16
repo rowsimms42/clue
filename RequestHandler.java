@@ -3,6 +3,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.HashMap;
 
 class RequestHandler extends Thread {
     private Socket socket;
@@ -12,7 +13,10 @@ class RequestHandler extends Thread {
     ObjectOutputStream oos;
     Player player;
 
+
     RequestHandler(Socket socket, GameHandler gameHandler) {
+    	System.out.println("In Request Handler: gameHandler: " + gameHandler);
+    	System.out.println("In Request Handler: gameState: " + gameHandler.getGameState());
         this.socket = socket;
         this.gameHandler = gameHandler;
         //player = Player();
@@ -35,9 +39,9 @@ class RequestHandler extends Thread {
 
             //Create a new player and assign its id from the thread ID. 
             player = new Player(getId());
-
+            
             //add the new player to the gamestate
-            gameHandler.addPlayerToGame(player, getId());
+            gameHandler.addPlayerToGame(getId(), player);
 
             //increase the number of players and display amount
             gameHandler.incrementAmountOfPlayers();
@@ -72,8 +76,9 @@ class RequestHandler extends Thread {
 
     synchronized private void sendMessageToClient(Message gameObj) throws IOException {
         //Send message to the client
+    	//oos.flush();
         this.oos.writeUnshared(gameObj);
-        //this.oos.flush();
+        oos.flush();
     }
 
     synchronized private Message listenForMessageFromClient() {

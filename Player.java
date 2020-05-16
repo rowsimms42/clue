@@ -21,6 +21,18 @@ public class Player implements Serializable{
         playerCardDeck = new ArrayList<Card>();
     }
 
+    //Copy constructor
+    public Player(Player oldPlayer) {
+    	this.Id = oldPlayer.Id;
+    	this.currentXLocation = oldPlayer.currentXLocation;
+    	this.currentYLocation = oldPlayer.currentYLocation;
+    	this.roomNumber = oldPlayer.roomNumber;
+    	this.isPlayerTurn = oldPlayer.isPlayerTurn;
+    	this.playerCharacter = oldPlayer.playerCharacter;
+    	this.locationArray = oldPlayer.locationArray;
+    	this.playerCardDeck = oldPlayer.playerCardDeck;
+    }
+    
     public long getPlayerId(){
         return Id;
     }
