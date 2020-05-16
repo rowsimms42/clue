@@ -100,7 +100,42 @@ public class ClientFrame extends JFrame {
 						scrollPane.setPreferredSize(new Dimension(307, 471));
 						gameRulesPanel.add(scrollPane);
 						getContentPane().add(gameRulesPanel);
-						textArea.setText("Someone add game rules....");
+						textArea.setText(
+						"Object of the Game"+
+						"Mr. Boddy is found death in one of the rooms of his mansion." +
+						"The players must determine the answers to these three questions: Who killed him? Where? and with What Weapon?"+
+						" "+
+						"	Game Play"+
+						"Miss Scarlett opens the game, the turns continue clockwise around the table."+
+						"On each turn, a player try to reach a different room of the mansion to investigate."+
+						"To start your turn, move your token by rolling the die or use a Secret Passage when you are in a corner room."+
+						"If you roll the die, you move your token that many spaces:"+
+						"Horizontally or vertically, forward or backward, but not diagonally."+
+						"You are not allowed to enter the same space twice on the same turn."+
+						"You may not enter on a space that is already occupied by another player."+
+						"If you move through a Secret Passage, you don't need to roll and you can move immediately to the other room. This ends your movement."+
+						"It is possible that your opponents might block any and all doors and trap you in a room. In that case, you have to wait for someone to move or un-block a door to leave!"+
+						" "+
+						" "+
+						"Suggestions or Guess"+
+						"When you enter a room, you can make a suggestion by naming a suspect, murder weapon and the room you just entered."+
+						"e.g. 'The crime was committed by Mr. Green in the lounge with a knife'."+
+						"Then your opponents (starting by the left player) must (if possible) prove that your suggestion is false by showing you one card that matches your suggestion."+
+						"If the first player can't disprove, the next player must try it, etc... until all players have passed."+
+						"As soon as someone shows you one of the cards, it is prooved that it can't be in the envelope and you can cross it off in your notebook as a possibility."+
+						"If no one is able to prove your suggestion false, you may either end your turn or make an accusation."+
+						"Note: the suggestion is always made for the room your token is at that moment."+
+						" "+
+						"Accusing"+
+						"If you think you have solved the crime by deduction, you can end your turn by making an accusation and name any three elements."+
+						"you can say: I accuse suspect of committing the crime in the room with the weapon."+
+						"Then, you must look secretly at the cards in the envelope to check if your suggestion is correct."+
+						"If you are correct, you can place the 3 cards face-up on the table to prove it and you won the game!"+
+						" "+
+						"Note: You can only make one accusation during a game. If your accusation is wrong, you lost and you must leave the game and board"
+						
+						);
+
 						setLocationRelativeTo(null);
 						setVisible(true);
 					}
