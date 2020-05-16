@@ -120,14 +120,12 @@ public class GameHandler {
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_OBJECT, tempPlayer);
             	return returnMessage;
             
-            	/*
             case ClueGameConstants.REQUEST_IS_CURRENT_TURN:
             	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-            	boolean isTurn = tempPlayer.getIsPlayerTurn();
-            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_IS_PLAYER_TURN, 
-            								Boolean.valueOf(isTurn));
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_IS_CURRENT_TURN, 
+            								Boolean.valueOf(tempPlayer.getIsPlayerTurn()));
             	return returnMessage;
-            
+            /*
             case ClueGameConstants.REQUEST_MARK_PLAYER_END_TURN:
             	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
             	tempPlayer.setIsPlayerTurn(false);
@@ -138,10 +136,10 @@ public class GameHandler {
             	put him back into the map
             	nextPlayer.setIsPlayerTurn(true); 
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_PLAYER_END_TURN,null);
-            	return returnMessage;*/
+            	return returnMessage; */
             
             
-            	
+            
             default:
                 return msgObj; //returns same object sent
         }
