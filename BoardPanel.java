@@ -161,7 +161,7 @@ public class BoardPanel extends JPanel {
         
         btnRollDice.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		
+        		requestDiceRoll(dice_roll_value);
         	}
         });
         
@@ -177,14 +177,18 @@ public class BoardPanel extends JPanel {
 		}
     }
     
-    private void requestDiceRoll(int dice_roll_value) throws IOException, ClassNotFoundException
+    private void requestDiceRoll(int dice_roll_value)
     {
-        client.send(new Message(ClueGameConstants.REQUEST_DICE_ROLL, null));
-        messageReceived = client.getMessage();
-        dice_roll_value =  (int) messageReceived.getData();
-        //output value from server
-        String str = String.valueOf(dice_roll_value);
-        clientFrame.addToLogConsole("Dice roll: " + str); 
+        try {
+			client.send(new Message(ClueGameConstants.REQUEST_DICE_ROLL, null));
+			messageReceived = client.getMessage();
+			dice_roll_value =  (int) messageReceived.getData();
+			//output value from server
+			String str = String.valueOf(dice_roll_value);
+			clientFrame.addToLogConsole("Dice roll: " + str);
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		} 
     }
     
     private int getDoorId(int row, int col) {
@@ -204,7 +208,7 @@ public class BoardPanel extends JPanel {
     }
 
     public void paint(Graphics g) {
-    	clientFrame.addToLogConsole("Paint start.....");
+    	//clientFrame.addToLogConsole("Paint start.....")
         super.paint(g);
         g.drawImage(gameboard.getImage(), 0, 0, null);
         g.setColor(new Color(currentPlayer.getCharacter().getColor()));
@@ -262,23 +266,6 @@ public class BoardPanel extends JPanel {
 		}
     }
 
-    /*
-    private void enableOrdisableBtns(JButton movementButtons[], char cArray[]){
-    	//WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
-		boolean []moveOptions = {false,false,false,false};
-    	for(int i = 0; i < 4; i++) {
-    		if(cArray[i] == '1')
-    			moveOptions[i] = true;
-    		else
-    			moveOptions[i] = false;
-    	}
-    	movementButtons[WEST].setEnabled(moveOptions[WEST]);
-    	movementButtons[EAST].setEnabled(moveOptions[EAST]);
-    	movementButtons[NORTH].setEnabled(moveOptions[NORTH]);
-    	movementButtons[SOUTH].setEnabled(moveOptions[SOUTH]); 
-    	
-    } */
-    
     private void initComponents()
     {
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -344,6 +331,41 @@ public class BoardPanel extends JPanel {
         this.add(btnRollDice);
         
         cArray_movement_enter = new char[5];
+    }
+    
+    private void enableOrdisableBtns(JButton movementButtons[], JButton enterButton[], char cArray_movement_enter[]){
+    	//WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
+        boolean []moveOptions = {false,false,false,false};
+        boolean []roomOptions = {false};
+        int i=1;
+
+        if (cArray_movement_enter[0] == '1')
+        {
+            roomOptions[0] = true;
+        }
+        else 
+        {
+            roomOptions[0] = false;
+        }
+        
+        for (int j=0; j<moveOptions.length; j++)
+        {
+            if (cArray_movement_enter[i] == '1')
+            {
+                moveOptions[j] = true;
+            }
+            else
+            {
+                moveOptions[j] = false;
+            }
+            i++;
+        }
+
+    	movementButtons[WEST].setEnabled(moveOptions[WEST]);
+    	movementButtons[EAST].setEnabled(moveOptions[EAST]);
+    	movementButtons[NORTH].setEnabled(moveOptions[NORTH]);
+        movementButtons[SOUTH].setEnabled(moveOptions[SOUTH]);
+        enterButton[ENTER_ROOM].setEnabled(roomOptions[ENTER_ROOM]);    
     }
     
     public void drawInRoom(int roomNumber, int roomDirection)
@@ -468,40 +490,6 @@ public class BoardPanel extends JPanel {
         }
     }
     
-    private void enableOrdisableBtns(JButton movementButtons[], JButton enterButton[], char cArray_movement_enter[]){
-    	//WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
-        boolean []moveOptions = {false,false,false,false};
-        boolean []roomOptions = {false};
-        int i=1;
-
-        if (cArray_movement_enter[0] == '1')
-        {
-            roomOptions[0] = true;
-        }
-        else 
-        {
-            roomOptions[0] = false;
-        }
-        
-        for (int j=0; j<moveOptions.length; j++)
-        {
-            if (cArray_movement_enter[i] == '1')
-            {
-                moveOptions[j] = true;
-            }
-            else
-            {
-                moveOptions[j] = false;
-            }
-            i++;
-        }
-
-    	movementButtons[WEST].setEnabled(moveOptions[WEST]);
-    	movementButtons[EAST].setEnabled(moveOptions[EAST]);
-    	movementButtons[NORTH].setEnabled(moveOptions[NORTH]);
-        movementButtons[SOUTH].setEnabled(moveOptions[SOUTH]);
-        enterButton[ENTER_ROOM].setEnabled(roomOptions[ENTER_ROOM]);    
-    }
 } // end class
 
 
