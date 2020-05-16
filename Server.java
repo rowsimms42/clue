@@ -27,7 +27,7 @@ public class Server extends Thread
     {
         try
         {
-            serverSocket = new ServerSocket( 55440);
+            serverSocket = new ServerSocket( 55332);
             this.start();
         }
         catch (IOException e)
