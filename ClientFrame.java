@@ -1,12 +1,10 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -23,8 +21,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
-import java.awt.Graphics;
-import java.awt.Rectangle;
 
 public class ClientFrame extends JFrame {
 
@@ -45,8 +41,8 @@ public class ClientFrame extends JFrame {
 	int coloums = 25;
 	String value;
 	private final BoardPanel gameBoardPanel;
-    int xe = 0;
-    int ye = 0;
+	int xe = 0;
+	int ye = 0;
 
 	/**
 	 * Create the frame.
@@ -93,17 +89,17 @@ public class ClientFrame extends JFrame {
 					public GameRules() {
 						setResizable(false);
 						setTitle("Clue Game Rules");
-						getContentPane().setLayout(null);
+						getContentPane().setLayout(new FlowLayout());
 						setBounds(6,6,329,493);
 						JPanel gameRulesPanel = new JPanel();
 						gameRulesPanel.setBounds(6, 6, 327, 491);
-						getContentPane().add(gameRulesPanel);
-						JTextArea textArea = new JTextArea(40,15);
+						JTextArea textArea = new JTextArea(40,30);
 						textArea.setLineWrap(true);
 						textArea.setEditable(false);
 						JScrollPane scrollPane = new JScrollPane(textArea);
-						scrollPane.setBounds(6,6, 325, 489);
-						getContentPane().add(scrollPane);
+						scrollPane.setPreferredSize(new Dimension(307, 471));
+						gameRulesPanel.add(scrollPane);
+						getContentPane().add(gameRulesPanel);
 						textArea.setText("Someone add game rules....");
 						setLocationRelativeTo(null);
 						setVisible(true);
