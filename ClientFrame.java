@@ -86,6 +86,25 @@ public class ClientFrame extends JFrame {
 				addToNotebook(textAreaGameNote.getText());
 			}
 		}); //end button action listener
+
+		seeCardDeckMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent g) {
+				class MyCards extends JFrame{
+					public MyCards(){
+						setResizable (true);
+						setTitle("Your Cards");
+						getContentPane().setLayout(new FlowLayout());
+						setBounds(6,6,494,693);
+						JPanel MyCards = new JPanel();
+						MyCards.setBounds(6, 6, 450, 691);
+						MyCards.setLayout(new GridLayout(3, 2));
+					}
+				}
+				new MyCards().setVisible(true);
+			}
+		});
+
+
 		
 		gameRulesMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
