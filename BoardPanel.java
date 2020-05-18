@@ -59,6 +59,7 @@ public class BoardPanel extends JPanel {
         lblNewLabel.setBounds(6, 6, 569, 523); 
         
         //TODO - Start game timer
+        
 
         xC = currentPlayer.getCharacter().getxStarting() * 21;
         yC = currentPlayer.getCharacter().getyStarting() * 20;
@@ -75,7 +76,7 @@ public class BoardPanel extends JPanel {
         requestPlayerMap();
         repaint();
         
-        clientFrame.addToLogConsole("Waiting for your turn.");
+        clientFrame.addToLogConsole("Waiting for your turn.........");
         /*current turn timer
         currentTurnTimer =  new Timer(2000,new ActionListener(){
 			  public void actionPerformed(ActionEvent e)
@@ -92,7 +93,7 @@ public class BoardPanel extends JPanel {
 				  }
 			  }
         }); */
-        currentTurnTimer.setRepeats(true); //timer repeats every 2 seconds
+       // currentTurnTimer.setRepeats(true); //timer repeats every 2 seconds
         
         
         
@@ -154,6 +155,7 @@ public class BoardPanel extends JPanel {
                 clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
                 int roomNumber = getDoorId(currentXgrid, currentYgrid);
                 int roomDirection = getDirection(currentXgrid, currentYgrid);
+                requestUpdatePlayerRoomLocation(roomNumber);
                 drawInRoom(roomNumber, roomDirection);
                 String enterRoomStr = "room Number: "+roomNumber+" room direction: "+roomDirection;
                 clientFrame.addToLogConsole(enterRoomStr);
@@ -186,7 +188,14 @@ public class BoardPanel extends JPanel {
     	return currentPlayer.getPlayerDeck();
     }
     
-    
+    private void requestUpdatePlayerRoomLocation(int roomNum) {
+    	try {
+			client.send(new Message(ClueGameConstants.REQUEST_UPDATE_PLAYER_ROOM_NUMBER, Integer.valueOf(roomNum)));
+			messageReceived = client.getMessage();
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+    }
     
     private void requestEndOfTurn() {
     	try {

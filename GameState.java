@@ -66,7 +66,7 @@ public class GameState {
 		playOrderIndex = value;
 	}
 	
-	public int getNextPlayerTurn() {
+	public int getNextPlayerTurnNumber() {
 		if(playOrderIndex < playerTurnOrderArrayList.size()) {
 			return playerTurnOrderArrayList.get(playOrderIndex);
 		}
