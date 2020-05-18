@@ -73,6 +73,7 @@ public class GameHandler {
                 tempCharacter = (Characters) gameState.getCharacterMap().get(gameState.getCharacterName(characterIndex));
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
                 tempPlayer.setCharacter(tempCharacter);
+                gameState.getPlayerMap().put(threadID, tempPlayer);
                 gameState.addTurnOrder(tempPlayer.getCharacter().getTurnOrder());
                 System.out.println("Character chosen: " + tempPlayer.getName());
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_CHARACTER_SELECTED, null);
@@ -125,20 +126,18 @@ public class GameHandler {
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_IS_CURRENT_TURN, 
             								Boolean.valueOf(tempPlayer.getIsPlayerTurn()));
             	return returnMessage;
-            /*
+            
             case ClueGameConstants.REQUEST_MARK_PLAYER_END_TURN:
             	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
             	tempPlayer.setIsPlayerTurn(false);
-            	Put tempPlayer back into the map
-            	int nextTurnOrder = from something
-            	get the next player based on the turn order
-            	set next players isPlayerTurn to true;
-            	put him back into the map
-            	nextPlayer.setIsPlayerTurn(true); 
+            	gameState.getPlayerMap().put(threadID, tempPlayer);
+            	int nextTurnOrder = gameState.getNextPlayerTurn();
+            	gameState.setPlayOrderIndex(gameState.getPlayOrderIndex() + 1);
+            	tempPlayer = (Player)gameState.getPlayerByTurnOrder(nextTurnOrder);
+            	tempPlayer.setIsPlayerTurn(true);
+            	gameState.getPlayerMap().put(threadID, tempPlayer);
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_PLAYER_END_TURN,null);
-            	return returnMessage; */
-            
-            
+            	return returnMessage; 
             
             default:
                 return msgObj; //returns same object sent
