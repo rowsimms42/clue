@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameState {
@@ -15,7 +16,8 @@ public class GameState {
 	private MovementOptions movementOptions;
 	private ArrayList<Card> weaponCardDeck, suspectCardDeck, 
 							roomCardDeck, envelopeDeck, combinedDeck;
-	private ArrayList<Integer> playerTurnOrder;
+	private ArrayList<Integer> playerTurnOrderArrayList;
+	private int playOrderIndex;
 	
 	public GameState(){
 		playerMap = new ConcurrentHashMap<Long, Player>(); //<- has to be here
@@ -31,14 +33,14 @@ public class GameState {
 	 * so the data can be undated and shared with 
 	 * the clients 
 	 */
-
 	public void initializeVariables(){
 
 		movementOptions = new MovementOptions();
-		playerTurnOrder = new ArrayList<>();
+		playerTurnOrderArrayList = new ArrayList<>();
 		
 		availableCharacters = 0;
 		numberOfPlayers = 0;
+		playOrderIndex = 0;
 		
 		availableCharactersArray = new Boolean[ ClueGameConstants.MAX_CHARACTERS ];
 		Arrays.fill(availableCharactersArray, true);
@@ -52,8 +54,26 @@ public class GameState {
 	}
 
 	public void addTurnOrder(int n) {
-		playerTurnOrder.add(n);
-		Collections.sort(playerTurnOrder);
+		playerTurnOrderArrayList.add(n);
+		Collections.sort(playerTurnOrderArrayList);
+	}
+	
+	public int getPlayOrderIndex() {
+		return playOrderIndex;
+	}
+	
+	public void setPlayOrderIndex(int value) {
+		playOrderIndex = value;
+	}
+	
+	public int getNextPlayerTurnNumber() {
+		if(playOrderIndex < playerTurnOrderArrayList.size()) {
+			return playerTurnOrderArrayList.get(playOrderIndex);
+		}
+		else {
+			setPlayOrderIndex(0);
+			return playerTurnOrderArrayList.get(playOrderIndex);
+		}
 	}
 	
 	public int getAvailableCharacters() {
@@ -113,6 +133,15 @@ public class GameState {
 
 	public HashMap<String, Boolean> getAvailableMoves(int[] locations){
 		return movementOptions.getNextMoves(locations, this);
+	}
+	
+	public Player getPlayerByTurnOrder(int turnOrder) {
+		for(Entry<Long, Player> p : playerMap.entrySet()) {
+			Player tempPlayer = p.getValue();
+			if(tempPlayer.getCharacter().getTurnOrder() == turnOrder)
+				return tempPlayer;
+		}
+		return null;
 	}
 	
 	private ArrayList<Card> createAndFillWeaponCardDeck(){

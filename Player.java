@@ -14,7 +14,9 @@ public class Player implements Serializable{
     value between 1 - 10. If not in a room, then value is 0*/
     private int roomNumber = 0; 
     private boolean isPlayerTurn = false;
-    
+    private boolean isBeingSuggested = false;
+    private boolean isBeingAccused = false;
+	
     
     public Player(long Id){
         this.Id = Id;
@@ -23,18 +25,36 @@ public class Player implements Serializable{
 
     //Copy constructor
     public Player(Player oldPlayer) {
+    	this.playerCharacter = oldPlayer.playerCharacter;
+    	this.locationArray = oldPlayer.locationArray;
     	this.Id = oldPlayer.Id;
+    	this.playerCardDeck = oldPlayer.playerCardDeck;
     	this.currentXLocation = oldPlayer.currentXLocation;
     	this.currentYLocation = oldPlayer.currentYLocation;
     	this.roomNumber = oldPlayer.roomNumber;
     	this.isPlayerTurn = oldPlayer.isPlayerTurn;
-    	this.playerCharacter = oldPlayer.playerCharacter;
-    	this.locationArray = oldPlayer.locationArray;
-    	this.playerCardDeck = oldPlayer.playerCardDeck;
+    	this.isBeingSuggested = oldPlayer.isBeingSuggested;
+    	this.isBeingAccused = oldPlayer.isBeingAccused;
     }
     
     public long getPlayerId(){
         return Id;
+    }
+    
+    public void setIsBeingSuggest(boolean value) {
+    	isBeingSuggested = value;
+    }
+    
+    public boolean getIsBeingSuggested() {
+    	return isBeingSuggested;
+    }
+    
+    public void setIsBeingAccused(boolean value) {
+    	isBeingAccused = value;
+    }
+    
+    public boolean getIsBeingAccused() {
+    	return isBeingAccused;
     }
     
     public void setRoomLocation(int roomNumber){
