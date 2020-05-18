@@ -148,7 +148,22 @@ public class GameHandler {
             	gameState.getPlayerMap().put(threadID, tempPlayer);
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_UPDATE_PLAYER_ROOM_NUMBER, null);
             	return returnMessage; 
-            
+            	
+            case ClueGameConstants.REQUEST_DOES_CURRENT_PLAYER_GO_FIRST:
+            	 //int recievedTurnOrderNumber = (Integer) msgObj.getData();
+            	 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
+            	 int firstTurnNumberInList = gameState.getTurnOrderList().get(0);
+            	 boolean doesGoFirst = (tempPlayer.getCharacter().getTurnOrder() == firstTurnNumberInList) ?
+            			 true : false;
+            	 if(doesGoFirst) {
+            		 tempPlayer = new Player((Player) gameState.getPlayerMap().get(threadID));
+            		 tempPlayer.setIsGoingFirst(doesGoFirst); //true
+            		 gameState.getPlayerMap().put(threadID, tempPlayer);
+            	 }
+            	 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_DOES_CURRENT_PLAYER_GO_FIRST,
+            			 Boolean.valueOf(tempPlayer.getIsGoingFirst()));
+            	 return returnMessage; 
+            	 
             default:
                 return msgObj; //returns same object sent
         }
