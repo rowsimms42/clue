@@ -75,6 +75,10 @@ public final class ClueGameConstants {
 		
 		public static final int REPLY_FROM_SERVER_CONFIRM_UPDATE_PLAYER_ROOM_NUMBER = 41;
 		
+		public static final int REQUEST_DOES_CURRENT_PLAYER_GO_FIRST = 42;
+		
+		public static final int REPLY_FROM_SERVER_DOES_CURRENT_PLAYER_GO_FIRST = 43;
+		
 		public static final int UNSELECTABLE_TILE = -1;
 
 		public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",

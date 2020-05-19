@@ -58,6 +58,10 @@ public class GameState {
 		Collections.sort(playerTurnOrderArrayList);
 	}
 	
+	public ArrayList<Integer> getTurnOrderList(){
+		return playerTurnOrderArrayList;
+	}
+	
 	public int getPlayOrderIndex() {
 		return playOrderIndex;
 	}
