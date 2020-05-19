@@ -30,7 +30,7 @@ public class ClientFrame extends JFrame {
 
 	private JPanel contentPane;
 	private StringBuilder noteStringBuilder, logStringBuilder;
-	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote;
+	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote, textAreaName;
 	private JScrollPane scrollPane, scrollPaneNotesAdded;
 	private JLabel lblConsoleLog, lblAddGameNote, lblGameNotes;
 	private JMenuBar menuBar;
@@ -69,6 +69,8 @@ public class ClientFrame extends JFrame {
 		} catch (ClassNotFoundException | IOException e1) {
 			e1.printStackTrace();
 		}
+
+		textAreaName.append("Character: " + currentPlayer.getCharacter().getName());
 		
 		//display the character properties in the console log
 		addToLogConsole(currentPlayer.getCharacter().getName());
@@ -227,6 +229,13 @@ public class ClientFrame extends JFrame {
 		menuBar.setToolTipText("Options");
 		menuBar.setBounds(6, 6, 132, 22);
 		contentPane.add(menuBar);
+
+		textAreaName = new JTextArea();
+		textAreaName.setFont(new Font("SansSerif", Font.BOLD, 13));
+		textAreaName.setBackground(new Color(0, 204, 204));
+		textAreaName.setBounds(150, 6, 290, 20);
+		textAreaName.setEditable(false);
+        contentPane.add(textAreaName);
 		
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

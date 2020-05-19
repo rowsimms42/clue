@@ -132,7 +132,7 @@ public class GameHandler {
             	tempPlayer.setIsPlayerTurn(false);
             	gameState.getPlayerMap().put(threadID, tempPlayer);
             	int nextTurnOrder = gameState.getNextPlayerTurnNumber();
-            	gameState.setPlayOrderIndex(gameState.getPlayOrderIndex() + 1);
+            	gameState.setPlayOrderIndex(gameState.getPlayOrderIndex() + 1); //needed to increment after first turn
             	nextPlayer = (Player)gameState.getPlayerByTurnOrder(nextTurnOrder);
             	if(nextPlayer == null) System.out.println("Next turn player was null"); 
             	tempPlayer = new Player((Player) gameState.getPlayerMap().get(nextPlayer.getPlayerId()));
@@ -152,13 +152,14 @@ public class GameHandler {
             case ClueGameConstants.REQUEST_DOES_CURRENT_PLAYER_GO_FIRST:
             	 //int recievedTurnOrderNumber = (Integer) msgObj.getData();
             	 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-            	 int firstTurnNumberInList = gameState.getTurnOrderList().get(0);
+                 int firstTurnNumberInList = gameState.getTurnOrderList().get(0);
             	 boolean doesGoFirst = (tempPlayer.getCharacter().getTurnOrder() == firstTurnNumberInList) ?
             			 true : false;
             	 if(doesGoFirst) {
             		 tempPlayer = new Player((Player) gameState.getPlayerMap().get(threadID));
             		 tempPlayer.setIsGoingFirst(doesGoFirst); //true
-            		 gameState.getPlayerMap().put(threadID, tempPlayer);
+                     gameState.getPlayerMap().put(threadID, tempPlayer);
+                     gameState.setPlayOrderIndex(gameState.getPlayOrderIndex() + 1);
             	 }
             	 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_DOES_CURRENT_PLAYER_GO_FIRST,
             			 Boolean.valueOf(tempPlayer.getIsGoingFirst()));
