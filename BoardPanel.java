@@ -41,9 +41,10 @@ public class BoardPanel extends JPanel {
     int currentYgrid = 0; //y coordinate location for tile grid. this y coord is sent to server
     HashMap<Long, Player> playerMap;
     boolean isPlayerCurrentTurn = false;
-    private JButton btnExitRoom, btnSuggest, btnAccuse, btnShortcut, btnEndTurn, btnRollDice;
-    int t = 1; //for testing
-    int buttonRollLimit = 1; //so player can only hit roll dice button once per turn
+    boolean gameStarted = false;
+    private JButton btnExitRoom, btnSuggest, btnAccuse, btnShortcut, btnEndTurn, btnRollDice, btnStartGame;
+    int t = 1, s=1, buttonRollLimit = 1; //testing for timer
+    int numOfPlayers = 0, tempNumPlayers = 0, update = 1;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
     	client = clientConnection;
@@ -59,16 +60,57 @@ public class BoardPanel extends JPanel {
         setPreferredSize(new Dimension(w, h));
         this.add(lblNewLabel);
         lblNewLabel.setBounds(6, 6, 569, 523); 
-        
-        //TODO - Start game timer
-        
 
         xC = currentPlayer.getCharacter().getxStarting() * 21;
         yC = currentPlayer.getCharacter().getyStarting() * 20;
 
         currentXgrid = currentPlayer.getCharacter().getxStarting();
         currentYgrid = currentPlayer.getCharacter().getyStarting();
- 
+        repaint();
+
+        gameStarted = false;
+        disableButtons(movementButtons);
+        btnStartGame.setEnabled(false);
+        //Start game timer
+        clientFrame.addToLogConsole("Waiting for other players to join the game.........");
+        startGameTimer =  new Timer(2000,new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			{
+                if (s!=0)
+                {
+                    clientFrame.addToLogConsole("Start timer running..."); //for testing
+                    s--;
+                }
+                if (numOfPlayers >= 3 && update == 1)
+                {
+                    clientFrame.addToLogConsole("UPDATE: enough players have joined to start game");
+                    update--;
+                    btnStartGame.setEnabled(true);
+                    //TO DO: enable start button
+                }
+                tempNumPlayers = playerMap.size();
+
+                if (tempNumPlayers > numOfPlayers)
+                {
+                    clientFrame.addToLogConsole("Number of players: " + tempNumPlayers);
+                    numOfPlayers = tempNumPlayers;
+                }
+                requestPlayerMap();
+                repaint();
+
+                if (gameStarted)
+                {
+                    startGameTimer.stop();
+                }
+            }
+        }); 
+        startGameTimer.setRepeats(true); //timer repeats every 2 seconds
+
+        if (!gameStarted)
+        {
+            startGameTimer.start();
+        }
+
         //request movement options at launch
         requestBtns(currentXgrid, currentYgrid);
         //enabled or disable buttons at launch
@@ -79,17 +121,22 @@ public class BoardPanel extends JPanel {
         requestPlayerMap();
         repaint();
         
-        clientFrame.addToLogConsole("Waiting for your turn.........");
+        
+        btnStartGame.setEnabled(false);
+        //clientFrame.addToLogConsole("Waiting for your turn.........");
         //current turn timer
         currentTurnTimer =  new Timer(2000,new ActionListener(){
 			  public void actionPerformed(ActionEvent e)
 			  {
+                  //if currentTurnCount == 0, ask if im the first person to start
+                  //currentTurnCount++;
+
 				  isPlayerCurrentTurn = requestIsCurrentTurn();
 				  requestPlayerMap();
                   repaint();
                   if (t!=0)
                   {
-                    clientFrame.addToLogConsole("Timer running..."); //for testing
+                    clientFrame.addToLogConsole("Waiting for your turn..."); //for testing
                     t--;
                   }
 				  if(isPlayerCurrentTurn) {
@@ -193,11 +240,31 @@ public class BoardPanel extends JPanel {
                 enableOrdisableBtns(movementButtons);
         	}
         });
+
+        btnStartGame.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+                gameStarted = true;
+                currentTurnTimer.start();
+        	}
+        });
         
     } //end constructor
     
     public ArrayList<Card> getPlayersCard(){
     	return currentPlayer.getPlayerDeck();
+    }
+
+    private boolean requestDoesCurrentPlayerGoFirst() {
+    	boolean isGoingFirst = false;
+    	try {
+			client.send(new Message(ClueGameConstants.REQUEST_DOES_CURRENT_PLAYER_GO_FIRST , null));
+			messageReceived = client.getMessage();
+			isGoingFirst = (boolean) messageReceived.getData();
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+    	return isGoingFirst;
+		
     }
     
     private void requestUpdatePlayerRoomLocation(int roomNum) {
@@ -235,11 +302,12 @@ public class BoardPanel extends JPanel {
     	try {
 			client.send(new Message(ClueGameConstants.REQUEST_PLAYER_MAP, null));
 			messageReceived = client.getMessage();
-			playerMap = (HashMap<Long, Player>) messageReceived.getData();
+            playerMap = (HashMap<Long, Player>) messageReceived.getData();
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
     }
+
     
     private int requestDiceRoll(){
         try {
@@ -385,6 +453,12 @@ public class BoardPanel extends JPanel {
         btnRollDice.setFont(new Font("SansSerif", Font.BOLD, 10));
         btnRollDice.setBounds(579, 208, 99, 23);
         this.add(btnRollDice);
+
+        btnStartGame = new JButton("Start Game");
+        btnStartGame.setForeground(new Color(0, 128, 0));
+        btnStartGame.setFont(new Font("SansSerif", Font.BOLD, 10));
+        btnStartGame.setBounds(579, 6, 99, 23);
+        this.add(btnStartGame);
         
         cArray_movement_enter = new char[5];
     }
