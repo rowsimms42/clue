@@ -41,9 +41,10 @@ public class BoardPanel extends JPanel {
     int currentYgrid = 0; //y coordinate location for tile grid. this y coord is sent to server
     HashMap<Long, Player> playerMap;
     boolean isPlayerCurrentTurn = false;
-    private JButton btnExitRoom, btnSuggest, btnAccuse, btnShortcut, btnEndTurn, btnRollDice;
-    int t = 1; //for testing
-    int buttonRollLimit = 1; //so player can only hit roll dice button once per turn
+    boolean gameStarted = false, currentPlayerGoFirst = false;
+    private JButton btnExitRoom, btnSuggest, btnAccuse, btnShortcut, btnEndTurn, btnRollDice, btnStartGame;
+    int turnTimerUpdate = 1, startTimerUpdate=1, playerNumberUpdate = 1;//testing for timer
+    int numOfPlayers = 0, tempNumPlayers = 0, buttonRollLimit = 1, currentTurnCount = 0;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
     	client = clientConnection;
@@ -59,16 +60,53 @@ public class BoardPanel extends JPanel {
         setPreferredSize(new Dimension(w, h));
         this.add(lblNewLabel);
         lblNewLabel.setBounds(6, 6, 569, 523); 
-        
-        //TODO - Start game timer
-        
 
         xC = currentPlayer.getCharacter().getxStarting() * 21;
         yC = currentPlayer.getCharacter().getyStarting() * 20;
 
         currentXgrid = currentPlayer.getCharacter().getxStarting();
         currentYgrid = currentPlayer.getCharacter().getyStarting();
- 
+        repaint();
+
+        gameStarted = false;
+        disableButtons(movementButtons);
+        btnStartGame.setEnabled(false);
+        btnRollDice.setEnabled(false);
+        btnEndTurn.setEnabled(false);
+        //Start game timer
+        clientFrame.addToLogConsole("Waiting for other players to join the game.........");
+        startGameTimer =  new Timer(2000,new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+                if (startTimerUpdate==1) {
+                    clientFrame.addToLogConsole("Start timer running..."); //for testing
+                    startTimerUpdate--;
+                }
+                if (numOfPlayers >= 3 && playerNumberUpdate == 1) {
+                    clientFrame.addToLogConsole("UPDATE: enough players have joined to start game");
+                    playerNumberUpdate--;
+                    btnStartGame.setEnabled(true);
+                }
+                tempNumPlayers = playerMap.size();
+
+                if (tempNumPlayers > numOfPlayers) {
+                    clientFrame.addToLogConsole("Number of players: " + tempNumPlayers);
+                    numOfPlayers = tempNumPlayers;
+                }
+                requestPlayerMap();
+                repaint();
+
+                if (gameStarted) {
+                    startGameTimer.stop();
+                    btnStartGame.setEnabled(false);
+                }
+            }
+        }); 
+        startGameTimer.setRepeats(true); //timer repeats every 2 seconds
+
+        if (!gameStarted) {
+            startGameTimer.start();
+        }
+
         //request movement options at launch
         requestBtns(currentXgrid, currentYgrid);
         //enabled or disable buttons at launch
@@ -79,37 +117,56 @@ public class BoardPanel extends JPanel {
         requestPlayerMap();
         repaint();
         
-        clientFrame.addToLogConsole("Waiting for your turn.........");
         //current turn timer
         currentTurnTimer =  new Timer(2000,new ActionListener(){
-			  public void actionPerformed(ActionEvent e)
-			  {
-				  isPlayerCurrentTurn = requestIsCurrentTurn();
-				  requestPlayerMap();
-                  repaint();
-                  if (t!=0)
-                  {
-                    clientFrame.addToLogConsole("Timer running..."); //for testing
-                    t--;
-                  }
-				  if(isPlayerCurrentTurn) {
-					  currentTurnTimer.stop();
+			  public void actionPerformed(ActionEvent e) {
+                if (turnTimerUpdate!=0) {
+                  clientFrame.addToLogConsole("Waiting for your turn..."); //for testing
+                  turnTimerUpdate--;
+                }
+
+                if (currentTurnCount==0) {
+                    currentPlayerGoFirst = requestDoesCurrentPlayerGoFirst();
+                    requestPlayerMap();
+                    repaint();
+
+                    if (currentPlayerGoFirst) {
+                      currentTurnTimer.stop();
 					  clientFrame.addToLogConsole("UPDATE - It's now your turn.");
-                      t = 1;
+                      turnTimerUpdate = 1;
                       requestBtns(currentXgrid, currentYgrid);
-                      enableOrdisableBtns(movementButtons);
+                      enableOrdisableBtns(movementButtons);  
                       disableButtons(movementButtons);
                       btnRollDice.setEnabled(true);
                       buttonRollLimit = 1;
-				  }
-			  }
+                    }
+                currentTurnCount++;
+                }
+                //all below will execute at every cycle
+				isPlayerCurrentTurn = requestIsCurrentTurn();
+                requestPlayerMap();
+                repaint();
+                  
+                if(isPlayerCurrentTurn) {
+					currentTurnTimer.stop();
+					clientFrame.addToLogConsole("UPDATE - It's now your turn.");
+                    turnTimerUpdate = 1;
+                    requestBtns(currentXgrid, currentYgrid); 
+                    enableOrdisableBtns(movementButtons);
+                    disableButtons(movementButtons);
+                    btnRollDice.setEnabled(true);
+                    buttonRollLimit = 1;
+                }
+			}
         }); 
         currentTurnTimer.setRepeats(true); //timer repeats every 2 seconds
         
         movementButtons[SOUTH].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	diceRollValue--;
+                if(diceRollValue >= 0){
                 clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+                }
                 yC += 20;
                 currentYgrid++;
                 repaint();
@@ -121,7 +178,10 @@ public class BoardPanel extends JPanel {
         movementButtons[NORTH].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	diceRollValue--;
-                clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+               
+                if(diceRollValue >= 0){
+                	clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+                }
                 yC -= 20;
                 currentYgrid--;
                 repaint();
@@ -133,10 +193,12 @@ public class BoardPanel extends JPanel {
         movementButtons[EAST].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	diceRollValue--;
-                clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
-            	xC += 21;
-                currentXgrid++;
+                if(diceRollValue >= 0){
+                	clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+                }
+                xC += 21;
                 repaint();
+                currentXgrid++;
                 requestBtns(currentXgrid, currentYgrid);
                 enableOrdisableBtns(movementButtons);
                 movementAmount++;
@@ -147,10 +209,12 @@ public class BoardPanel extends JPanel {
         movementButtons[WEST].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	diceRollValue--;
-                clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+                if(diceRollValue >= 0){
+                	clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+                }
                 xC -= 21;
-                currentXgrid--;
                 repaint();
+                currentXgrid--;
                 requestBtns(currentXgrid, currentYgrid);
                 enableOrdisableBtns(movementButtons);
             }
@@ -165,7 +229,7 @@ public class BoardPanel extends JPanel {
                 int roomDirection = getDirection(currentXgrid, currentYgrid);
                 requestUpdatePlayerRoomLocation(roomNumber);
                 drawInRoom(roomNumber, roomDirection);
-                String enterRoomStr = "room Number: "+roomNumber+" room direction: "+roomDirection;
+                String enterRoomStr = "room number: "+roomNumber+" room direction: "+roomDirection;
                 clientFrame.addToLogConsole(enterRoomStr);
                 requestBtns(currentXgrid, currentYgrid);
                 enableOrdisableBtns(movementButtons);
@@ -179,25 +243,48 @@ public class BoardPanel extends JPanel {
             	requestPlayerMap(); 
             	repaint();
             	if(!currentTurnTimer.isRunning())
-            		currentTurnTimer.start();
-            	
+                    currentTurnTimer.start();
+                    btnEndTurn.setEnabled(false);
             }
         });
         
         btnRollDice.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                    diceRollValue = requestDiceRoll();
+                    requestBtns(currentXgrid, currentYgrid);
+                    enableOrdisableBtns(movementButtons);
+                    buttonRollLimit--;
+                    enableOrdisableBtns(movementButtons);
+                    btnEndTurn.setEnabled(true);
+            }
+        }); 
+
+        btnStartGame.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-                requestBtns(currentXgrid, currentYgrid);
-                enableOrdisableBtns(movementButtons);
-                diceRollValue = requestDiceRoll();
-                buttonRollLimit--;
-                enableOrdisableBtns(movementButtons);
+                gameStarted = true;
+                currentTurnTimer.start();
         	}
         });
-        
+       
+
     } //end constructor
-    
+     
     public ArrayList<Card> getPlayersCard(){
     	return currentPlayer.getPlayerDeck();
+    }
+
+    private boolean requestDoesCurrentPlayerGoFirst() {
+    	boolean isGoingFirst = false;
+    	try {
+			client.send(new Message(ClueGameConstants.REQUEST_DOES_CURRENT_PLAYER_GO_FIRST , null));
+			messageReceived = client.getMessage();
+			isGoingFirst = (boolean) messageReceived.getData();
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+    	return isGoingFirst;
+		
     }
     
     private void requestUpdatePlayerRoomLocation(int roomNum) {
@@ -227,7 +314,7 @@ public class BoardPanel extends JPanel {
 			isTurn = (boolean)messageReceived.getData();
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
-		}
+        }
     	return isTurn;
     }
     
@@ -235,24 +322,25 @@ public class BoardPanel extends JPanel {
     	try {
 			client.send(new Message(ClueGameConstants.REQUEST_PLAYER_MAP, null));
 			messageReceived = client.getMessage();
-			playerMap = (HashMap<Long, Player>) messageReceived.getData();
+            playerMap = (HashMap<Long, Player>) messageReceived.getData();
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
     }
-    
-    private int requestDiceRoll(){
+   
+    public int requestDiceRoll(){
+        int diceRoll = 0;
         try {
 			client.send(new Message(ClueGameConstants.REQUEST_DICE_ROLL, null));
 			messageReceived = client.getMessage();
-			diceRollValue =  (int) messageReceived.getData();
-			clientFrame.addToLogConsole("Dice roll: " + diceRollValue);
+			diceRoll = (int) messageReceived.getData();
+			clientFrame.addToLogConsole("Dice roll: " + diceRoll);
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
-		} 
-        return diceRollValue;
-    }
-    
+		}
+        return diceRoll;
+    } 
+   
     private int getDoorId(int row, int col) {
 		for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
 			if(door.getRow() == row && door.getCol() == col) 
@@ -286,7 +374,6 @@ public class BoardPanel extends JPanel {
          	Player player = p.getValue();
          	if(player.getCharacter().getName() == currentPlayer.getCharacter().getName())
         			continue;
-         	
          	int playerInMapXBound = player.getCurrentXLocation() * 21;
          	int playerInMapYBound = player.getCurrentYLocation() * 20;
          	rectBounds  = getBounds(playerInMapXBound, playerInMapYBound);
@@ -306,24 +393,24 @@ public class BoardPanel extends JPanel {
         return new Rectangle(x + 30,y + 16,20,20);
     }
  
-    private void requestBtns(int x, int y) {
-    	int[] coords = {x, y};
-        String coordinatesStr = coords[0] + ", " + coords[1];
-        clientFrame.addToLogConsole(coordinatesStr); 
+    private void requestBtns(int x, int y){
+        int[] coords = { x, y};
+        String coordinatesStr = x + ", " + y;
+        clientFrame.addToLogConsole(coordinatesStr); // adds player location to console
+
         try {
 			client.send(new Message(ClueGameConstants.REQUEST_MOVEMENT_BUTTON_VALUES, coords));
 			messageReceived = client.getMessage();
-			btnValues =  (String) messageReceived.getData();
-			cArray_movement_enter = btnValues.toCharArray();
-			//for debugging purposes, output string to console log
-			//clientFrame.addToLogConsole(btnValues);
+			btnValues = (String) messageReceived.getData();
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
+        cArray_movement_enter = btnValues.toCharArray();
+        // for debugging purposes, output string to console log
+        //clientFrame.addToLogConsole(btnValues);
     }
 
-    private void initComponents()
-    {
+    private void initComponents(){
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBackground(Color.PINK);
         this.setBounds(6, 37, 688, 535);
@@ -385,54 +472,48 @@ public class BoardPanel extends JPanel {
         btnRollDice.setFont(new Font("SansSerif", Font.BOLD, 10));
         btnRollDice.setBounds(579, 208, 99, 23);
         this.add(btnRollDice);
+
+        btnStartGame = new JButton("Start Game");
+        btnStartGame.setForeground(new Color(0, 128, 0));
+        btnStartGame.setFont(new Font("SansSerif", Font.BOLD, 10));
+        btnStartGame.setBounds(579, 6, 99, 23);
+        this.add(btnStartGame);
         
         cArray_movement_enter = new char[5];
     }
-    
-    private void enableOrdisableBtns(JButton[] movementButtons){
-        //WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
-        if (buttonRollLimit == 0)
-        {
+   
+    private void enableOrdisableBtns(JButton movementButtons[]) {
+        // WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
+        if (buttonRollLimit == 0){
             btnRollDice.setEnabled(false);
         }
-        if (diceRollValue == 0)
-        {
-            btnRollDice.setEnabled(false);
+        if (diceRollValue == 0) {
             disableButtons(movementButtons);
-        }
-        
-        else
-        {
-            
-            boolean []moveOptions = {false,false,false,false};
+        } else {
+            boolean[] moveOptions = { false, false, false, false };
             boolean roomOptions = false;
-            int i=1;
-            //determine if there is an option to enter a room
+            int i = 1;
             roomOptions = (cArray_movement_enter[0] == '1') ? true : false;
-            //determine all movement options
-            for (int j=0; j<moveOptions.length; j++){
-        	    moveOptions[j] = (cArray_movement_enter[i] == '1') ? true : false;
+            
+
+            for (int j = 0; j < moveOptions.length; j++) {
+            	 moveOptions[j] = (cArray_movement_enter[i] == '1') ? true : false;
                 i++;
             }
-            //enable or disable movement buttons
-    	    movementButtons[WEST].setEnabled(moveOptions[WEST]);
-    	    movementButtons[EAST].setEnabled(moveOptions[EAST]);
-    	    movementButtons[NORTH].setEnabled(moveOptions[NORTH]);
+
+            movementButtons[WEST].setEnabled(moveOptions[WEST]);
+            movementButtons[EAST].setEnabled(moveOptions[EAST]);
+            movementButtons[NORTH].setEnabled(moveOptions[NORTH]);
             movementButtons[SOUTH].setEnabled(moveOptions[SOUTH]);
-            enterButton[ENTER_ROOM].setEnabled(roomOptions);    
+            enterButton[ENTER_ROOM].setEnabled(roomOptions);
         }
-        
     }
 
-    public void disableButtons(JButton[] movementButtons)
-    {
-         //enable or disable movement buttons
-         movementButtons[WEST].setEnabled(false);
-         movementButtons[EAST].setEnabled(false);
-         movementButtons[NORTH].setEnabled(false);
-         movementButtons[SOUTH].setEnabled(false);    
-         enterButton[ENTER_ROOM].setEnabled(false);
-         btnRollDice.setEnabled(false);
+    public void disableButtons(JButton movementButtons[]) {
+        movementButtons[WEST].setEnabled(false);
+        movementButtons[EAST].setEnabled(false);
+        movementButtons[NORTH].setEnabled(false);
+        movementButtons[SOUTH].setEnabled(false);
     }
     
     public void drawInRoom(int roomNumber, int roomDirection)
@@ -557,4 +638,12 @@ public class BoardPanel extends JPanel {
         }
     }
     
+    /*
+    public void requestBtnsCall(int currentXgrid, int currentYgrid) {
+        try {
+            requestBtns(currentXgrid, currentYgrid);
+        } catch (ClassNotFoundException | IOException e1) {
+            e1.printStackTrace();
+        }
+    } */
 } // end class

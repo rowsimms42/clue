@@ -16,6 +16,7 @@ public class Player implements Serializable{
     private boolean isPlayerTurn = false;
     private boolean isBeingSuggested = false;
     private boolean isBeingAccused = false;
+    private boolean isGoingFirst = false;
 	
     
     public Player(long Id){
@@ -35,10 +36,19 @@ public class Player implements Serializable{
     	this.isPlayerTurn = oldPlayer.isPlayerTurn;
     	this.isBeingSuggested = oldPlayer.isBeingSuggested;
     	this.isBeingAccused = oldPlayer.isBeingAccused;
+    	this.isGoingFirst = oldPlayer.isGoingFirst;
     }
     
     public long getPlayerId(){
         return Id;
+    }
+    
+    public void setIsGoingFirst(boolean value) {
+    	isGoingFirst = value;
+    }
+    
+    public boolean getIsGoingFirst() {
+    	return isGoingFirst;
     }
     
     public void setIsBeingSuggest(boolean value) {
