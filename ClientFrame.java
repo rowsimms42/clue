@@ -37,6 +37,36 @@ public class ClientFrame extends JFrame {
 	private JMenu gameMenu;
 	private JMenuItem gameRulesMenuItem, seeCardDeckMenuItem;
 	private JButton btnAddNote;
+	private JTextArea yourCardsFrameInfo;
+
+
+		//						0			1			2			3		4			5
+		String playerCardscheaker [] = {"Pipe", "Candle Stick","Revolver","Wrench","Knife", "Rope",
+		//	6				7					8		9			10		11				12		13			14
+		   "Conservatory", "Billiard Room", "Study Room", "Hall", "Lounge", "Dining Room", "Kitchen", "Ballroom", "Library",
+		   //    15				16				17				18			19				20
+		   "Colonel Mustard", "Miss Scarlet", "Professor Plum", "Mr. Green", "Mrs. White", "Mrs. Peacock"};
+   
+   
+								   //				0							1							2							
+	String  pullPlayerCardsImageArray [] = { "resources/Lead_Pipe.JPG", "resources/Candlestick.JPG", "resources/Revolver.JPG",
+	   //  3 							4					5
+	   "resources/Wrench.JPG","resources/Knife.JPG","resources/Rope.JPG",
+		//		6							7						8						9					10					
+   "resources/Conservatory.JPG","resources/Billiard_Room.JPG","resources/Study.JPG","resources/Hall.JPG","resources/Lounge.JPG",
+   //  11								12						13						14
+   "resources/Dinning_Room.JPG","resources/Kitchen.JPG","resources/BallRoom.JPG","resources/Libary.JPG",
+	   //    15				16						17						18						19						20
+   "resources/green.png", "resources/plum.png", "resources/white.png","resources/mustard.png", "resources/scarlett.png", "resources/peacock.png"
+		   };
+   
+	
+
+	private JLabel[] yourPlayerCards;
+	private JPanel[] yourCardPanelArray;
+	private ImageIcon yourCardsImages [];
+	private JPanel yourcardPanel;
+
 	Message messageRecieved;
 	Client client;
 	Player currentPlayer;
@@ -93,19 +123,37 @@ public class ClientFrame extends JFrame {
 					public MyCards(){
 						setResizable (true);
 						setTitle("Your Cards");
-						getContentPane().setLayout(new FlowLayout());
-						setBounds(6,6,494,693);
-						JPanel MyCards = new JPanel();
-						MyCards.setBounds(6, 6, 450, 691);
-						MyCards.setLayout(new GridLayout(3, 2));
+						contentPane = new JPanel();
+						contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+						setContentPane(contentPane);
+						contentPane.setLayout(null);
+
+						setBounds(100, 100, 400, 650);
+					//	getContentPane().setLayout(new FlowLayout());
+					//	setBounds(6,6,494,693);
+						yourcardPanel = new JPanel();
+						yourcardPanel.setBounds(6, 6, 550, 791);
+						contentPane.add(yourcardPanel);
+						yourcardPanel.setLayout(new GridLayout(3, 2));
+
+						yourCardsFrameInfo = new JTextArea();
+						yourCardsFrameInfo.setEditable(false);
+						yourCardsFrameInfo.setBounds(6, 498, 388, 59);
+						yourcardPanel.add(yourCardsFrameInfo);
+
+
+
+						addingYourCardsToSee();
+						setVisible(true); 
 					}
 				}
-				new MyCards().setVisible(true);
+				new MyCards();
 			}
 		});
+									
+					
+	
 
-
-		
 		gameRulesMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				class GameRules extends JFrame{
@@ -132,8 +180,39 @@ public class ClientFrame extends JFrame {
 			}
 		});
 
-		//setVisible(true); 
+
 	} // end constructor
+
+
+	private void addingYourCardsToSee() {
+		initPanelsInArrayYourCards(); // initial the panels
+		addPictureToPanelsToYourCards(); // add character pictures to the panels
+		addArrayPanelsYourCards(); // add the panels from array to the main panel
+	}
+
+	private void initPanelsInArrayYourCards() {
+		yourCardPanelArray = new JPanel[ClueGameConstants.MAX_CHARACTERS];
+		yourPlayerCards = new JLabel[ClueGameConstants.MAX_CHARACTERS];
+		yourCardsImages = new ImageIcon[ClueGameConstants.MAX_CHARACTERS];
+		for (int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
+			yourCardPanelArray[i] = new JPanel();
+			yourCardsImages[i] = new ImageIcon(getClass().getResource(pullPlayerCardsImageArray[i]));
+			yourPlayerCards[i] = new JLabel(yourCardsImages[i]);
+		}
+	}
+
+	private void addPictureToPanelsToYourCards() {
+		for (int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
+			yourCardPanelArray[i].setBackground(Color.BLUE);
+			yourCardPanelArray[i].add(yourPlayerCards[i]);
+		}
+	}
+
+	private void addArrayPanelsYourCards() {
+		for (JPanel panel : yourCardPanelArray) {
+			yourcardPanel.add(panel);
+		}
+	}
 
 	//add text to the console log
 	protected void addToLogConsole(String input){
@@ -233,4 +312,5 @@ public class ClientFrame extends JFrame {
 		setResizable(false);
 		setVisible(true);
 	}
+	
 } //end class

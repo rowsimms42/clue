@@ -558,5 +558,3 @@ public class BoardPanel extends JPanel {
     }
     
 } // end class
-
-
