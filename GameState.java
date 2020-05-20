@@ -130,8 +130,8 @@ public class GameState {
 
 	public int rollDice(){
 		Random rand = new Random();
-		int dice_1 = rand.nextInt(7);
-		int dice_2 = rand.nextInt(7);
+		int dice_1 = rand.nextInt(6) + 1;
+		int dice_2 = rand.nextInt(6) + 1;
 		return dice_1 + dice_2;
 	}
 
