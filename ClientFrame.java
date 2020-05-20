@@ -30,7 +30,7 @@ public class ClientFrame extends JFrame {
 
 	private JPanel contentPane;
 	private StringBuilder noteStringBuilder, logStringBuilder;
-	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote, textAreaName;
+	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote;
 	private JScrollPane scrollPane, scrollPaneNotesAdded;
 	private JLabel lblConsoleLog, lblAddGameNote, lblGameNotes;
 	private JMenuBar menuBar;
@@ -40,12 +40,12 @@ public class ClientFrame extends JFrame {
 	private JTextArea yourCardsFrameInfo;
 
 
-		//						0			1			2			3		4			5
+		//								0			1			2			3		4			5
 		String playerCardscheaker [] = {"Pipe", "Candle Stick","Revolver","Wrench","Knife", "Rope",
 		//	6				7					8		9			10		11				12		13			14
 		   "Conservatory", "Billiard Room", "Study Room", "Hall", "Lounge", "Dining Room", "Kitchen", "Ballroom", "Library",
 		   //    15				16				17				18			19				20
-		   "Colonel Mustard", "Miss Scarlet", "Professor Plum", "Mr. Green", "Mrs. White", "Mrs. Peacock"};
+		   "Mr. Green","Professor Plum" , "Mrs. White", "Colonel Mustard", "Miss Scarlet", "Mrs. Peacock"};
    
    
 								   //				0							1							2							
@@ -99,8 +99,6 @@ public class ClientFrame extends JFrame {
 		} catch (ClassNotFoundException | IOException e1) {
 			e1.printStackTrace();
 		}
-
-		textAreaName.append("Character: " + currentPlayer.getCharacter().getName());
 		
 		//display the character properties in the console log
 		addToLogConsole(currentPlayer.getCharacter().getName());
@@ -191,6 +189,18 @@ public class ClientFrame extends JFrame {
 		addPictureToPanelsToYourCards(); // add character pictures to the panels
 		addArrayPanelsYourCards(); // add the panels from array to the main panel
 	}
+	//private void yourcards
+	// int cardIdNumber [];
+	// for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++){
+	// string yourhandofcards = boardpanal.getplayercard.geti.getname;
+	// int j = 0;
+	// while(yourhandofcards != playerCardscheaker) 
+	// if (playerCardscheaker [j] = yourhandofcards){}
+	// cardIdNumber [i] = j;
+	// }
+	// j++
+	//
+	
 
 	private void initPanelsInArrayYourCards() {
 		yourCardPanelArray = new JPanel[ClueGameConstants.MAX_CHARACTERS];
@@ -204,9 +214,9 @@ public class ClientFrame extends JFrame {
 	}
 
 	private void addPictureToPanelsToYourCards() {
-		for (int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
-			yourCardPanelArray[i].setBackground(Color.BLUE);
-			yourCardPanelArray[i].add(yourPlayerCards[i]);
+		for (int J = 0; J < ClueGameConstants.MAX_CHARACTERS; J++) {
+			yourCardPanelArray[J].setBackground(Color.BLUE);
+			yourCardPanelArray[J].add(yourPlayerCards[J]);
 		}
 	}
 
@@ -308,13 +318,6 @@ public class ClientFrame extends JFrame {
 		menuBar.setToolTipText("Options");
 		menuBar.setBounds(6, 6, 132, 22);
 		contentPane.add(menuBar);
-
-		textAreaName = new JTextArea();
-		textAreaName.setFont(new Font("SansSerif", Font.BOLD, 13));
-		textAreaName.setBackground(new Color(0, 204, 204));
-		textAreaName.setBounds(150, 6, 290, 20);
-		textAreaName.setEditable(false);
-        contentPane.add(textAreaName);
 		
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
