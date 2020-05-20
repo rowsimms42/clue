@@ -30,7 +30,7 @@ public class ClientFrame extends JFrame {
 
 	private JPanel contentPane;
 	private StringBuilder noteStringBuilder, logStringBuilder;
-	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote;
+	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote, textAreaName;
 	private JScrollPane scrollPane, scrollPaneNotesAdded;
 	private JLabel lblConsoleLog, lblAddGameNote, lblGameNotes;
 	private JMenuBar menuBar;
@@ -106,6 +106,8 @@ public class ClientFrame extends JFrame {
 		ye = currentPlayer.getCharacter().getyStarting();
 		String startPointsStr = "Starting points: " + xe + " " + ye;
 		addToLogConsole(startPointsStr);
+
+		textAreaName.append("Character: " + currentPlayer.getCharacter().getName());
 		
 		gameBoardPanel = new BoardPanel(clientConnection, this, currentPlayer);
 		contentPane.add(gameBoardPanel);
@@ -314,6 +316,13 @@ public class ClientFrame extends JFrame {
 		gameMenu.add(gameRulesMenuItem);
 		gameMenu.add(seeCardDeckMenuItem);
 		menuBar.add(gameMenu);
+
+		textAreaName = new JTextArea();
+		textAreaName.setFont(new Font("SansSerif", Font.BOLD, 13));
+		textAreaName.setBackground(new Color(0, 204, 204));
+		textAreaName.setBounds(150, 6, 290, 20);
+		textAreaName.setEditable(false);
+        contentPane.add(textAreaName);
 		
 		menuBar.setToolTipText("Options");
 		menuBar.setBounds(6, 6, 132, 22);
