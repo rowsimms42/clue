@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.io.Serializable;
 
 public class Player implements Serializable{
@@ -17,6 +18,7 @@ public class Player implements Serializable{
     private boolean isBeingSuggested = false;
     private boolean isBeingAccused = false;
     private boolean isGoingFirst = false;
+    private boolean isCanStartgame = false;
 	
     
     public Player(long Id){
@@ -26,10 +28,12 @@ public class Player implements Serializable{
 
     //Copy constructor
     public Player(Player oldPlayer) {
+    	this.playerCardDeck =  new ArrayList<Card>();
     	this.playerCharacter = oldPlayer.playerCharacter;
     	this.locationArray = oldPlayer.locationArray;
     	this.Id = oldPlayer.Id;
     	this.playerCardDeck = oldPlayer.playerCardDeck;
+    	//Collections.copy(this.playerCardDeck,oldPlayer.playerCardDeck);
     	this.currentXLocation = oldPlayer.currentXLocation;
     	this.currentYLocation = oldPlayer.currentYLocation;
     	this.roomNumber = oldPlayer.roomNumber;
@@ -37,10 +41,19 @@ public class Player implements Serializable{
     	this.isBeingSuggested = oldPlayer.isBeingSuggested;
     	this.isBeingAccused = oldPlayer.isBeingAccused;
     	this.isGoingFirst = oldPlayer.isGoingFirst;
+    	this.isCanStartgame = oldPlayer.isCanStartgame;
     }
     
     public long getPlayerId(){
         return Id;
+    }
+    
+    public void setIsCanStartGame(boolean value) {
+    	isCanStartgame = value;
+    }
+    
+    public boolean getIsCanStartGame() {
+    	return isCanStartgame;
     }
     
     public void setIsGoingFirst(boolean value) {
@@ -126,3 +139,4 @@ public class Player implements Serializable{
         return currentYLocation;
     }
 } //end class
+

@@ -18,6 +18,7 @@ public class GameState {
 							roomCardDeck, envelopeDeck, combinedDeck;
 	private ArrayList<Integer> playerTurnOrderArrayList;
 	private int playOrderIndex;
+	private boolean isGameStarted;
 	
 	public GameState(){
 		playerMap = new ConcurrentHashMap<Long, Player>(); //<- has to be here
@@ -41,6 +42,7 @@ public class GameState {
 		availableCharacters = 0;
 		numberOfPlayers = 0;
 		playOrderIndex = 0;
+		isGameStarted = false;
 		
 		availableCharactersArray = new Boolean[ ClueGameConstants.MAX_CHARACTERS ];
 		Arrays.fill(availableCharactersArray, true);
@@ -68,6 +70,14 @@ public class GameState {
 	
 	public void setPlayOrderIndex(int value) {
 		playOrderIndex = value;
+	}
+	
+	public void setIsGameStarted(boolean value) {
+		isGameStarted = value;
+	}
+	
+	public boolean getIsGameStarted() {
+		return isGameStarted;
 	}
 	
 	public int getNextPlayerTurnNumber() {
@@ -241,17 +251,27 @@ public class GameState {
 	}
 	
 	public void dealCardsToPlayers() {	
-		
+		Player currentPlayer, tempPlayer, newPlayer;
 		final int TOP_OF_DECK = 0; 
 		while(!combinedDeck.isEmpty()){	
 			for(long id: playerMap.keySet()){
 				if(combinedDeck.size() > 0 ){
-					Player tempPlayer = playerMap.get(id);	
-					tempPlayer.getPlayerDeck().add(combinedDeck.get(TOP_OF_DECK));					
+					currentPlayer = (Player) playerMap.get(id);	
+					currentPlayer.getPlayerDeck().add(combinedDeck.get(TOP_OF_DECK));
 					combinedDeck.remove(TOP_OF_DECK);	 		
     			}	
 			}
 		}
+		
 	 }
+	
+	public boolean findIfPlayerCanStartGame(Player player) {
+		long lowestIDNumber = Collections.min(playerMap.keySet());
+		//return (player.getPlayerId() == lowestIDNumber) ? true : false;
+		if(player.getPlayerId() == lowestIDNumber)
+			return true;
+		else
+			return false;
+	}
 	
 } //end class

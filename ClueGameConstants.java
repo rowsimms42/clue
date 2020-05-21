@@ -79,6 +79,22 @@ public final class ClueGameConstants {
 		
 		public static final int REPLY_FROM_SERVER_DOES_CURRENT_PLAYER_GO_FIRST = 43;
 		
+		public static final int REQUEST_CAN_PLAYER_START_GAME = 44;
+		
+		public static final int REPLY_FROM_SERVER_CAN_PLAYER_START_GAME = 45;
+		
+		public static final int REQUEST_IF_GAME_HAS_STARTED = 46;
+		
+		public static final int  REPLY_FROM_SERVER_IF_GAME_HAS_STARTED = 47;
+		
+		public static final int REQUEST_TO_START_GAME = 48;
+		
+		public static final int REPLY_FROM_SERVER_CONFIRM_START_GAME = 49;
+		
+		public static final int REQUEST_DEAL_CARDS = 50;
+		
+		public static final int REPLY_FROM_SERVER_CONFIRM_DEAL_CARDS = 51;
+		
 		public static final int UNSELECTABLE_TILE = -1;
 
 		public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
