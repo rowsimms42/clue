@@ -38,7 +38,7 @@ public class ClientFrame extends JFrame {
 	private JMenuItem gameRulesMenuItem, seeCardDeckMenuItem;
 	private JButton btnAddNote;
 	private JTextArea yourCardsFrameInfo;
-
+	private int cardTotalInHand;
 
 		//								0			1			2			3		4			5
 		String playerCardscheaker [] = {"Pipe", "Candle Stick","Revolver","Wrench","Knife", "Rope",
@@ -66,6 +66,7 @@ public class ClientFrame extends JFrame {
 	private JPanel[] yourCardPanelArray;
 	private ImageIcon yourCardsImages [];
 	private JPanel yourcardPanel;
+	private JPanel yourCardContentPane;
 
 	Message messageRecieved;
 	Client client;
@@ -123,26 +124,18 @@ public class ClientFrame extends JFrame {
 					public MyCards(){
 						setResizable (true);
 						setTitle("Your Cards");
-						contentPane = new JPanel();
-						contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-						setContentPane(contentPane);
-						contentPane.setLayout(null);
+						yourCardContentPane = new JPanel();
+						yourCardContentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+						setContentPane(yourCardContentPane);
+						yourCardContentPane.setLayout(null);
 
 						setBounds(100, 100, 400, 650);
 					//	getContentPane().setLayout(new FlowLayout());
 					//	setBounds(6,6,494,693);
 						yourcardPanel = new JPanel();
-						yourcardPanel.setBounds(6, 6, 550, 791);
-						contentPane.add(yourcardPanel);
+						yourcardPanel.setBounds(6, 6, 388, 480);
+						yourCardContentPane.add(yourcardPanel);
 						yourcardPanel.setLayout(new GridLayout(3, 2));
-
-						yourCardsFrameInfo = new JTextArea();
-						yourCardsFrameInfo.setEditable(false);
-						yourCardsFrameInfo.setBounds(6, 498, 388, 59);
-						yourcardPanel.add(yourCardsFrameInfo);
-
-
-
 						addingYourCardsToSee();
 						setVisible(true); 
 					}
@@ -183,38 +176,46 @@ public class ClientFrame extends JFrame {
 
 	} // end constructor
 
-
 	private void addingYourCardsToSee() {
+		//cardTotalInHand = gameBoardPanel.getPlayersCard().size();
+		cardTotalInHand = 4;
 		initPanelsInArrayYourCards(); // initial the panels
 		addPictureToPanelsToYourCards(); // add character pictures to the panels
 		addArrayPanelsYourCards(); // add the panels from array to the main panel
 	}
-	//private void yourcards
-	// int cardIdNumber [];
-	// for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++){
-	// string yourhandofcards = boardpanal.getplayercard.geti.getname;
-	// int j = 0;
-	// while(yourhandofcards != playerCardscheaker) 
-	// if (playerCardscheaker [j] = yourhandofcards){}
-	// cardIdNumber [i] = j;
-	// }
-	// j++
-	//
-	
 
+	int cardIdNumber [] = {0,0,0,0,0,0};
+	private void yourcards (){
+		String tester [] = {"Hall", "Lounge", "Dining Room", "Kitchen", "Ballroom", "Library"};
+		cardTotalInHand = 4;
+	 for(int i = 0; i < cardTotalInHand; i++){
+
+		// String yourhandofcards = gameBoardPanel.getPlayersCard().get(i).getName();
+		 	for(int j = 0; j < 19; j++){
+	 			if (playerCardscheaker[j] == tester[i]/*yourhandofcards*/){
+					cardIdNumber [i] = j;
+				} 
+	 		}
+		}
+	}
+	
 	private void initPanelsInArrayYourCards() {
-		yourCardPanelArray = new JPanel[ClueGameConstants.MAX_CHARACTERS];
-		yourPlayerCards = new JLabel[ClueGameConstants.MAX_CHARACTERS];
-		yourCardsImages = new ImageIcon[ClueGameConstants.MAX_CHARACTERS];
-		for (int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
+		yourCardPanelArray = new JPanel[cardTotalInHand];
+		yourPlayerCards = new JLabel[cardTotalInHand];
+		yourCardsImages = new ImageIcon[cardTotalInHand];
+		cardTotalInHand = 4;
+		yourcards();
+		//int tester [] = {6,9,15,12,20,17};
+		for (int i = 0; i < cardTotalInHand; i++) {
 			yourCardPanelArray[i] = new JPanel();
-			yourCardsImages[i] = new ImageIcon(getClass().getResource(pullPlayerCardsImageArray[i]));
+			yourCardsImages[i] = new ImageIcon(getClass().getResource(pullPlayerCardsImageArray[cardIdNumber[i]]));
 			yourPlayerCards[i] = new JLabel(yourCardsImages[i]);
 		}
 	}
 
 	private void addPictureToPanelsToYourCards() {
-		for (int J = 0; J < ClueGameConstants.MAX_CHARACTERS; J++) {
+		for (int J = 0; J < cardTotalInHand; J++) {
+			cardTotalInHand = 4;
 			yourCardPanelArray[J].setBackground(Color.BLUE);
 			yourCardPanelArray[J].add(yourPlayerCards[J]);
 		}
