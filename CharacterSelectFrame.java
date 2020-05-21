@@ -6,9 +6,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.UnknownHostException;
-
-//import com.sun.security.ntlm.Server;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -329,6 +326,8 @@ public class CharacterSelectFrame extends JFrame {
 		contentPane.add(textAreaCharacterFrameInfo);
 		// Create, assign, fill the character panels
 		initCharacterPanels();
+		setLocationRelativeTo(null);
+
 		// set the character select frame to visibility to true
 		setVisible(true); 
 	}
