@@ -37,15 +37,16 @@ public class ClientFrame extends JFrame {
 	private JMenu gameMenu;
 	private JMenuItem gameRulesMenuItem, seeCardDeckMenuItem;
 	private JButton btnAddNote;
-	private JTextArea yourCardsFrameInfo;
+	//private JTextArea yourCardsFrameInfo;
 	private int cardTotalInHand;
-
+	public int [] cardIdNumber = {0,0,0,0,0,0};
 		//								0			1			2			3		4			5
 		String playerCardscheaker [] = {"Pipe", "Candle Stick","Revolver","Wrench","Knife", "Rope",
 		//	6				7					8		9			10		11				12		13			14
 		   "Conservatory", "Billiard Room", "Study Room", "Hall", "Lounge", "Dining Room", "Kitchen", "Ballroom", "Library",
 		   //    15				16				17				18			19				20
 		   "Mr. Green","Professor Plum" , "Mrs. White", "Colonel Mustard", "Miss Scarlet", "Mrs. Peacock"};
+		   
    
    
 								   //				0							1							2							
@@ -179,22 +180,21 @@ public class ClientFrame extends JFrame {
 	} // end constructor
 
 	private void addingYourCardsToSee() {
-		//cardTotalInHand = gameBoardPanel.getPlayersCard().size();
-		cardTotalInHand = 4;
+		cardTotalInHand = gameBoardPanel.getPlayersCards().size();
+
 		initPanelsInArrayYourCards(); // initial the panels
 		addPictureToPanelsToYourCards(); // add character pictures to the panels
 		addArrayPanelsYourCards(); // add the panels from array to the main panel
 	}
 
-	int cardIdNumber [] = {0,0,0,0,0,0};
-	private void yourcards (){
-		String tester [] = {"Hall", "Lounge", "Dining Room", "Kitchen", "Ballroom", "Library"};
-		cardTotalInHand = 4;
-	 for(int i = 0; i < cardTotalInHand; i++){
 
-		// String yourhandofcards = gameBoardPanel.getPlayersCard().get(i).getName();
-		 	for(int j = 0; j < 19; j++){
-	 			if (playerCardscheaker[j] == tester[i]/*yourhandofcards*/){
+	
+	private void yourcards (){
+	 for(int i = 0; i < cardTotalInHand; i++){
+		 String yourhandofcards = gameBoardPanel.getPlayersCards().get(i).getName();
+		 	for(int j = 0; j < 20; j++){
+
+	 			if (playerCardscheaker[j] == yourhandofcards){
 					cardIdNumber [i] = j;
 				} 
 	 		}
@@ -205,9 +205,8 @@ public class ClientFrame extends JFrame {
 		yourCardPanelArray = new JPanel[cardTotalInHand];
 		yourPlayerCards = new JLabel[cardTotalInHand];
 		yourCardsImages = new ImageIcon[cardTotalInHand];
-		cardTotalInHand = 4;
 		yourcards();
-		//int tester [] = {6,9,15,12,20,17};
+
 		for (int i = 0; i < cardTotalInHand; i++) {
 			yourCardPanelArray[i] = new JPanel();
 			yourCardsImages[i] = new ImageIcon(getClass().getResource(pullPlayerCardsImageArray[cardIdNumber[i]]));
@@ -217,7 +216,6 @@ public class ClientFrame extends JFrame {
 
 	private void addPictureToPanelsToYourCards() {
 		for (int J = 0; J < cardTotalInHand; J++) {
-			cardTotalInHand = 4;
 			yourCardPanelArray[J].setBackground(Color.BLUE);
 			yourCardPanelArray[J].add(yourPlayerCards[J]);
 		}
