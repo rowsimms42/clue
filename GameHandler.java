@@ -199,15 +199,11 @@ public class GameHandler {
             	return returnMessage;
             	
             case ClueGameConstants.REQUEST_PlAYERS_DECK:
-            	System.out.println("Deck size before assignment on server: " + playersDeck.size());
             	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
             	playersDeck.clear();
-            	//Collections.copy(playersDeck, tempPlayer.getPlayerDeck());
             	for(int i = 0; i < tempPlayer.getPlayerDeck().size(); i++) {
             		 playersDeck.add(tempPlayer.getPlayerDeck().get(i));
             	}
-            	//playersDeck = tempPlayer.getPlayerDeck();
-            	System.out.println("Deck size after assignment on server: " + playersDeck.size());
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_PlAYERS_DECK,
             			playersDeck);
             	return returnMessage;
