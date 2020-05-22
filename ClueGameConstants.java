@@ -99,6 +99,14 @@ public final class ClueGameConstants {
 		
 		public static final int REPLY_FROM_SERVER_CONFIRM_PlAYERS_DECK = 53;
 		
+		public static final int REQUEST_LIST_OF_NON_PLAYING_CHARACTERS = 54;
+		
+		public static final int REPLY_FROM_SERVER_CONFIRM_LIST_OF_NON_PLAYING_CHARACTERS = 55;
+		
+		public static final int REQUEST_BUILD_NON_PLAYING_CHAR_LIST = 56;
+		
+		public static final int REPLY_FROM_SERVER_CONFIRM_BUILD_NON_PLAYING_CHAR_LIST = 57;
+		
 		public static final int UNSELECTABLE_TILE = -1;
 
 		public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",

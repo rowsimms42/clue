@@ -17,6 +17,7 @@ public class GameState {
 	private ArrayList<Card> weaponCardDeck, suspectCardDeck, 
 							roomCardDeck, envelopeDeck, combinedDeck;
 	private ArrayList<Integer> playerTurnOrderArrayList;
+	private ArrayList<Characters> nonPlayingCharactersArrayList;
 	private int playOrderIndex;
 	private boolean isGameStarted;
 	
@@ -38,6 +39,7 @@ public class GameState {
 
 		movementOptions = new MovementOptions();
 		playerTurnOrderArrayList = new ArrayList<>();
+		nonPlayingCharactersArrayList = new ArrayList<>();
 		
 		availableCharacters = 0;
 		numberOfPlayers = 0;
@@ -62,6 +64,10 @@ public class GameState {
 	
 	public ArrayList<Integer> getTurnOrderList(){
 		return playerTurnOrderArrayList;
+	}
+	
+	public ArrayList<Characters> getNonPlayingCharactersArrayList(){
+		return nonPlayingCharactersArrayList;
 	}
 	
 	public int getPlayOrderIndex() {
@@ -254,7 +260,7 @@ public class GameState {
 		Player currentPlayer, newPlayer;
 		final int TOP_OF_DECK = 0; 
 		while(!combinedDeck.isEmpty()){	
-			for(long id: playerMap.keySet()){
+			for(long id : playerMap.keySet()){
 				if(combinedDeck.size() > 0 ){
 					currentPlayer = (Player) playerMap.get(id);	
 					currentPlayer.getPlayerDeck().add(combinedDeck.get(TOP_OF_DECK));
@@ -264,9 +270,6 @@ public class GameState {
     			}	
 			}
 		}
-		
-		
-		
 	 }
 	
 	public boolean findIfPlayerCanStartGame(Player player) {
@@ -276,6 +279,27 @@ public class GameState {
 			return true;
 		else
 			return false;
+	}
+	
+	public void buildlistOfAllNonPlayingCharacters(){
+		nonPlayingCharactersArrayList.clear();
+		for(int i = 0; i < ClueGameConstants.MAX_CHARACTERS; i++) {
+			String characterName = ClueGameConstants.CHARACTER_NAMES_ARRAY[i];
+			if(!isCharacterInMap(characterName)) {
+				//this character was not assigned to a player in the player map
+				Characters character = characterMap.get(characterName);
+				nonPlayingCharactersArrayList.add(character);
+			}	
+		}
+	}
+	
+	private boolean isCharacterInMap(String name) {
+		for(long id : playerMap.keySet()){
+			Characters character = playerMap.get(id).getCharacter();
+			if(character.getName() == name)
+				return true;
+		}
+		return false;
 	}
 	
 } //end class

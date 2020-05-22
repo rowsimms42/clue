@@ -47,6 +47,7 @@ public class BoardPanel extends JPanel {
     int turnTimerUpdate = 1, startTimerUpdate=1, playerNumberUpdate = 1, tempNum = 0;//testing for timer
     int numOfPlayers = 0, tempNumPlayers = 0, buttonRollLimit = 1, currentTurnCount = 0;
     ArrayList<Card> playersDeck;
+    ArrayList<Characters> nonPlayingCharList;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
     	client = clientConnection;
@@ -110,6 +111,8 @@ public class BoardPanel extends JPanel {
                 boolean isHasGameStarted = requestIfGameHasStarted();
                 clientFrame.addToLogConsole("Has the game started: " + isHasGameStarted);
                 if(isHasGameStarted) { 
+                	nonPlayingCharList = requestListNonPlayingChars();
+                	printNonPlayingCharacters(nonPlayingCharList);
                 	playersDeck = requestPlayersCardDeck();
                 	printCardsInPlayersDeck(playersDeck);
 	                startGameTimer.stop();
@@ -282,6 +285,7 @@ public class BoardPanel extends JPanel {
         	public void actionPerformed(ActionEvent e) {
         		requestToStartGame();
         		requestDealCards();
+        		requestBuildListOfNonPlayingChars();
         		btnStartGame.setEnabled(false);
         	}
         });
@@ -292,13 +296,27 @@ public class BoardPanel extends JPanel {
     	return playersDeck;
     }
     
-    private void printCardsInPlayersDeck(ArrayList<Card> deck) {
-    	clientFrame.addToLogConsole("Your cards are: ");
-    	clientFrame.addToLogConsole("Deck size: " + deck.size());
-    	for(Card card : deck) {
-    		clientFrame.addToLogConsole(card.getName());
-    	}
+    private void requestBuildListOfNonPlayingChars() {
+    	try {
+			client.send(new Message(ClueGameConstants.REQUEST_BUILD_NON_PLAYING_CHAR_LIST, null));
+			messageReceived = client.getMessage();
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
     }
+    
+    private ArrayList<Characters> requestListNonPlayingChars(){
+    	ArrayList<Characters> characterList = new ArrayList<>();
+    	try {
+			client.send(new Message(ClueGameConstants.REQUEST_LIST_OF_NON_PLAYING_CHARACTERS, null));
+			messageReceived = client.getMessage();
+			characterList   = (ArrayList<Characters>) messageReceived.getData();
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+    	return characterList;
+    }
+    
     
     public Player getCurrentPlayerFromMap(Player currentPlayer, HashMap<Long, Player> map) {
     	Player p = (Player) map.get(currentPlayer.getPlayerId());
@@ -440,6 +458,28 @@ public class BoardPanel extends JPanel {
 				return door.getDirection();
 		}
 		return 0;
+    }
+    
+    private void printCardsInPlayersDeck(ArrayList<Card> deck) {
+    	clientFrame.addToLogConsole("------------------------");
+    	clientFrame.addToLogConsole("Your cards are: ");
+    	clientFrame.addToLogConsole("Deck size: " + deck.size());
+    	for(Card card : deck) {
+    		clientFrame.addToLogConsole(card.getName());
+    	}
+    	clientFrame.addToLogConsole("------------------------");
+    }
+    
+    private void printNonPlayingCharacters(ArrayList<Characters> charList) {
+    	clientFrame.addToLogConsole("------------------------");
+    	clientFrame.addToLogConsole("Non playing characters are: ");
+    	if(charList.isEmpty())
+    		clientFrame.addToLogConsole("None");
+    	else {
+    		for(Characters c : charList)
+    			clientFrame.addToLogConsole(c.getName());
+    	}
+    	clientFrame.addToLogConsole("------------------------");
     }
 
     public void paint(Graphics g) {

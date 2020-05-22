@@ -44,6 +44,7 @@ public class GameHandler {
         Characters tempCharacter;
         HashMap<Long, Player> playerMapTemp = new  HashMap<Long, Player>();
         ArrayList<Card> playersDeck = new ArrayList<>();
+        ArrayList<Characters> nonPlayingCharList; 
 
         int msgID = msgObj.getMessageID();
        // System.out.println("Incoming to server MessageID: " + msgID);
@@ -85,12 +86,12 @@ public class GameHandler {
             case ClueGameConstants.REQUEST_PLAYER_ID:
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_ID, 
-                                            Long.valueOf(tempPlayer.getPlayerId()));
+                                Long.valueOf(tempPlayer.getPlayerId()));
                 return returnMessage; 
             
             case ClueGameConstants.REQUEST_DICE_ROLL:
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_DICE_ROLL, 
-                                            Integer.valueOf(gameState.rollDice()));
+                                Integer.valueOf(gameState.rollDice()));
                 return returnMessage;
              
             case ClueGameConstants.REQUEST_MOVEMENT_BUTTON_VALUES:
@@ -105,17 +106,13 @@ public class GameHandler {
                     int boolToIntVal = (val == false) ? 0 : 1;
                     sb.append(boolToIntVal);
                 }
-                //System.out.println(sb);
-                //System.out.println("in game handler...");
-                //System.out.println(Collections.singletonList(buttonValues));
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_MOVEMENT_BUTTON_VALUES, String.valueOf(sb));
                 return returnMessage;
                 
             case ClueGameConstants.REQUEST_PLAYER_MAP:
             	playerMapTemp.clear();
             	playerMapTemp.putAll(gameState.getPlayerMap());
-            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_MAP, 
-            			playerMapTemp);
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_PLAYER_MAP, playerMapTemp);
             	return returnMessage;
             	
             case ClueGameConstants.REQUEST_PLAYER_OBJECT:
@@ -127,7 +124,7 @@ public class GameHandler {
             	//System.out.print("Requesting if current turn.");
             	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_IS_CURRENT_TURN, 
-            								Boolean.valueOf(tempPlayer.getIsPlayerTurn()));
+            					Boolean.valueOf(tempPlayer.getIsPlayerTurn()));
             	return returnMessage;
             
             case ClueGameConstants.REQUEST_MARK_PLAYER_END_TURN:
@@ -165,7 +162,7 @@ public class GameHandler {
             		 gameState.setPlayOrderIndex(gameState.getPlayOrderIndex() + 1);
             	 }
             	 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_DOES_CURRENT_PLAYER_GO_FIRST,
-            			 Boolean.valueOf(tempPlayer.getIsGoingFirst()));
+            			 		 Boolean.valueOf(tempPlayer.getIsGoingFirst()));
             	 return returnMessage; 
             	 
             case  ClueGameConstants.REQUEST_CAN_PLAYER_START_GAME:
@@ -177,25 +174,23 @@ public class GameHandler {
             		gameState.getPlayerMap().put(threadID, tempPlayer);
             	}
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CAN_PLAYER_START_GAME,
-           			 Boolean.valueOf(tempPlayer.getIsCanStartGame()));
+           			 			Boolean.valueOf(tempPlayer.getIsCanStartGame()));
            	 	return returnMessage; 
            	 	
             case ClueGameConstants.REQUEST_TO_START_GAME:
             	gameState.setIsGameStarted(true);
-            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_START_GAME,
-              			 null);
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_START_GAME, null);
             	return returnMessage; 
             	
             case ClueGameConstants.REQUEST_IF_GAME_HAS_STARTED:
             	boolean isHasGameStarted = gameState.getIsGameStarted();
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_IF_GAME_HAS_STARTED,
-             			 Boolean.valueOf(isHasGameStarted));
+             			 		Boolean.valueOf(isHasGameStarted));
             	return returnMessage;
             	
             case ClueGameConstants.REQUEST_DEAL_CARDS:
             	gameState.dealCardsToPlayers();
-            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_DEAL_CARDS,
-            			 null);
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_DEAL_CARDS, null);
             	return returnMessage;
             	
             case ClueGameConstants.REQUEST_PlAYERS_DECK:
@@ -205,9 +200,18 @@ public class GameHandler {
             		 playersDeck.add(tempPlayer.getPlayerDeck().get(i));
             	}
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_PlAYERS_DECK,
-            			playersDeck);
+            				    playersDeck);
+            	return returnMessage;
+            case ClueGameConstants.REQUEST_LIST_OF_NON_PLAYING_CHARACTERS:
+            	nonPlayingCharList = gameState.getNonPlayingCharactersArrayList();
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_LIST_OF_NON_PLAYING_CHARACTERS,
+            					nonPlayingCharList);
             	return returnMessage;
             	
+            case ClueGameConstants.REQUEST_BUILD_NON_PLAYING_CHAR_LIST:
+            	gameState.buildlistOfAllNonPlayingCharacters();
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_BUILD_NON_PLAYING_CHAR_LIST, null);
+            	return returnMessage;
             default:
                 return msgObj; //returns same object sent
         }
