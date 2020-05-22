@@ -34,6 +34,7 @@ public class BoardPanel extends JPanel {
     BasicArrowButton[] movementButtons;
     JLabel boardLabel;
     JButton[] enterButton, roomButtons; //to hold buttons in room
+    private JTextArea textAreaDice;
     int diceRollValue = 1, movementAmount = 0 ,previousMovement = 0;
     char[] cArray_movement_enter;
     int xC = 0; //x coordinate for drawing on board
@@ -48,6 +49,7 @@ public class BoardPanel extends JPanel {
     int numOfPlayers = 0, tempNumPlayers = 0, buttonRollLimit = 1, currentTurnCount = 0;
     ArrayList<Card> playersDeck;
     ArrayList<Characters> nonPlayingCharList;
+    ArrayList<String> legendList;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
     	client = clientConnection;
@@ -111,8 +113,9 @@ public class BoardPanel extends JPanel {
                 boolean isHasGameStarted = requestIfGameHasStarted();
                 clientFrame.addToLogConsole("Has the game started: " + isHasGameStarted);
                 if(isHasGameStarted) { 
-                	nonPlayingCharList = requestListNonPlayingChars();
-                	printNonPlayingCharacters(nonPlayingCharList);
+                	//nonPlayingCharList = requestListNonPlayingChars();
+                    //printNonPlayingCharacters(nonPlayingCharList);
+                    getNamesForLegend();
                 	playersDeck = requestPlayersCardDeck();
                 	printCardsInPlayersDeck(playersDeck);
 	                startGameTimer.stop();
@@ -182,7 +185,7 @@ public class BoardPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
             	diceRollValue--;
                 if(diceRollValue >= 0){
-                	clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+                    addToDiceLog(Integer.toString(diceRollValue));
                 }
                 yC += 20;
                 currentYgrid++;
@@ -198,7 +201,7 @@ public class BoardPanel extends JPanel {
             	diceRollValue--;
                
                 if(diceRollValue >= 0){
-                	clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+                    addToDiceLog(Integer.toString(diceRollValue));
                 }
                 yC -= 20;
                 currentYgrid--;
@@ -213,7 +216,7 @@ public class BoardPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
             	diceRollValue--;
                 if(diceRollValue >= 0){
-                	clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+                    addToDiceLog(Integer.toString(diceRollValue));
                 }
                 xC += 21;
                 repaint();
@@ -228,7 +231,7 @@ public class BoardPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
             	diceRollValue--;
                 if(diceRollValue >= 0){
-                	clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+                    addToDiceLog(Integer.toString(diceRollValue));
                 }
                 xC -= 21;
                 repaint();
@@ -241,8 +244,8 @@ public class BoardPanel extends JPanel {
         enterButton[ENTER_ROOM].addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
                 //figure out which room
-        		diceRollValue--;
-                clientFrame.addToLogConsole("Number of Moves: " + diceRollValue);
+                diceRollValue = 0;
+                addToDiceLog(Integer.toString(diceRollValue));
                 int roomNumber = getDoorId(currentXgrid, currentYgrid);
                 int roomDirection = getDirection(currentXgrid, currentYgrid);
                 requestUpdatePlayerRoomLocation(roomNumber);
@@ -251,6 +254,7 @@ public class BoardPanel extends JPanel {
                 clientFrame.addToLogConsole(enterRoomStr);
                 requestBtns(currentXgrid, currentYgrid);
                 enableOrdisableBtns(movementButtons);
+                enterButton[ENTER_ROOM].setEnabled(false);
                 repaint();
                 //TODO --- > enable the suggestion button
                 //TODO --- > enable the accuse button
@@ -260,6 +264,8 @@ public class BoardPanel extends JPanel {
         
         btnEndTurn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                diceRollValue = 0;
+                addToDiceLog(Integer.toString(diceRollValue));
             	requestEndOfTurn();
             	requestPlayerMap(); 
             	repaint();
@@ -316,8 +322,27 @@ public class BoardPanel extends JPanel {
 		}
     	return characterList;
     }
-    
-    
+
+    public void getNamesForLegend(){
+        requestPlayerMap();
+        String playerName;
+        for(Entry<Long, Player> p : playerMap.entrySet()) {
+            long idNum = (long)p.getKey();
+            Player player = p.getValue();
+            playerName = player.getCharacter().getName() + "- Active";
+            legendList.add(playerName);
+        }
+        nonPlayingCharList = requestListNonPlayingChars();
+        for(Characters c : nonPlayingCharList){
+            legendList.add(c.getName());
+        }
+        Collections.sort(legendList);
+        for (int i=0; i< legendList.size(); i++)
+        {
+            clientFrame.addToLegend(legendList.get(i));
+        }
+    }
+
     public Player getCurrentPlayerFromMap(Player currentPlayer, HashMap<Long, Player> map) {
     	Player p = (Player) map.get(currentPlayer.getPlayerId());
     	return p;
@@ -436,8 +461,8 @@ public class BoardPanel extends JPanel {
         try {
 			client.send(new Message(ClueGameConstants.REQUEST_DICE_ROLL, null));
 			messageReceived = client.getMessage();
-			diceRoll = (int) messageReceived.getData();
-			clientFrame.addToLogConsole("Dice roll: " + diceRoll);
+            diceRoll = (int) messageReceived.getData();
+            addToDiceLog(Integer.toString(diceRoll));
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
@@ -572,6 +597,10 @@ public class BoardPanel extends JPanel {
         	movementButtons[i].setEnabled(false);
         }
     }
+
+    protected void addToDiceLog(String input){
+		textAreaDice.setText(input.toString());
+	}
     
     public void drawInRoom(int roomNumber, int roomDirection)
     {
@@ -619,7 +648,7 @@ public class BoardPanel extends JPanel {
                 xC+= 21*3; //right 3
                 currentXgrid = currentXgrid+3;
                 xC-= 21*multiplier; //left by 6
-                currentYgrid = currentYgrid+2;
+                currentYgrid = currentYgrid-2;
             }
             else
             {
@@ -717,40 +746,40 @@ public class BoardPanel extends JPanel {
         movementButtons[WEST].setBounds(587, 106, 26, 23);
         this.add(movementButtons[WEST]);
 
+        btnEndTurn = new JButton("End Turn");
+        btnEndTurn.setForeground(Color.RED);
+        btnEndTurn.setFont(new Font("SansSerif", Font.BOLD, 10));
+        btnEndTurn.setBounds(579, 337, 99, 23);
+        this.add(btnEndTurn);
+
         enterButton = new JButton[1];
         enterButton[ENTER_ROOM] = new JButton("Enter Room");
         enterButton[ENTER_ROOM] .setForeground(new Color(128, 0, 128));
         enterButton[ENTER_ROOM] .setFont(new Font("SansSerif", Font.BOLD, 10));
-        enterButton[ENTER_ROOM] .setBounds(579, 340, 99, 23);
+        enterButton[ENTER_ROOM] .setBounds(579, 370, 99, 23);
         this.add(enterButton[ENTER_ROOM]);
         
         btnExitRoom = new JButton("Exit Room");
         btnExitRoom.setForeground(new Color(128, 0, 128));
         btnExitRoom.setFont(new Font("SansSerif", Font.BOLD, 10));
-        btnExitRoom.setBounds(579, 375, 99, 23);
+        btnExitRoom.setBounds(579, 403, 99, 23);
         this.add(btnExitRoom);
 
         btnSuggest = new JButton("Suggest");
         btnSuggest.setFont(new Font("SansSerif", Font.BOLD, 10));
-        btnSuggest.setBounds(579, 410, 99, 23);
+        btnSuggest.setBounds(579, 436, 99, 23);
         this.add(btnSuggest);
 
         btnAccuse = new JButton("Accuse");
         btnAccuse.setFont(new Font("SansSerif", Font.BOLD, 10));
-        btnAccuse.setBounds(579, 445, 99, 23);
+        btnAccuse.setBounds(579, 469, 99, 23);
         this.add(btnAccuse);
 
         btnShortcut = new JButton("Shortcut");
         btnShortcut.setForeground(Color.BLACK);
         btnShortcut.setFont(new Font("SansSerif", Font.BOLD, 10));
-        btnShortcut.setBounds(579, 480, 99, 23);
+        btnShortcut.setBounds(579, 502, 99, 23);
         this.add(btnShortcut);
-
-        btnEndTurn = new JButton("End Turn");
-        btnEndTurn.setForeground(Color.RED);
-        btnEndTurn.setFont(new Font("SansSerif", Font.BOLD, 10));
-        btnEndTurn.setBounds(579, 243, 99, 23);
-        this.add(btnEndTurn);
 
         btnRollDice = new JButton("Roll Dice");
         btnRollDice.setForeground(new Color(0,128,0));
@@ -763,10 +792,19 @@ public class BoardPanel extends JPanel {
         btnStartGame.setFont(new Font("SansSerif", Font.BOLD, 10));
         btnStartGame.setBounds(579, 6, 99, 23);
         this.add(btnStartGame);
+
+        textAreaDice = new JTextArea();
+	    textAreaDice.setBounds(604, 241, 74, 76);
+	    textAreaDice.setEditable(false);
+	    textAreaDice.setFont(new Font("Microsoft Tai Le", Font.BOLD, 60));
+	    textAreaDice.setBackground(Color.PINK);
+		this.add(textAreaDice);
         
         cArray_movement_enter = new char[5];
         
         playersDeck = new ArrayList<>();
+
+        legendList = new ArrayList<>();
     }
     
     

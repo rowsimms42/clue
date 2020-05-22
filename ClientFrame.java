@@ -29,8 +29,8 @@ import java.awt.Rectangle;
 public class ClientFrame extends JFrame {
 
 	private JPanel contentPane;
-	private StringBuilder noteStringBuilder, logStringBuilder;
-	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote, textAreaName;
+	private StringBuilder noteStringBuilder, logStringBuilder, legendStringBuilder;
+	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote, textAreaName, textAreaLegend;
 	private JScrollPane scrollPane, scrollPaneNotesAdded;
 	private JLabel lblConsoleLog, lblAddGameNote, lblGameNotes;
 	private JMenuBar menuBar;
@@ -40,6 +40,8 @@ public class ClientFrame extends JFrame {
 	//private JTextArea yourCardsFrameInfo;
 	private int cardTotalInHand;
 	public int [] cardIdNumber = {0,0,0,0,0,0};
+	int xPieceName = 130;
+	int yPieceName = 20;
 		//								0			1			2			3		4			5
 		String playerCardscheaker [] = {"Pipe", "Candle Stick","Revolver","Wrench","Knife", "Rope",
 		//	6				7					8		9			10		11				12		13			14
@@ -179,6 +181,30 @@ public class ClientFrame extends JFrame {
 
 	} // end constructor
 
+	public void paint(Graphics g2) {
+		super.paint(g2);		
+		for(ClueGameConstants.LEGEND legend : ClueGameConstants.LEGEND.values()) {
+		 	g2.setColor(new Color(legend.getColor()));
+         	Rectangle rectBounds = getBounds1(legend.getXCoordLegend(), legend.getYCoordLegend());
+         	int rectXBounds = (int) rectBounds.getX(); 
+         	int rectYBounds = (int) rectBounds.getY();
+         	int rectBoundsHeight = (int) rectBounds.getHeight();
+         	int rectBoundsWidth  = (int) rectBounds.getWidth();
+		 	g2.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
+		}
+		g2.setColor(new Color(currentPlayer.getCharacter().getColor()));
+         Rectangle rectBounds = getBounds1(xPieceName, yPieceName);
+         int rectXBounds = (int) rectBounds.getX(); 
+         int rectYBounds = (int) rectBounds.getY();
+         int rectBoundsHeight = (int) rectBounds.getHeight();
+         int rectBoundsWidth  = (int) rectBounds.getWidth();
+		 g2.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
+	}
+
+	private Rectangle getBounds1(int x, int y) {
+        return new Rectangle(x + 30,y + 16,20,20);
+    }
+
 	private void addingYourCardsToSee() {
 		cardTotalInHand = gameBoardPanel.getPlayersCards().size();
 
@@ -232,7 +258,12 @@ public class ClientFrame extends JFrame {
 		logStringBuilder.append(input + "\n");
 		log_text_area.setText(logStringBuilder.toString());
 	}
-	
+
+	protected void addToLegend(String input){
+		legendStringBuilder.append(input + "\n" + "\n");
+		textAreaLegend.setText(legendStringBuilder.toString());
+	}
+
 	//add notes to the notebook
 	private void addToNotebook(String input){
 		String noteToAdd = input;
@@ -263,6 +294,7 @@ public class ClientFrame extends JFrame {
 		
 		noteStringBuilder = new StringBuilder();
 		logStringBuilder  = new StringBuilder();
+		legendStringBuilder = new StringBuilder();
 		
 		log_text_area = new JTextArea(10,60);
 		log_text_area.setEditable(false);
@@ -294,9 +326,9 @@ public class ClientFrame extends JFrame {
 		btnAddNote.setBounds(770, 162, 117, 29);
 		contentPane.add(btnAddNote);
 		
-		lblGameNotes = new JLabel("Game Notes");
+		lblGameNotes = new JLabel(" ");
 		lblGameNotes.setFont(new Font("SansSerif", Font.BOLD, 12));
-		lblGameNotes.setBounds(784, 206, 80, 16);
+		lblGameNotes.setBounds(755, 206, 151, 16);
 		contentPane.add(lblGameNotes);
 		
 		textAreaNotesAdded = new JTextArea(5, 10);
@@ -319,9 +351,16 @@ public class ClientFrame extends JFrame {
 		textAreaName = new JTextArea();
 		textAreaName.setFont(new Font("SansSerif", Font.BOLD, 13));
 		textAreaName.setBackground(new Color(0, 204, 204));
-		textAreaName.setBounds(150, 6, 290, 20);
+		textAreaName.setBounds(175, 6, 290, 20);
 		textAreaName.setEditable(false);
-        contentPane.add(textAreaName);
+		contentPane.add(textAreaName);
+		
+		textAreaLegend = new JTextArea();
+		textAreaLegend.setFont(new Font("SansSerif", Font.BOLD, 11));
+		textAreaLegend.setEditable(false);
+		textAreaLegend.setBounds(740, 590, 171, 200);
+		textAreaLegend.setBackground(new Color(0, 204, 204));
+		contentPane.add(textAreaLegend);
 		
 		menuBar.setToolTipText("Options");
 		menuBar.setBounds(6, 6, 132, 22);
