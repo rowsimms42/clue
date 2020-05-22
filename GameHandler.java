@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class GameHandler {
         Player tempPlayer, nextPlayer;
         Characters tempCharacter;
         HashMap<Long, Player> playerMapTemp = new  HashMap<Long, Player>();
+        ArrayList<Card> playersDeck = new ArrayList<>();
 
         int msgID = msgObj.getMessageID();
        // System.out.println("Incoming to server MessageID: " + msgID);
@@ -195,7 +197,21 @@ public class GameHandler {
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_DEAL_CARDS,
             			 null);
             	return returnMessage;
-            	 
+            	
+            case ClueGameConstants.REQUEST_PlAYERS_DECK:
+            	System.out.println("Deck size before assignment on server: " + playersDeck.size());
+            	tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
+            	playersDeck.clear();
+            	//Collections.copy(playersDeck, tempPlayer.getPlayerDeck());
+            	for(int i = 0; i < tempPlayer.getPlayerDeck().size(); i++) {
+            		 playersDeck.add(tempPlayer.getPlayerDeck().get(i));
+            	}
+            	//playersDeck = tempPlayer.getPlayerDeck();
+            	System.out.println("Deck size after assignment on server: " + playersDeck.size());
+            	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_PlAYERS_DECK,
+            			playersDeck);
+            	return returnMessage;
+            	
             default:
                 return msgObj; //returns same object sent
         }

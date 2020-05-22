@@ -95,6 +95,10 @@ public final class ClueGameConstants {
 		
 		public static final int REPLY_FROM_SERVER_CONFIRM_DEAL_CARDS = 51;
 		
+		public static final int REQUEST_PlAYERS_DECK = 52;
+		
+		public static final int REPLY_FROM_SERVER_CONFIRM_PlAYERS_DECK = 53;
+		
 		public static final int UNSELECTABLE_TILE = -1;
 
 		public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",

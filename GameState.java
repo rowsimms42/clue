@@ -251,17 +251,21 @@ public class GameState {
 	}
 	
 	public void dealCardsToPlayers() {	
-		Player currentPlayer, tempPlayer, newPlayer;
+		Player currentPlayer, newPlayer;
 		final int TOP_OF_DECK = 0; 
 		while(!combinedDeck.isEmpty()){	
 			for(long id: playerMap.keySet()){
 				if(combinedDeck.size() > 0 ){
 					currentPlayer = (Player) playerMap.get(id);	
 					currentPlayer.getPlayerDeck().add(combinedDeck.get(TOP_OF_DECK));
+					newPlayer = new Player(currentPlayer);
+					playerMap.put(newPlayer.getPlayerId(), newPlayer);
 					combinedDeck.remove(TOP_OF_DECK);	 		
     			}	
 			}
 		}
+		
+		
 		
 	 }
 	

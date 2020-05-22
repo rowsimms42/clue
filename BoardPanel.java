@@ -44,8 +44,9 @@ public class BoardPanel extends JPanel {
     boolean isPlayerCurrentTurn = false;
     boolean isGameStarted = false, isCurrentPlayerGoFirst = false;
     private JButton btnExitRoom, btnSuggest, btnAccuse, btnShortcut, btnEndTurn, btnRollDice, btnStartGame;
-    int turnTimerUpdate = 1, startTimerUpdate=1, playerNumberUpdate = 1;//testing for timer
+    int turnTimerUpdate = 1, startTimerUpdate=1, playerNumberUpdate = 1, tempNum = 0;//testing for timer
     int numOfPlayers = 0, tempNumPlayers = 0, buttonRollLimit = 1, currentTurnCount = 0;
+    ArrayList<Card> playersDeck;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
     	client = clientConnection;
@@ -103,17 +104,14 @@ public class BoardPanel extends JPanel {
                     numOfPlayers = tempNumPlayers;
                 }
                 
-           
                 requestPlayerMap();
                 repaint();
                
                 boolean isHasGameStarted = requestIfGameHasStarted();
                 clientFrame.addToLogConsole("Has the game started: " + isHasGameStarted);
                 if(isHasGameStarted) { 
-	                //tempPlayer = getCurrentPlayerFromMap(currentPlayer, playerMap);
-	                //printCardsInPlayersDeck(tempPlayer);
-                	//requestPlayerObject();
-                	//printCardsInPlayersDeck(currentPlayer);
+                	playersDeck = requestPlayersCardDeck();
+                	printCardsInPlayersDeck(playersDeck);
 	                startGameTimer.stop();
 	                currentTurnTimer.start();
                 }
@@ -139,13 +137,13 @@ public class BoardPanel extends JPanel {
                   clientFrame.addToLogConsole("Waiting for your turn..."); //for testing
                   turnTimerUpdate--;
                 }
-
-                if (currentTurnCount==0) {
+                
+                if(currentTurnCount==0) {
                     isCurrentPlayerGoFirst = requestDoesCurrentPlayerGoFirst();
                     requestPlayerMap();
                     repaint();
 
-                    if (isCurrentPlayerGoFirst) {
+                    if(isCurrentPlayerGoFirst) {
                       currentTurnTimer.stop();
 					  clientFrame.addToLogConsole("UPDATE - It's now your turn.");
                       turnTimerUpdate = 1;
@@ -155,7 +153,7 @@ public class BoardPanel extends JPanel {
                       btnRollDice.setEnabled(true);
                       buttonRollLimit = 1;
                     }
-                currentTurnCount++;
+	                currentTurnCount++;
                 }
                 
                 //--------all below will execute at every cycle
@@ -220,8 +218,6 @@ public class BoardPanel extends JPanel {
                 requestBtns(currentXgrid, currentYgrid);
                 enableOrdisableBtns(movementButtons);
                 movementAmount++;
-                //clientFrame.addToLogConsole("NO AVAILABLE MOVES!!!!");
-                clientFrame.addToLogConsole("Current X location: " + currentPlayer.getCurrentXLocation());
             }
         });
 
@@ -236,7 +232,6 @@ public class BoardPanel extends JPanel {
                 currentXgrid--;
                 requestBtns(currentXgrid, currentYgrid);
                 enableOrdisableBtns(movementButtons);
-                clientFrame.addToLogConsole("Current X location: " + currentPlayer.getCurrentXLocation());
             }
         });
         
@@ -293,14 +288,33 @@ public class BoardPanel extends JPanel {
     
     } //end constructor
     
-    /*
-    public ArrayList<Card> getPlayersCard(){
-    	return currentPlayer.getPlayerDeck();
-    }*/
+    public ArrayList<Card> getPlayersCards(){
+    	return playersDeck;
+    }
+    
+    private void printCardsInPlayersDeck(ArrayList<Card> deck) {
+    	clientFrame.addToLogConsole("Your cards are: ");
+    	clientFrame.addToLogConsole("Deck size: " + deck.size());
+    	for(Card card : deck) {
+    		clientFrame.addToLogConsole(card.getName());
+    	}
+    }
     
     public Player getCurrentPlayerFromMap(Player currentPlayer, HashMap<Long, Player> map) {
     	Player p = (Player) map.get(currentPlayer.getPlayerId());
     	return p;
+    }
+    
+    private ArrayList<Card> requestPlayersCardDeck() {
+    	ArrayList<Card> deck = new ArrayList<>();
+    	try {
+			client.send(new Message(ClueGameConstants.REQUEST_PlAYERS_DECK , null));
+			messageReceived = client.getMessage();
+			deck = (ArrayList<Card>) messageReceived.getData();
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+		return deck;
     }
     
     private void requestDealCards() {
@@ -711,16 +725,11 @@ public class BoardPanel extends JPanel {
         this.add(btnStartGame);
         
         cArray_movement_enter = new char[5];
+        
+        playersDeck = new ArrayList<>();
     }
     
-    private void printCardsInPlayersDeck(Player p) {
-    	ArrayList<Card> deck = p.getPlayerDeck();
-    	clientFrame.addToLogConsole("Your cards are: ");
-    	clientFrame.addToLogConsole("Deck size: " + deck.size());
-    	//for(Card card : deck) {
-    	//	clientFrame.addToLogConsole(card.getName());
-    	//}
-    }
+    
     
 } // end class
 
