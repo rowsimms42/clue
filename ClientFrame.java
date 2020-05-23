@@ -32,7 +32,7 @@ public class ClientFrame extends JFrame {
 	private StringBuilder noteStringBuilder, logStringBuilder, legendStringBuilder;
 	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote, textAreaName, textAreaLegend;
 	private JScrollPane scrollPane, scrollPaneNotesAdded;
-	private JLabel lblConsoleLog, lblAddGameNote, lblGameNotes;
+	private JLabel lblConsoleLog, lblAddGameNote, lblGameNotes, lblScoreCard;
 	private JMenuBar menuBar;
 	private JMenu gameMenu;
 	private JMenuItem gameRulesMenuItem, seeCardDeckMenuItem;
@@ -79,6 +79,7 @@ public class ClientFrame extends JFrame {
 	int coloums = 25;
 	String value;
 	private final BoardPanel gameBoardPanel;
+	private final ScoreCard scoreCardPanel;
     int xe = 0;
     int ye = 0;
 
@@ -117,11 +118,10 @@ public class ClientFrame extends JFrame {
 		contentPane.add(gameBoardPanel);
 		gameBoardPanel.setLayout(null);
 
-		btnAddNote.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addToNotebook(textAreaGameNote.getText());
-			}
-		}); //end button action listener
+		scoreCardPanel = new ScoreCard();
+		scoreCardPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		contentPane.add(scoreCardPanel);
+		scoreCardPanel.setLayout(null);
 
 		seeCardDeckMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent g) {
@@ -263,25 +263,6 @@ public class ClientFrame extends JFrame {
 		textAreaLegend.setText(legendStringBuilder.toString());
 	}
 
-	//add notes to the notebook
-	private void addToNotebook(String input){
-		String noteToAdd = input;
-		if(noteToAdd.isEmpty()) {
-			//Display JOptionPane with error message if textAreaGameNote contained no text. 
-			JOptionPane.showMessageDialog(null, "No Text Entered");
-		}
-		else {
-			noteCounter++;
-			noteStringBuilder.append("Note ");
-			noteStringBuilder.append(Integer.toString(noteCounter));
-			noteStringBuilder.append(": ");
-			noteStringBuilder.append(noteToAdd);
-			noteStringBuilder.append("\n");
-			textAreaNotesAdded.setText(noteStringBuilder.toString());
-			textAreaGameNote.setText("");
-		}
-	} 
-	
 	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 950, 800);
@@ -316,28 +297,14 @@ public class ClientFrame extends JFrame {
 		textAreaGameNote = new JTextArea();
 		textAreaGameNote.setEditable(true);
 		textAreaGameNote.setLineWrap(true);
-		textAreaGameNote.setBounds(706, 52, 238, 98);
+		textAreaGameNote.setBounds(704, 52, 227, 98);
 		contentPane.add(textAreaGameNote);
-		
-		btnAddNote = new JButton("Add Note");
-		btnAddNote.setFont(new Font("SansSerif", Font.BOLD, 12));
-		
-		btnAddNote.setBounds(770, 162, 117, 29);
-		contentPane.add(btnAddNote);
 		
 		lblGameNotes = new JLabel(" ");
 		lblGameNotes.setFont(new Font("SansSerif", Font.BOLD, 12));
 		lblGameNotes.setBounds(755, 206, 151, 16);
 		contentPane.add(lblGameNotes);
-		
-		textAreaNotesAdded = new JTextArea(5, 10);
-		textAreaNotesAdded.setEditable(false);
-		textAreaNotesAdded.setLineWrap(true);
-		
-		scrollPaneNotesAdded = new JScrollPane(textAreaNotesAdded);
-		scrollPaneNotesAdded.setBounds(706, 234, 238, 111);
-		contentPane.add(scrollPaneNotesAdded);
-				
+
 		menuBar = new JMenuBar();
 		gameMenu = new JMenu("Options");
 		gameMenu.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -360,6 +327,11 @@ public class ClientFrame extends JFrame {
 		textAreaLegend.setBounds(740, 590, 171, 200);
 		textAreaLegend.setBackground(new Color(0, 204, 204));
 		contentPane.add(textAreaLegend);
+
+		lblScoreCard = new JLabel("Score Card");
+	    lblScoreCard.setFont(new Font("SansSerif", Font.BOLD, 13));
+	    lblScoreCard.setBounds(775, 200, 90, 13);
+	    contentPane.add(lblScoreCard);
 		
 		menuBar.setToolTipText("Options");
 		menuBar.setBounds(6, 6, 132, 22);
