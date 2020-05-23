@@ -58,7 +58,7 @@ public class ClientFrame extends JFrame {
 		//		6							7						8						9					10					
    "resources/Conservatory.JPG","resources/Billiard_Room.JPG","resources/Study.JPG","resources/Hall.JPG","resources/Lounge.JPG",
    //  11								12						13						14
-   "resources/Dinning_Room.JPG","resources/Kitchen.JPG","resources/BallRoom.JPG","resources/Libary.JPG",
+   "resources/Dinning_Room.JPG","resources/Kitchen.JPG","resources/BallRoom.JPG","resources/Library.JPG",
 	   //    15				16						17						18						19						20
    "resources/green.png", "resources/plum.png", "resources/white.png","resources/mustard.png", "resources/scarlett.png", "resources/peacock.png"
 		   };
@@ -219,7 +219,6 @@ public class ClientFrame extends JFrame {
 	 for(int i = 0; i < cardTotalInHand; i++){
 		 String yourhandofcards = gameBoardPanel.getPlayersCards().get(i).getName();
 		 	for(int j = 0; j <= 20; j++){
-
 	 			if (yourhandofcards.equals(playerCardscheaker[j])){
 					cardIdNumber [i] = j;
 				} 
