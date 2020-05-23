@@ -23,6 +23,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -37,34 +38,13 @@ public class ClientFrame extends JFrame {
 	private JMenu gameMenu;
 	private JMenuItem gameRulesMenuItem, seeCardDeckMenuItem;
 	private JButton btnAddNote;
+
 	//private JTextArea yourCardsFrameInfo;
 	private int cardTotalInHand;
 	public int [] cardIdNumber = {0,0,0,0,0,0};
 	int xPieceName = 130;
 	int yPieceName = 20;
-		//								0			1			2			3		4			5
-		String playerCardscheaker [] = {"Pipe", "Candle Stick","Revolver","Wrench","Knife", "Rope",
-		//	6				7					8		9			10		11				12		13			14
-		   "Conservatory", "Billiard Room", "Study Room", "Hall", "Lounge", "Dining Room", "Kitchen", "Ballroom", "Library",
-		   //    15				16				17				18			19				20
-		   "Mr. Green","Professor Plum" , "Mrs. White", "Colonel Mustard", "Miss Scarlet", "Mrs. Peacock"};
-		   
-   
-   
-								   //				0							1							2							
-	String  pullPlayerCardsImageArray [] = { "resources/Lead_Pipe.JPG", "resources/Candlestick.JPG", "resources/Revolver.JPG",
-	   //  3 							4					5
-	   "resources/Wrench.JPG","resources/Knife.JPG","resources/Rope.JPG",
-		//		6							7						8						9					10					
-   "resources/Conservatory.JPG","resources/Billiard_Room.JPG","resources/Study.JPG","resources/Hall.JPG","resources/Lounge.JPG",
-   //  11								12						13						14
-   "resources/Dinning_Room.JPG","resources/Kitchen.JPG","resources/BallRoom.JPG","resources/Library.JPG",
-	   //    15				16						17						18						19						20
-   "resources/green.png", "resources/plum.png", "resources/white.png","resources/mustard.png", "resources/scarlett.png", "resources/peacock.png"
-		   };
-   
 	
-
 	private JLabel[] yourPlayerCards;
 	private JPanel[] yourCardPanelArray;
 	private ImageIcon yourCardsImages [];
@@ -81,8 +61,19 @@ public class ClientFrame extends JFrame {
 	private final BoardPanel gameBoardPanel;
 	private final ScoreCard scoreCardPanel;
     int xe = 0;
-    int ye = 0;
+	int ye = 0;
+	
+	private String playerCardscheaker [] = {"Pipe", "Candle Stick","Revolver","Wrench","Knife", "Rope",
+		   "Conservatory", "Billiard Room", "Study Room", "Hall", "Lounge", "Dining Room", "Kitchen", 
+		   "Ballroom", "Library", "Mr. Green","Professor Plum" , "Mrs. White", "Colonel Mustard", 
+		   "Miss Scarlet", "Mrs. Peacock"};
 
+	private String  pullPlayerCardsImageArray [] = { "resources/Lead_Pipe.JPG", "resources/Candlestick.JPG", 
+		   "resources/Revolver.JPG", "resources/Wrench.JPG", "resources/Knife.JPG", "resources/Rope.JPG", 
+		   "resources/Conservatory.JPG", "resources/Billiard_Room.JPG","resources/Study.JPG","resources/Hall.JPG",
+		   "resources/Lounge.JPG", "resources/Dinning_Room.JPG","resources/Kitchen.JPG","resources/BallRoom.JPG",
+		   "resources/Library.JPG", "resources/green.png", "resources/plum.png", "resources/white.png",
+		   "resources/mustard.png", "resources/scarlett.png", "resources/peacock.png"}; 
 	/**
 	 * Create the frame.
 	 */
@@ -90,8 +81,7 @@ public class ClientFrame extends JFrame {
 		client = clientConnection;
 		
 		//initialize all gui components minus the game board panel
-		initComponents();
-		
+		initComponents();		
 		//----ask if we can start
 		//request and receive the player object for this player
 		try {
@@ -149,9 +139,6 @@ public class ClientFrame extends JFrame {
 			}
 		});
 									
-					
-	
-
 		gameRulesMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				class GameRules extends JFrame{
@@ -177,10 +164,8 @@ public class ClientFrame extends JFrame {
 				new GameRules();
 			}
 		});
-
-
 	} // end constructor
-
+	
 	public void paint(Graphics g2) {
 		super.paint(g2);		
 		for(ClueGameConstants.LEGEND legend : ClueGameConstants.LEGEND.values()) {
@@ -200,21 +185,17 @@ public class ClientFrame extends JFrame {
          int rectBoundsWidth  = (int) rectBounds.getWidth();
 		 g2.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
 	}
-
+	
 	private Rectangle getBounds1(int x, int y) {
         return new Rectangle(x + 30,y + 16,20,20);
     }
 
 	private void addingYourCardsToSee() {
 		cardTotalInHand = gameBoardPanel.getPlayersCards().size();
-
 		initPanelsInArrayYourCards(); // initial the panels
-		addPictureToPanelsToYourCards(); // add character pictures to the panels
 		addArrayPanelsYourCards(); // add the panels from array to the main panel
 	}
 
-
-	
 	private void yourcards (){
 	 for(int i = 0; i < cardTotalInHand; i++){
 		 String yourhandofcards = gameBoardPanel.getPlayersCards().get(i).getName();
@@ -227,22 +208,22 @@ public class ClientFrame extends JFrame {
 	}
 	
 	private void initPanelsInArrayYourCards() {
-		yourCardPanelArray = new JPanel[cardTotalInHand];
-		yourPlayerCards = new JLabel[cardTotalInHand];
-		yourCardsImages = new ImageIcon[cardTotalInHand];
+		yourCardPanelArray = new JPanel[ClueGameConstants.MAX_CHARACTERS];
+		yourPlayerCards = new JLabel[ClueGameConstants.MAX_CHARACTERS];
+		yourCardsImages = new ImageIcon[ClueGameConstants.MAX_CHARACTERS];
 		yourcards();
 
-		for (int i = 0; i < cardTotalInHand; i++) {
+		for(int i = 0; i < 6; i++) {
 			yourCardPanelArray[i] = new JPanel();
-			yourCardsImages[i] = new ImageIcon(getClass().getResource(pullPlayerCardsImageArray[cardIdNumber[i]]));
-			yourPlayerCards[i] = new JLabel(yourCardsImages[i]);
+			yourCardPanelArray[i].setBackground(Color.BLUE);
 		}
-	}
-
-	private void addPictureToPanelsToYourCards() {
-		for (int J = 0; J < cardTotalInHand; J++) {
-			yourCardPanelArray[J].setBackground(Color.BLUE);
-			yourCardPanelArray[J].add(yourPlayerCards[J]);
+		
+		for (int i = 0; i < cardTotalInHand; i++) {
+			int imageIndex  = cardIdNumber[i];
+			String imageStr = pullPlayerCardsImageArray[imageIndex];
+			yourCardsImages[i] = new ImageIcon(getClass().getResource(imageStr));
+			yourPlayerCards[i] = new JLabel(yourCardsImages[i]);
+			yourCardPanelArray[i].add(yourPlayerCards[i]);
 		}
 	}
 
@@ -336,11 +317,11 @@ public class ClientFrame extends JFrame {
 		menuBar.setToolTipText("Options");
 		menuBar.setBounds(6, 6, 132, 22);
 		contentPane.add(menuBar);
-		
+
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
 } //end class

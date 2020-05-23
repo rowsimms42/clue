@@ -115,11 +115,13 @@ public class BoardPanel extends JPanel {
                 if(isHasGameStarted) { 
                 	//nonPlayingCharList = requestListNonPlayingChars();
                     //printNonPlayingCharacters(nonPlayingCharList);
+                    isGameStarted = true;
                     getNamesForLegend();
                 	playersDeck = requestPlayersCardDeck();
                 	printCardsInPlayersDeck(playersDeck);
 	                startGameTimer.stop();
-	                currentTurnTimer.start();
+                    currentTurnTimer.start();
+                    repaint();
                 }
             }
         }); 
@@ -534,6 +536,19 @@ public class BoardPanel extends JPanel {
          	g.setColor(new Color(player.getCharacter().getColor()));
          	g.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
          }
+         if (isGameStarted){
+         for(Characters character : nonPlayingCharList) {
+            int xBound = character.getxStarting() * 21;
+            int yBound = character.getyStarting() * 20;
+            rectBounds  = getBounds(xBound, yBound);
+            rectXBounds = (int) rectBounds.getX(); 
+             rectYBounds = (int) rectBounds.getY();
+             rectBoundsHeight = (int) rectBounds.getHeight();
+             rectBoundsWidth  = (int) rectBounds.getWidth();
+             g.setColor(new Color(character.getColor()));
+             g.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
+         }
+        }
          
          //TODO ----> draw all the none active characters at their starting locations. 
          //clientFrame.addToLogConsole("Paint end....."); For testing
