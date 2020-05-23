@@ -218,9 +218,9 @@ public class ClientFrame extends JFrame {
 	private void yourcards (){
 	 for(int i = 0; i < cardTotalInHand; i++){
 		 String yourhandofcards = gameBoardPanel.getPlayersCards().get(i).getName();
-		 	for(int j = 0; j < 20; j++){
+		 	for(int j = 0; j <= 20; j++){
 
-	 			if (playerCardscheaker[j] == yourhandofcards){
+	 			if (yourhandofcards.equals(playerCardscheaker[j])){
 					cardIdNumber [i] = j;
 				} 
 	 		}
