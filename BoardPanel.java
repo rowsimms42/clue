@@ -20,15 +20,15 @@ import javax.swing.plaf.basic.BasicArrowButton;
 
 public class BoardPanel extends JPanel {
 
-	final ImageIcon gameboard;
-	Timer startGameTimer, currentTurnTimer;
-	String value;
+    final ImageIcon gameboard;
+    Timer startGameTimer, currentTurnTimer;
+    String value;
     Client client;
     ClientFrame clientFrame;
     Player currentPlayer; //Characters now in Player class. Access specific character by currentPlayer.getCharacter(). ...
     Player tempPlayer;
     Message messageReceived;
-    final int WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3; 
+    final int WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
     final int ENTER_ROOM = 0;
     String btnValues;
     BasicArrowButton[] movementButtons;
@@ -47,24 +47,28 @@ public class BoardPanel extends JPanel {
     private JButton btnExitRoom, btnSuggest, btnAccuse, btnShortcut, btnEndTurn, btnRollDice, btnStartGame;
     int turnTimerUpdate = 1, startTimerUpdate=1, playerNumberUpdate = 1, tempNum = 0;//testing for timer
     int numOfPlayers = 0, tempNumPlayers = 0, buttonRollLimit = 1, currentTurnCount = 0;
+    int currenInRoomNumber = 0;
     ArrayList<Card> playersDeck;
     ArrayList<Characters> nonPlayingCharList;
     ArrayList<String> legendList;
+    ClientRequestManager crm;
+    String[] reqBtnArray;
+    int counterForShortCut = 0, enterRoomCounter = 0;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
-    	client = clientConnection;
+        crm = new ClientRequestManager(clientConnection);
         this.clientFrame = clientFrame;
         currentPlayer = player;
-        
-        initComponents(); //init all but board 
-        
-        JLabel lblNewLabel = new JLabel("");  
+
+        initComponents(); //initiate all but board
+
+        JLabel lblNewLabel = new JLabel("");
         gameboard = new ImageIcon(getClass().getResource("resources/board.jpg"));
         int w = gameboard.getIconWidth();
         int h = gameboard.getIconHeight();
         setPreferredSize(new Dimension(w, h));
         this.add(lblNewLabel);
-        lblNewLabel.setBounds(6, 6, 569, 523); 
+        lblNewLabel.setBounds(6, 6, 569, 523);
 
         xC = currentPlayer.getCharacter().getxStarting() * 21;
         yC = currentPlayer.getCharacter().getyStarting() * 20;
@@ -78,152 +82,161 @@ public class BoardPanel extends JPanel {
         btnStartGame.setEnabled(false);
         btnRollDice.setEnabled(false);
         btnEndTurn.setEnabled(false);
+        btnSuggest.setEnabled(false);
+        btnAccuse.setEnabled(false);
+        btnShortcut.setEnabled(false);
+        btnExitRoom.setEnabled(false);
+
         //Start game timer
         clientFrame.addToLogConsole("Waiting for other players to join the game.........");
         //if (!isGameStarted) {
-            //startGameTimer.start();
+        //startGameTimer.start();
         startGameTimer =  new Timer(2000,new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 if (startTimerUpdate==1) {
                     clientFrame.addToLogConsole("Start timer running..."); //for testing
                     startTimerUpdate--;
                 }
-                
-                boolean canStart = requestIfPlayerCanStartGame();
-      
+
+                boolean canStart = crm.requestIfPlayerCanStartGame();
+
                 if (numOfPlayers >= 3 && playerNumberUpdate == 1 && canStart == true) {
                     clientFrame.addToLogConsole("UPDATE: enough players have joined to start game");
                     playerNumberUpdate--;
                     btnStartGame.setEnabled(true);
                 }
                 else if(numOfPlayers >= 3 && playerNumberUpdate == 1 && canStart == false) {
-                	clientFrame.addToLogConsole("UPDATE: enough players have joined to start game and for player 1 to start it");
+                    clientFrame.addToLogConsole("UPDATE: enough players have joined to start game and for player 1 to start it");
                     playerNumberUpdate--;
                 }
-                
+
                 tempNumPlayers = playerMap.size();
                 if (tempNumPlayers > numOfPlayers) {
                     clientFrame.addToLogConsole("Number of players: " + tempNumPlayers);
                     numOfPlayers = tempNumPlayers;
                 }
-                
-                requestPlayerMap();
+
+                playerMap = crm.requestPlayerMap();
                 repaint();
-               
-                boolean isHasGameStarted = requestIfGameHasStarted();
+
+                boolean isHasGameStarted = crm.requestIfGameHasStarted();
                 clientFrame.addToLogConsole("Has the game started: " + isHasGameStarted);
-                if(isHasGameStarted) { 
-                	//nonPlayingCharList = requestListNonPlayingChars();
-                    //printNonPlayingCharacters(nonPlayingCharList);
+                if(isHasGameStarted) {
                     isGameStarted = true;
-                    getNamesForLegend();
-                	playersDeck = requestPlayersCardDeck();
-                	printCardsInPlayersDeck(playersDeck);
-	                startGameTimer.stop();
+                    nonPlayingCharList = crm.requestListNonPlayingChars();
+                    buildNamesForLegend(nonPlayingCharList);
+                    playersDeck = crm.requestPlayersCardDeck();
+                    printCardsInPlayersDeck(playersDeck);
+                    startGameTimer.stop();
                     currentTurnTimer.start();
-                    repaint();
                 }
             }
-        }); 
+        });
         startGameTimer.setRepeats(true); //timer repeats every 2 seconds
         startGameTimer.start();
-        
+
         //request movement options at launch
-        requestBtns(currentXgrid, currentYgrid);
+        reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+        printAndAssignBtnsArray(reqBtnArray);
         //enabled or disable movement buttons at launch
         enableOrdisableBtns(movementButtons);
         //movement buttons disabled
         disableButtons(movementButtons);
         //request initial player map (for drawing)
-        requestPlayerMap();
+        playerMap = crm.requestPlayerMap();
         repaint();
-        
+
         //current turn timer
         currentTurnTimer =  new Timer(2000,new ActionListener(){
-			  public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 if (turnTimerUpdate!=0) {
-                  clientFrame.addToLogConsole("Waiting for your turn..."); //for testing
-                  turnTimerUpdate--;
+                    clientFrame.addToLogConsole("Waiting for your turn..."); //for testing
+                    turnTimerUpdate--;
                 }
-                
+
                 if(currentTurnCount==0) {
-                    isCurrentPlayerGoFirst = requestDoesCurrentPlayerGoFirst();
-                    requestPlayerMap();
+                    isCurrentPlayerGoFirst = crm.requestDoesCurrentPlayerGoFirst();
+                    playerMap = crm.requestPlayerMap();
                     repaint();
 
                     if(isCurrentPlayerGoFirst) {
-                      currentTurnTimer.stop();
-					  clientFrame.addToLogConsole("UPDATE - It's now your turn.");
-                      turnTimerUpdate = 1;
-                      requestBtns(currentXgrid, currentYgrid);
-                      enableOrdisableBtns(movementButtons);  
-                      disableButtons(movementButtons);
-                      btnRollDice.setEnabled(true);
-                      buttonRollLimit = 1;
+                        currentTurnTimer.stop();
+                        clientFrame.addToLogConsole("UPDATE - It's now your turn.");
+                        turnTimerUpdate = 1;
+                        reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                        printAndAssignBtnsArray(reqBtnArray);
+                        enableOrdisableBtns(movementButtons);
+                        disableButtons(movementButtons);
+                        btnRollDice.setEnabled(true);
+                        buttonRollLimit = 1;
                     }
-	                currentTurnCount++;
+                    currentTurnCount++;
                 }
-                
+
                 //--------all below will execute at every cycle
-				isPlayerCurrentTurn = requestIsCurrentTurn();
-                requestPlayerMap();
+                isPlayerCurrentTurn = crm.requestIsCurrentTurn();
+                playerMap = crm.requestPlayerMap();
                 repaint();
-                
+
                 if(isPlayerCurrentTurn) {
-					currentTurnTimer.stop();
-					clientFrame.addToLogConsole("UPDATE - It's now your turn.");
+                    counterForShortCut++;
+                    currentTurnTimer.stop();
+                    clientFrame.addToLogConsole("UPDATE - It's now your turn.");
                     turnTimerUpdate = 1;
-                    requestBtns(currentXgrid, currentYgrid); 
+                    reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                    printAndAssignBtnsArray(reqBtnArray);
                     enableOrdisableBtns(movementButtons);
                     disableButtons(movementButtons);
                     btnRollDice.setEnabled(true);
                     buttonRollLimit = 1;
                 }
-			}
-        }); 
+            }
+        });
         currentTurnTimer.setRepeats(true); //timer repeats every 2 seconds
-        
+
+        //determine if in room
+
         movementButtons[SOUTH].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	diceRollValue--;
+                diceRollValue--;
                 if(diceRollValue >= 0){
                     addToDiceLog(Integer.toString(diceRollValue));
                 }
                 yC += 20;
                 currentYgrid++;
                 repaint();
-                requestBtns(currentXgrid, currentYgrid);
+                reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                printAndAssignBtnsArray(reqBtnArray);
                 enableOrdisableBtns(movementButtons);
-                clientFrame.addToLogConsole("Current X location: " + currentPlayer.getCurrentXLocation());
             }
         });
 
         movementButtons[NORTH].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	diceRollValue--;
-               
+                diceRollValue--;
                 if(diceRollValue >= 0){
                     addToDiceLog(Integer.toString(diceRollValue));
                 }
                 yC -= 20;
                 currentYgrid--;
                 repaint();
-                requestBtns(currentXgrid, currentYgrid);
+                reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                printAndAssignBtnsArray(reqBtnArray);
                 enableOrdisableBtns(movementButtons);
-                clientFrame.addToLogConsole("Current X location: " + currentPlayer.getCurrentXLocation());
             }
         });
 
         movementButtons[EAST].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	diceRollValue--;
+                diceRollValue--;
                 if(diceRollValue >= 0){
                     addToDiceLog(Integer.toString(diceRollValue));
                 }
                 xC += 21;
                 repaint();
                 currentXgrid++;
-                requestBtns(currentXgrid, currentYgrid);
+                reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                printAndAssignBtnsArray(reqBtnArray);
                 enableOrdisableBtns(movementButtons);
                 movementAmount++;
             }
@@ -231,354 +244,226 @@ public class BoardPanel extends JPanel {
 
         movementButtons[WEST].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	diceRollValue--;
+                diceRollValue--;
                 if(diceRollValue >= 0){
                     addToDiceLog(Integer.toString(diceRollValue));
                 }
                 xC -= 21;
                 repaint();
                 currentXgrid--;
-                requestBtns(currentXgrid, currentYgrid);
+                reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                printAndAssignBtnsArray(reqBtnArray);
                 enableOrdisableBtns(movementButtons);
             }
         });
-        
+
         enterButton[ENTER_ROOM].addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-                //figure out which room
+            public void actionPerformed(ActionEvent e) {
+                //enterRoomCounter = counterForShortCut;
                 diceRollValue = 0;
                 addToDiceLog(Integer.toString(diceRollValue));
-                int roomNumber = getDoorId(currentXgrid, currentYgrid);
+                currenInRoomNumber = getDoorId(currentXgrid, currentYgrid);
                 int roomDirection = getDirection(currentXgrid, currentYgrid);
-                requestUpdatePlayerRoomLocation(roomNumber);
-                drawInRoom(roomNumber, roomDirection);
-                String enterRoomStr = "room number: "+roomNumber+" room direction: "+roomDirection;
+                crm.requestUpdatePlayerRoomLocation(currenInRoomNumber);
+                drawInRoom(currenInRoomNumber, roomDirection);
+                String enterRoomStr = "room number: "+currenInRoomNumber+" room direction: "+roomDirection;
                 clientFrame.addToLogConsole(enterRoomStr);
-                requestBtns(currentXgrid, currentYgrid);
+                reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                printAndAssignBtnsArray(reqBtnArray);
                 enableOrdisableBtns(movementButtons);
                 enterButton[ENTER_ROOM].setEnabled(false);
                 repaint();
                 //TODO --- > enable the suggestion button
                 //TODO --- > enable the accuse button
                 //TODO ----> test appropriate room and enable shortcut button
-        	}
+                if(currenInRoomNumber == 1 || currenInRoomNumber == 8 ||
+                        currenInRoomNumber == 4 || currenInRoomNumber == 9) {
+                   // if(counterForShortCut % 2 == 0 || counterForShortCut > 2)
+                        btnShortcut.setEnabled(true);
+                }
+            }
         });
-        
+
+        btnShortcut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                counterForShortCut = 0;
+                //shortUsedAmount++;
+                //if(counterForShortCut % 2 != 0 && shortUsedAmount == 1){
+
+                //}
+                if(currenInRoomNumber == 1) {
+                    currenInRoomNumber = 8;
+                    crm.requestUpdatePlayerRoomLocation(currenInRoomNumber);
+                    currentXgrid = 17;
+                    currentYgrid = 6;
+                    xC = currentXgrid * 21;
+                    yC = currentYgrid * 20;
+                    drawInRoom(currenInRoomNumber, 0);
+                    reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                    printAndAssignBtnsArray(reqBtnArray);
+                    repaint();
+                }
+            }
+        });
+
         btnEndTurn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 diceRollValue = 0;
                 addToDiceLog(Integer.toString(diceRollValue));
-            	requestEndOfTurn();
-            	requestPlayerMap(); 
-            	repaint();
-            	if(!currentTurnTimer.isRunning()) {
+                crm.requestEndOfTurn();
+                disableButtons(movementButtons);
+                playerMap = crm.requestPlayerMap();
+                repaint();
+                if(!currentTurnTimer.isRunning()) {
                     currentTurnTimer.start();
                     btnEndTurn.setEnabled(false);
-            	}
+                }
             }
         });
-        
+
         btnRollDice.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                    diceRollValue = requestDiceRoll();
-                    requestBtns(currentXgrid, currentYgrid);
-                    enableOrdisableBtns(movementButtons);
-                    buttonRollLimit--;
-                    enableOrdisableBtns(movementButtons);
-                    btnEndTurn.setEnabled(true);
+                diceRollValue = crm.requestDiceRoll();
+                addToDiceLog(Integer.toString(diceRollValue));
+                reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                printAndAssignBtnsArray(reqBtnArray);
+                enableOrdisableBtns(movementButtons);
+                buttonRollLimit--;
+                enableOrdisableBtns(movementButtons);
+                btnEndTurn.setEnabled(true);
             }
-        }); 
+        });
 
         btnStartGame.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		requestToStartGame();
-        		requestDealCards();
-        		requestBuildListOfNonPlayingChars();
-        		btnStartGame.setEnabled(false);
-        	}
+            public void actionPerformed(ActionEvent e) {
+                crm.requestToStartGame();
+                crm.requestDealCards();
+                crm.requestBuildListOfNonPlayingChars();
+                btnStartGame.setEnabled(false);
+            }
         });
-    
+
     } //end constructor
-    
+
     public ArrayList<Card> getPlayersCards(){
-    	return playersDeck;
-    }
-    
-    private void requestBuildListOfNonPlayingChars() {
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_BUILD_NON_PLAYING_CHAR_LIST, null));
-			messageReceived = client.getMessage();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-    }
-    
-    private ArrayList<Characters> requestListNonPlayingChars(){
-    	ArrayList<Characters> characterList = new ArrayList<>();
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_LIST_OF_NON_PLAYING_CHARACTERS, null));
-			messageReceived = client.getMessage();
-			characterList   = (ArrayList<Characters>) messageReceived.getData();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-    	return characterList;
+        return playersDeck;
     }
 
-    public void getNamesForLegend(){
-        requestPlayerMap();
+    private void printAndAssignBtnsArray(String[] btsStrArray){
+        clientFrame.addToLogConsole(btsStrArray[0]);
+        cArray_movement_enter = btsStrArray[1].toCharArray();
+    }
+
+    public void buildNamesForLegend(ArrayList<Characters> nonPlayingList){
+        playerMap = crm.requestPlayerMap();
         String playerName;
         for(Entry<Long, Player> p : playerMap.entrySet()) {
             long idNum = (long)p.getKey();
             Player player = p.getValue();
-            playerName = player.getCharacter().getName() + "- Active";
+            playerName = player.getCharacter().getName() + " - Active";
             legendList.add(playerName);
         }
-        nonPlayingCharList = requestListNonPlayingChars();
-        for(Characters c : nonPlayingCharList){
+
+        for(Characters c : nonPlayingList){
             legendList.add(c.getName());
         }
         Collections.sort(legendList);
-        for (int i=0; i< legendList.size(); i++)
-        {
-            clientFrame.addToLegend(legendList.get(i));
+        for (String characterName : legendList){
+            clientFrame.addToLegend(characterName);
         }
     }
 
     public Player getCurrentPlayerFromMap(Player currentPlayer, HashMap<Long, Player> map) {
-    	Player p = (Player) map.get(currentPlayer.getPlayerId());
-    	return p;
-    }
-    
-    private ArrayList<Card> requestPlayersCardDeck() {
-    	ArrayList<Card> deck = new ArrayList<>();
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_PlAYERS_DECK , null));
-			messageReceived = client.getMessage();
-			deck = (ArrayList<Card>) messageReceived.getData();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-		return deck;
-    }
-    
-    private void requestDealCards() {
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_DEAL_CARDS, null));
-			messageReceived = client.getMessage();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-    }
-    
-    private void requestToStartGame() {
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_TO_START_GAME , null));
-			messageReceived = client.getMessage();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-    }
-    
-    private boolean requestIfPlayerCanStartGame() {
-    	boolean isCanStartGame = false;
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_CAN_PLAYER_START_GAME , null));
-			messageReceived = client.getMessage();
-			isCanStartGame = (boolean) messageReceived.getData();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-    	return isCanStartGame;
-    }
-    
-    private boolean requestIfGameHasStarted() {
-    	boolean isGameStarted = false;
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_IF_GAME_HAS_STARTED, null));
-			messageReceived = client.getMessage();
-			isGameStarted = (boolean) messageReceived.getData();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-    	return isGameStarted;
+        Player p = (Player) map.get(currentPlayer.getPlayerId());
+        return p;
     }
 
-    private boolean requestDoesCurrentPlayerGoFirst() {
-    	boolean isGoingFirst = false;
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_DOES_CURRENT_PLAYER_GO_FIRST , null));
-			messageReceived = client.getMessage();
-			isGoingFirst = (boolean) messageReceived.getData();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-    	return isGoingFirst;
-		
-    }
-    
-    private void requestUpdatePlayerRoomLocation(int roomNum) {
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_UPDATE_PLAYER_ROOM_NUMBER, Integer.valueOf(roomNum)));
-			messageReceived = client.getMessage();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-    }
-    
-    private void requestEndOfTurn() {
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_MARK_PLAYER_END_TURN, null));
-			messageReceived = client.getMessage();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-        }
-        disableButtons(movementButtons);
-    }
-    
-    private boolean requestIsCurrentTurn() {
-    	boolean isTurn = false;
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_IS_CURRENT_TURN, null));
-			messageReceived = client.getMessage();
-			isTurn = (boolean)messageReceived.getData();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-        }
-    	return isTurn;
-    }
-    
-    private void requestPlayerMap(){
-    	try {
-			client.send(new Message(ClueGameConstants.REQUEST_PLAYER_MAP, null));
-			messageReceived = client.getMessage();
-            playerMap = (HashMap<Long, Player>) messageReceived.getData();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-    }
-   
-    public int requestDiceRoll(){
-        int diceRoll = 0;
-        try {
-			client.send(new Message(ClueGameConstants.REQUEST_DICE_ROLL, null));
-			messageReceived = client.getMessage();
-            diceRoll = (int) messageReceived.getData();
-            addToDiceLog(Integer.toString(diceRoll));
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-        return diceRoll;
-    } 
-   
     private int getDoorId(int row, int col) {
-		for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
-			if(door.getRow() == row && door.getCol() == col) 
-				return door.getRoomNumber();
-		}
-		return 0; 
+        for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
+            if(door.getRow() == row && door.getCol() == col)
+                return door.getRoomNumber();
+        }
+        return 0;
     }
-    
+
     private int getDirection(int row, int col) {
-		for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
-			if(door.getRow() == row && door.getCol() == col) 
-				return door.getDirection();
-		}
-		return 0;
+        for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
+            if(door.getRow() == row && door.getCol() == col)
+                return door.getDirection();
+        }
+        return 0;
     }
-    
+
     private void printCardsInPlayersDeck(ArrayList<Card> deck) {
-    	clientFrame.addToLogConsole("------------------------");
-    	clientFrame.addToLogConsole("Your cards are: ");
-    	clientFrame.addToLogConsole("Deck size: " + deck.size());
-    	for(Card card : deck) {
-    		clientFrame.addToLogConsole(card.getName());
-    	}
-    	clientFrame.addToLogConsole("------------------------");
+        clientFrame.addToLogConsole("------------------------");
+        clientFrame.addToLogConsole("Your cards are: ");
+        clientFrame.addToLogConsole("Deck size: " + deck.size());
+        for(Card card : deck) {
+            clientFrame.addToLogConsole(card.getName());
+        }
+        clientFrame.addToLogConsole("------------------------");
     }
-    
+
     private void printNonPlayingCharacters(ArrayList<Characters> charList) {
-    	clientFrame.addToLogConsole("------------------------");
-    	clientFrame.addToLogConsole("Non playing characters are: ");
-    	if(charList.isEmpty())
-    		clientFrame.addToLogConsole("None");
-    	else {
-    		for(Characters c : charList)
-    			clientFrame.addToLogConsole(c.getName());
-    	}
-    	clientFrame.addToLogConsole("------------------------");
+        clientFrame.addToLogConsole("------------------------");
+        clientFrame.addToLogConsole("Non playing characters are: ");
+        if(charList.isEmpty())
+            clientFrame.addToLogConsole("None");
+        else {
+            for(Characters c : charList)
+                clientFrame.addToLogConsole(c.getName());
+        }
+        clientFrame.addToLogConsole("------------------------");
     }
 
     public void paint(Graphics g) {
-    	//clientFrame.addToLogConsole("Paint start.....")
-    	 super.paint(g);
-         g.drawImage(gameboard.getImage(), 0, 0, null);
-         g.setColor(new Color(currentPlayer.getCharacter().getColor()));
-         Rectangle rectBounds = getBounds(xC, yC);
-         int rectXBounds = (int) rectBounds.getX(); 
-         int rectYBounds = (int) rectBounds.getY();
-         int rectBoundsHeight = (int) rectBounds.getHeight();
-         int rectBoundsWidth  = (int) rectBounds.getWidth();
-         g.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
-         
-         for(Entry<Long, Player> p : playerMap.entrySet()) {
-         	long id = (long)p.getKey();
-         	Player player = p.getValue();
-         	if(player.getCharacter().getName() == currentPlayer.getCharacter().getName())
-        			continue;
-         	int playerInMapXBound = player.getCurrentXLocation() * 21;
-         	int playerInMapYBound = player.getCurrentYLocation() * 20;
-         	rectBounds  = getBounds(playerInMapXBound, playerInMapYBound);
-        	rectXBounds = (int) rectBounds.getX(); 
-        	rectYBounds = (int) rectBounds.getY();
-        	rectBoundsHeight = (int) rectBounds.getHeight();
-        	rectBoundsWidth  = (int) rectBounds.getWidth();
-         	g.setColor(new Color(player.getCharacter().getColor()));
-         	g.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
-         }
-         if (isGameStarted){
-         for(Characters character : nonPlayingCharList) {
-            int xBound = character.getxStarting() * 21;
-            int yBound = character.getyStarting() * 20;
-            rectBounds  = getBounds(xBound, yBound);
-            rectXBounds = (int) rectBounds.getX(); 
-             rectYBounds = (int) rectBounds.getY();
-             rectBoundsHeight = (int) rectBounds.getHeight();
-             rectBoundsWidth  = (int) rectBounds.getWidth();
-             g.setColor(new Color(character.getColor()));
-             g.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
-         }
+        //clientFrame.addToLogConsole("Paint start.....")
+        super.paint(g);
+        g.drawImage(gameboard.getImage(), 0, 0, null);
+        g.setColor(new Color(currentPlayer.getCharacter().getColor()));
+        Rectangle rectBounds = getBounds(xC, yC);
+        int rectXBounds = (int) rectBounds.getX();
+        int rectYBounds = (int) rectBounds.getY();
+        int rectBoundsHeight = (int) rectBounds.getHeight();
+        int rectBoundsWidth  = (int) rectBounds.getWidth();
+        g.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
+
+        for(Entry<Long, Player> p : playerMap.entrySet()) {
+            long id = (long)p.getKey();
+            Player player = p.getValue();
+            if(player.getCharacter().getName().equals(currentPlayer.getCharacter().getName()))
+                continue;
+            int playerInMapXBound = player.getCurrentXLocation() * 21;
+            int playerInMapYBound = player.getCurrentYLocation() * 20;
+            rectBounds  = getBounds(playerInMapXBound, playerInMapYBound);
+            rectXBounds = (int) rectBounds.getX();
+            rectYBounds = (int) rectBounds.getY();
+            rectBoundsHeight = (int) rectBounds.getHeight();
+            rectBoundsWidth  = (int) rectBounds.getWidth();
+            g.setColor(new Color(player.getCharacter().getColor()));
+            g.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
         }
-         
-         //TODO ----> draw all the none active characters at their starting locations. 
-         //clientFrame.addToLogConsole("Paint end....."); For testing
+        if (isGameStarted){
+            for(Characters character : nonPlayingCharList) {
+                int xBound = character.getxStarting() * 21;
+                int yBound = character.getyStarting() * 20;
+                rectBounds  = getBounds(xBound, yBound);
+                rectXBounds = (int) rectBounds.getX();
+                rectYBounds = (int) rectBounds.getY();
+                rectBoundsHeight = (int) rectBounds.getHeight();
+                rectBoundsWidth  = (int) rectBounds.getWidth();
+                g.setColor(new Color(character.getColor()));
+                g.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
+            }
+        }
     }
-     
+
     private Rectangle getBounds(int x, int y) {
-        //increase x offset by 30 
-    	//increase y offset by 16
+        //increase x offset by 30
+        //increase y offset by 16
         return new Rectangle(x + 30,y + 16,20,20);
     }
- 
-    private void requestBtns(int x, int y){
-        int[] coords = {x, y};
-        String coordinatesStr = x + ", " + y;
-        clientFrame.addToLogConsole(coordinatesStr); // adds player location to console
 
-        try {
-			client.send(new Message(ClueGameConstants.REQUEST_MOVEMENT_BUTTON_VALUES, coords));
-			messageReceived = client.getMessage();
-			btnValues = (String) messageReceived.getData();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-        cArray_movement_enter = btnValues.toCharArray();
-        // for debugging purposes, output string to console log
-        //clientFrame.addToLogConsole(btnValues);
-    }
-
-   
-   
     private void enableOrdisableBtns(JButton movementButtons[]) {
         // WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
         if (buttonRollLimit == 0){
@@ -587,36 +472,34 @@ public class BoardPanel extends JPanel {
         if (diceRollValue == 0) {
             disableButtons(movementButtons);
         } else {
-        	enableOrDisableMovementAndEnterButtons(movementButtons);
+            enableOrDisableMovementAndEnterButtons(movementButtons);
         }
     }
-    
+
     private void enableOrDisableMovementAndEnterButtons(JButton movementButtons[]) {
-    	boolean[] moveOptions = { false, false, false, false };
+        boolean[] moveOptions = { false, false, false, false };
         boolean roomOptions = false;
         int i = 1;
         roomOptions = (cArray_movement_enter[0] == '1') ? true : false;
-        
 
         for (int j = 0; j < moveOptions.length; j++) {
-        	 moveOptions[j] = (cArray_movement_enter[i] == '1') ? true : false;
-             i++;
-             movementButtons[j].setEnabled(moveOptions[j]);
+            moveOptions[j] = (cArray_movement_enter[i] == '1') ? true : false;
+            i++;
+            movementButtons[j].setEnabled(moveOptions[j]);
         }
-
         enterButton[ENTER_ROOM].setEnabled(roomOptions);
     }
 
     public void disableButtons(JButton movementButtons[]) {
         for(int i = 0; i < 4; i++) {
-        	movementButtons[i].setEnabled(false);
+            movementButtons[i].setEnabled(false);
         }
     }
 
     protected void addToDiceLog(String input){
-		textAreaDice.setText(input.toString());
-	}
-    
+        textAreaDice.setText(input.toString());
+    }
+
     public void drawInRoom(int roomNumber, int roomDirection)
     {
         //cons:1 ; billiard:2; lib:3; study:4; ball: 5; hall:6; lounge:8; kitchen:9; dining: 10
@@ -719,18 +602,18 @@ public class BoardPanel extends JPanel {
             {
                 yC+= 20*multiplier;
             }
-            else 
+            else
             {
                 yC-= 20*3; //up 3
                 currentYgrid = currentYgrid - 3;
                 if (roomDirection == 3) //right
                 {
-                    xC+= 21; 
+                    xC+= 21;
                     currentXgrid++;
                 }
                 else
                 {
-                    xC-= 21; 
+                    xC-= 21;
                     currentXgrid--;
                 }
                 yC+= 20*multiplier;
@@ -738,7 +621,7 @@ public class BoardPanel extends JPanel {
             }
         }
     }
-    
+
     private void initComponents(){
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBackground(Color.PINK);
@@ -756,7 +639,7 @@ public class BoardPanel extends JPanel {
         movementButtons[EAST] = new BasicArrowButton(BasicArrowButton.EAST);
         movementButtons[EAST].setBounds(639, 106, 26, 23);
         this.add(movementButtons[EAST]);
-        
+
         movementButtons[WEST] = new BasicArrowButton(BasicArrowButton.WEST);
         movementButtons[WEST].setBounds(587, 106, 26, 23);
         this.add(movementButtons[WEST]);
@@ -773,7 +656,7 @@ public class BoardPanel extends JPanel {
         enterButton[ENTER_ROOM] .setFont(new Font("SansSerif", Font.BOLD, 10));
         enterButton[ENTER_ROOM] .setBounds(579, 370, 99, 23);
         this.add(enterButton[ENTER_ROOM]);
-        
+
         btnExitRoom = new JButton("Exit Room");
         btnExitRoom.setForeground(new Color(128, 0, 128));
         btnExitRoom.setFont(new Font("SansSerif", Font.BOLD, 10));
@@ -809,21 +692,14 @@ public class BoardPanel extends JPanel {
         this.add(btnStartGame);
 
         textAreaDice = new JTextArea();
-	    textAreaDice.setBounds(604, 241, 74, 76);
-	    textAreaDice.setEditable(false);
-	    textAreaDice.setFont(new Font("Microsoft Tai Le", Font.BOLD, 60));
-	    textAreaDice.setBackground(Color.PINK);
-		this.add(textAreaDice);
-        
-        cArray_movement_enter = new char[5];
-        
-        playersDeck = new ArrayList<>();
+        textAreaDice.setBounds(604, 241, 74, 76);
+        textAreaDice.setEditable(false);
+        textAreaDice.setFont(new Font("Microsoft Tai Le", Font.BOLD, 60));
+        textAreaDice.setBackground(Color.PINK);
+        this.add(textAreaDice);
 
+        cArray_movement_enter = new char[5];
+        playersDeck = new ArrayList<>();
         legendList = new ArrayList<>();
     }
-    
-    
-    
 } // end class
-
-
