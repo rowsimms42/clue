@@ -180,4 +180,41 @@ public class ClientRequestManager {
         return new String[]{coordinatesStr, btnValues};
     }
 
+    public Boolean requestIfSuggestionMade(){
+        Boolean suggestion = false;
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_IF_SUGGESTION_MADE, null));
+            messageReceived = clientConnection.getMessage();
+            suggestion = (Boolean) messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return suggestion;
+    }
+
+    public String[] requestSuggestionContent(){
+        String[] suggestionContent = {};
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_SUGGESTION_CONTENT, null));
+            messageReceived = clientConnection.getMessage();
+            suggestionContent = (String[])messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return suggestionContent;
+    }
+
+    public String requestCardRevealed(){
+        String card = "";
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_CARD_REVEALED, null));
+            messageReceived = clientConnection.getMessage();
+            card = (String) messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return card;
+    }
+
 }

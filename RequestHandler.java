@@ -3,7 +3,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.HashMap;
 
 class RequestHandler extends Thread {
     private Socket socket;
@@ -69,14 +68,13 @@ class RequestHandler extends Thread {
             }
             System.out.println("Connection closed for player: " + this.getId());
             System.out.println("Server listening for more connectoins...");
-            /* NEED to add function to set character to available
-               NEED to add function to decrement player count */
+            /* TODO add function to set character to available
+               TODO to add function to decrement player count */
         }
     }
 
     synchronized private void sendMessageToClient(Message gameObj) throws IOException {
         //Send message to the client
-    	//oos.flush();
         this.oos.writeUnshared(gameObj);
         oos.flush();
     }

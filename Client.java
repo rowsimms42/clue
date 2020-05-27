@@ -32,7 +32,7 @@ public class Client {
 			ois = new ObjectInputStream(socket.getInputStream());
 			oos = new ObjectOutputStream(socket.getOutputStream());
 		} catch (IOException e2) {
-			// TODO Auto-generated catch block
+			System.out.println("Error openining Input or Output Stream in Client.java");
 			e2.printStackTrace();
 		}
     }
@@ -45,7 +45,6 @@ public class Client {
 
     synchronized public void send(Message msg) throws IOException {
         oos.writeUnshared(msg);
-        //oos.flush();    
     }
     
     public Boolean isPlayerConnected(){
@@ -58,7 +57,7 @@ public class Client {
 			oos.close();
 			ois.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error closing connection in Client.java");
 			e.printStackTrace();
 		}
     }
