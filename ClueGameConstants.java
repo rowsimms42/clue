@@ -116,6 +116,12 @@ public final class ClueGameConstants {
 
     public static final int REQUEST_CARD_REVEALED = 62;
 
+    public static final int REPLY_IF_SUGGESTION_MADE = 63;
+
+    public static final int REPLY_SUGGESTION_CONTENTS = 64;
+
+    public static final int REPLY_REVEALED_CARD = 65;
+
     public static final int UNSELECTABLE_TILE = -1;
 
     public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",

@@ -1,8 +1,5 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public class GameHandler {
@@ -30,6 +27,32 @@ public class GameHandler {
     public void addPlayerToGame(long ID, Player player){
         gameState.addPlayer(ID, player);
         //System.out.println("Adding player to gamestate address: " + gameState);
+    }
+
+    //remove player from game
+    public void removePlayerFromGame(long ID, Player player){
+       String name = player.getName();
+       /* Character: 0 - Mr. Green, 1 - Professor Plumb, 2 - Mrs. White,
+		   3 - Colonel Mustard, 4 - Miss Scarlet, 5 - Mrs. Peacock */
+       switch (name) {
+           case "Mr. Green": gameState.setSpecificCharacterToAvailable(0);
+               break;
+            case "Professor Plumb": gameState.setSpecificCharacterToAvailable(1);
+                break;
+            case "Mrs. White": gameState.setSpecificCharacterToAvailable(2);
+                break;
+            case "Colonel Mustard": gameState.setSpecificCharacterToAvailable(3);
+                break;
+            case "Miss Scarlet": gameState.setSpecificCharacterToAvailable(4);
+                break;
+            case "Mrs. Peacock": gameState.setSpecificCharacterToAvailable(5);
+           default:
+               break;
+       }
+       
+        gameState.removePlayer(ID);
+        //TODO make character the player was assigned to available.
+
     }
 
     //return the number of players from the game state 
@@ -211,7 +234,21 @@ public class GameHandler {
             case ClueGameConstants.REQUEST_BUILD_NON_PLAYING_CHAR_LIST:
             	gameState.buildlistOfAllNonPlayingCharacters();
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_BUILD_NON_PLAYING_CHAR_LIST, null);
-            	return returnMessage;
+                return returnMessage;
+                
+            case ClueGameConstants.REQUEST_IF_SUGGESTION_MADE:
+                returnMessage = new Message(ClueGameConstants.REPLY_IF_SUGGESTION_MADE, gameState.getIsSuggestionMade());
+                return returnMessage;
+
+            case ClueGameConstants.REQUEST_SUGGESTION_CONTENT:
+                //TODO get and parse suggestion player
+                returnMessage = new Message(ClueGameConstants.REPLY_SUGGESTION_CONTENTS, null);// TODO NOT NULL
+                return returnMessage;
+
+            case ClueGameConstants.REQUEST_CARD_REVEALED:
+                //TODO cycle through suggestion and match with players' hands
+                returnMessage = new Message(ClueGameConstants.REPLY_REVEALED_CARD, null); //TODO not null
+                return returnMessage;
             default:
                 return msgObj; //returns same object sent
         }

@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameState {
@@ -20,7 +20,8 @@ public class GameState {
 	private ArrayList<Characters> nonPlayingCharactersArrayList;
 	private int playOrderIndex;
 	private boolean isGameStarted;
-	
+	private boolean isSuggestionMade;
+
 	public GameState(){
 		playerMap = new ConcurrentHashMap<Long, Player>(); //<- has to be here
 		initializeVariables();
@@ -85,6 +86,14 @@ public class GameState {
 	public boolean getIsGameStarted() {
 		return isGameStarted;
 	}
+
+	public boolean getIsSuggestionMade(){
+		return isSuggestionMade;
+	}
+
+	public void setIsSuggestionMade(boolean value){
+		isSuggestionMade = value;
+	}
 	
 	public int getNextPlayerTurnNumber() {
 		if(playOrderIndex < playerTurnOrderArrayList.size()) {
@@ -104,6 +113,10 @@ public class GameState {
 		return (availableCharactersArray[index - 1] == true);
 	}
 	
+	public void setSpecificCharacterToAvailable(int index){
+		//TODO use setNthBit to reverse character availability
+	}
+
 	public void setSpecificCharacterToUnavailable(int index ) {
 		/* Character: 0 - Mr. Green, 1 - Professor Plumb, 2 - Mrs. White,
 		   3 - Colonel Mustard, 4 - Miss Scarlet, 5 - Mrs. Peacock */
@@ -126,6 +139,10 @@ public class GameState {
 	
 	public void addPlayer(long threadID, Player player){
 		playerMap.put(threadID, player);
+	}
+
+	public void removePlayer(long threadID){
+		playerMap.remove(threadID);
 	}
 
 	public ConcurrentHashMap<Long, Player> getPlayerMap() {
