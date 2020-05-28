@@ -1,31 +1,23 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
+import java.awt.*;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.geom.*;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.plaf.basic.BasicArrowButton;
-
 
 public class BoardPanel extends JPanel {
 
-    //Added to prevent waring, JPanel extends Serializable
-    private static final long serialVersionUID = 1L;
-    
-    final ImageIcon gameboard;
+    ImageIcon gameboard;
     Timer startGameTimer, currentTurnTimer;
     String value;
     Client client;
@@ -52,17 +44,25 @@ public class BoardPanel extends JPanel {
     private JButton btnExitRoom, btnSuggest, btnAccuse, btnShortcut, btnEndTurn, btnRollDice, btnStartGame;
     int turnTimerUpdate = 1, startTimerUpdate=1, playerNumberUpdate = 1, tempNum = 0;//testing for timer
     int numOfPlayers = 0, tempNumPlayers = 0, buttonRollLimit = 1, currentTurnCount = 0;
-    int currenInRoomNumber = 0;
+    int currentInRoomNumber = 0;
     ArrayList<Card> playersDeck;
     ArrayList<Characters> nonPlayingCharList;
     ArrayList<String> legendList;
     ClientRequestManager crm;
+    BoardPanelHelper bph;
     String[] reqBtnArray;
+    String[] roomExitPictureStrs = {"resources/conservatoryExit.png", "resources/billardExit.png",
+            "resources/libraryExit.png", "resources/studyExit.png", "resources/ballroomExit.png",
+            "resources/hallExit.png", "resources/loungeExit.png", "resources/kitchenExit.png",
+            "resources/diningroomExit.png"};
+
+    //Hashtable roomExitPictures;
     int counterForShortCut = 0, enterRoomCounter = 0;
-    Boolean suggestion;
+    boolean inShortcutRoom = false, inRoom = false;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
         crm = new ClientRequestManager(clientConnection);
+        bph = new BoardPanelHelper();
         this.clientFrame = clientFrame;
         currentPlayer = player;
 
@@ -106,12 +106,12 @@ public class BoardPanel extends JPanel {
 
                 boolean canStart = crm.requestIfPlayerCanStartGame();
 
-                if (numOfPlayers >= 3 && playerNumberUpdate == 1 && canStart == true) {
+                if (numOfPlayers >= 3 && playerNumberUpdate == 1 && canStart) {
                     clientFrame.addToLogConsole("UPDATE: enough players have joined to start game");
                     playerNumberUpdate--;
                     btnStartGame.setEnabled(true);
                 }
-                else if(numOfPlayers >= 3 && playerNumberUpdate == 1 && canStart == false) {
+                else if(numOfPlayers >= 3 && playerNumberUpdate == 1 && !canStart) {
                     clientFrame.addToLogConsole("UPDATE: enough players have joined to start game and for player 1 to start it");
                     playerNumberUpdate--;
                 }
@@ -184,16 +184,10 @@ public class BoardPanel extends JPanel {
                 playerMap = crm.requestPlayerMap();
                 repaint();
 
-                //has suggestion been made
-                suggestion = crm.requestIfSuggestionMade();
-                if(suggestion){
-                    String[] suggestion = crm.requestSuggestionContent();
-                    // TODO print out suggestion to console
-                    String card = crm.requestCardRevealed();
-                    //print to console if not null
-                    //need to handle if card is null,
-                    //seems easier to to just pass null if card not found
-                }
+                //boolean isSuggestion = requestHasSuggestionBeenMade();
+                //if(isSuggestion)
+                //  requestWhatCardsIHad()
+
 
                 if(isPlayerCurrentTurn) {
                     counterForShortCut++;
@@ -206,14 +200,15 @@ public class BoardPanel extends JPanel {
                     disableButtons(movementButtons);
                     btnRollDice.setEnabled(true);
                     buttonRollLimit = 1;
+                    //if(currentInRoomNumber > 0)
+                      //  btnSuggest.setEnabled(true);
                 }
             }
         });
         currentTurnTimer.setRepeats(true); //timer repeats every 2 seconds
 
-        //determine if in room
-
         movementButtons[SOUTH].addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 diceRollValue--;
                 if(diceRollValue >= 0){
@@ -229,6 +224,7 @@ public class BoardPanel extends JPanel {
         });
 
         movementButtons[NORTH].addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 diceRollValue--;
                 if(diceRollValue >= 0){
@@ -244,6 +240,7 @@ public class BoardPanel extends JPanel {
         });
 
         movementButtons[EAST].addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 diceRollValue--;
                 if(diceRollValue >= 0){
@@ -260,6 +257,7 @@ public class BoardPanel extends JPanel {
         });
 
         movementButtons[WEST].addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 diceRollValue--;
                 if(diceRollValue >= 0){
@@ -281,47 +279,50 @@ public class BoardPanel extends JPanel {
          });
 
         enterButton[ENTER_ROOM].addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 //enterRoomCounter = counterForShortCut;
                 diceRollValue = 0;
                 addToDiceLog(Integer.toString(diceRollValue));
-                currenInRoomNumber = getDoorId(currentXgrid, currentYgrid);
+                currentInRoomNumber = getDoorId(currentXgrid, currentYgrid);
                 int roomDirection = getDirection(currentXgrid, currentYgrid);
-                crm.requestUpdatePlayerRoomLocation(currenInRoomNumber);
-                drawInRoom(currenInRoomNumber, roomDirection);
-                String enterRoomStr = "room number: "+currenInRoomNumber+" room direction: "+roomDirection;
+                crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
+                drawInRoom(currentInRoomNumber, roomDirection);
+                String enterRoomStr = "room number: "+currentInRoomNumber+" room direction: "+roomDirection;
                 clientFrame.addToLogConsole(enterRoomStr);
                 reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
                 printAndAssignBtnsArray(reqBtnArray);
                 enableOrdisableBtns(movementButtons);
                 enterButton[ENTER_ROOM].setEnabled(false);
+                if(bph.isRoomAShortCutRoom(currentInRoomNumber)) {
+                    inShortcutRoom = true;
+                }
+                inRoom = true;
                 repaint();
                 //TODO --- > enable the suggestion button
                 //TODO --- > enable the accuse button
                 //TODO ----> test appropriate room and enable shortcut button
-                if(currenInRoomNumber == 1 || currenInRoomNumber == 8 ||
-                        currenInRoomNumber == 4 || currenInRoomNumber == 9) {
-                   // if(counterForShortCut % 2 == 0 || counterForShortCut > 2)
-                        btnShortcut.setEnabled(true);
-                }
             }
         });
 
         btnShortcut.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 counterForShortCut = 0;
+                btnShortcut.setEnabled(false);
+                btnExitRoom.setEnabled(false);
                 //shortUsedAmount++;
                 //if(counterForShortCut % 2 != 0 && shortUsedAmount == 1){
 
                 //}
-                if(currenInRoomNumber == 1) {
-                    currenInRoomNumber = 8;
-                    crm.requestUpdatePlayerRoomLocation(currenInRoomNumber);
+                if(currentInRoomNumber == 1) {
+                    currentInRoomNumber = 7;
+                    crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
                     currentXgrid = 17;
                     currentYgrid = 6;
                     xC = currentXgrid * 21;
                     yC = currentYgrid * 20;
-                    drawInRoom(currenInRoomNumber, 0);
+                    drawInRoom(currentInRoomNumber, 0);
                     reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
                     printAndAssignBtnsArray(reqBtnArray);
                     repaint();
@@ -330,6 +331,7 @@ public class BoardPanel extends JPanel {
         });
 
         btnEndTurn.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 diceRollValue = 0;
                 addToDiceLog(Integer.toString(diceRollValue));
@@ -345,6 +347,7 @@ public class BoardPanel extends JPanel {
         });
 
         btnRollDice.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 diceRollValue = crm.requestDiceRoll();
                 addToDiceLog(Integer.toString(diceRollValue));
@@ -358,6 +361,7 @@ public class BoardPanel extends JPanel {
         });
 
         btnStartGame.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 crm.requestToStartGame();
                 crm.requestDealCards();
@@ -366,6 +370,26 @@ public class BoardPanel extends JPanel {
             }
         });
 
+        btnExitRoom.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exitRoom(currentInRoomNumber);
+                if (currentInRoomNumber == 0){
+                    inShortcutRoom = false;
+                    inRoom = false;
+                    btnExitRoom.setEnabled(false);
+                    btnSuggest.setEnabled(false);
+                }
+            }
+        });
+
+        btnSuggest.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               makeSuggestion();
+               btnSuggest.setEnabled(false);
+            }
+        });
     } //end constructor
 
     public ArrayList<Card> getPlayersCards(){
@@ -397,8 +421,7 @@ public class BoardPanel extends JPanel {
     }
 
     public Player getCurrentPlayerFromMap(Player currentPlayer, HashMap<Long, Player> map) {
-        Player p = (Player) map.get(currentPlayer.getPlayerId());
-        return p;
+        return (Player) map.get(currentPlayer.getPlayerId());
     }
 
     private int getDoorId(int row, int col) {
@@ -444,7 +467,7 @@ public class BoardPanel extends JPanel {
         super.paint(g);
         g.drawImage(gameboard.getImage(), 0, 0, null);
         g.setColor(new Color(currentPlayer.getCharacter().getColor()));
-        Rectangle rectBounds = getBounds(xC, yC);
+        Rectangle rectBounds = bph.getBounds(xC, yC);
         int rectXBounds = (int) rectBounds.getX();
         int rectYBounds = (int) rectBounds.getY();
         int rectBoundsHeight = (int) rectBounds.getHeight();
@@ -458,7 +481,7 @@ public class BoardPanel extends JPanel {
                 continue;
             int playerInMapXBound = player.getCurrentXLocation() * 21;
             int playerInMapYBound = player.getCurrentYLocation() * 20;
-            rectBounds  = getBounds(playerInMapXBound, playerInMapYBound);
+            rectBounds  = bph.getBounds(playerInMapXBound, playerInMapYBound);
             rectXBounds = (int) rectBounds.getX();
             rectYBounds = (int) rectBounds.getY();
             rectBoundsHeight = (int) rectBounds.getHeight();
@@ -470,7 +493,7 @@ public class BoardPanel extends JPanel {
             for(Characters character : nonPlayingCharList) {
                 int xBound = character.getxStarting() * 21;
                 int yBound = character.getyStarting() * 20;
-                rectBounds  = getBounds(xBound, yBound);
+                rectBounds  = bph.getBounds(xBound, yBound);
                 rectXBounds = (int) rectBounds.getX();
                 rectYBounds = (int) rectBounds.getY();
                 rectBoundsHeight = (int) rectBounds.getHeight();
@@ -481,13 +504,7 @@ public class BoardPanel extends JPanel {
         }
     }
 
-    private Rectangle getBounds(int x, int y) {
-        //increase x offset by 30
-        //increase y offset by 16
-        return new Rectangle(x + 30,y + 16,20,20);
-    }
-
-    private void enableOrdisableBtns(JButton movementButtons[]) {
+    private void enableOrdisableBtns(JButton[] movementButtons) {
         // WEST = 0, EAST = 1, NORTH = 2, SOUTH = 3;
         if (buttonRollLimit == 0){
             btnRollDice.setEnabled(false);
@@ -499,28 +516,115 @@ public class BoardPanel extends JPanel {
         }
     }
 
-    private void enableOrDisableMovementAndEnterButtons(JButton movementButtons[]) {
+    private void enableOrDisableMovementAndEnterButtons(JButton[] movementButtons) {
         boolean[] moveOptions = { false, false, false, false };
         boolean roomOptions = false;
         int i = 1;
-        roomOptions = (cArray_movement_enter[0] == '1') ? true : false;
+        if (inShortcutRoom)
+            btnShortcut.setEnabled(true);
+
+        roomOptions = cArray_movement_enter[0] == '1';
 
         for (int j = 0; j < moveOptions.length; j++) {
-            moveOptions[j] = (cArray_movement_enter[i] == '1') ? true : false;
+            moveOptions[j] = cArray_movement_enter[i] == '1';
             i++;
             movementButtons[j].setEnabled(moveOptions[j]);
         }
         enterButton[ENTER_ROOM].setEnabled(roomOptions);
+        if (inRoom) {
+            btnExitRoom.setEnabled(true);
+            btnSuggest.setEnabled(true);
+        }
     }
 
-    public void disableButtons(JButton movementButtons[]) {
+    public void disableButtons(JButton[] movementButtons) {
         for(int i = 0; i < 4; i++) {
             movementButtons[i].setEnabled(false);
         }
+        enterButton[ENTER_ROOM].setEnabled(false);
+        btnShortcut.setEnabled(false);
+        btnExitRoom.setEnabled(false);
+        btnSuggest.setEnabled(false);
     }
 
     protected void addToDiceLog(String input){
         textAreaDice.setText(input.toString());
+    }
+
+    private void exitRoom(int roomNumber){
+        ArrayList<Boolean[]> attemptedDoorsListArray = bph.getAttemptedDoorsList();
+        boolean isDoorBlocked = false;
+        int attemptedDoorsAmt = 0;
+
+        do {
+            String roomName = ClueGameConstants.ROOM_NAMES_ARRAY[roomNumber - 1];
+            String[] exitOptions = bph.assignExitOptions(roomNumber);
+            String roomPictureStrResource = roomExitPictureStrs[roomNumber - 1];
+            ImageIcon roomImageIcon  = new ImageIcon(getClass().getResource(roomPictureStrResource));
+            String doorSelection = (String)JOptionPane.showInputDialog(null,
+                    "Please Select Exiting Door", "Select Door", JOptionPane.PLAIN_MESSAGE,
+                    roomImageIcon, exitOptions, exitOptions[0]);
+            ClueGameConstants.DOORS doorEnumValue = bph.findSpecificDoor(roomNumber, Integer.parseInt(doorSelection));
+            assert doorEnumValue != null;
+            int tempCurrentXgrid = doorEnumValue.getRow();
+            int tempCurrentYgrid = doorEnumValue.getCol();
+            isDoorBlocked = bph.determineIfSelectedDoorIsBlocked(tempCurrentXgrid, tempCurrentYgrid, playerMap);
+            if(isDoorBlocked){
+                attemptedDoorsListArray.get(roomNumber - 1)[doorEnumValue.getDoorID() - 1] = true;
+                attemptedDoorsAmt = bph.determineTrueAmountInDoorArray(attemptedDoorsListArray.get(roomNumber - 1));
+                if(attemptedDoorsAmt == attemptedDoorsListArray.get(roomNumber - 1).length){
+                    String allDoorsBlockedStr = "All door(s) are blocked.";
+                    clientFrame.addToLogConsole("Could not exit " + roomName + ". Door(s) blocked");
+                    JOptionPane.showMessageDialog(null, allDoorsBlockedStr, "No Exit",
+                            JOptionPane.WARNING_MESSAGE);
+                    break;
+                }
+                else{
+                    String blockedDoorStr = "Selected door is blocked. Choose another door";
+                    JOptionPane.showMessageDialog(null, blockedDoorStr, "Blocked Door",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+            else{
+                currentXgrid = doorEnumValue.getRow();
+                currentYgrid = doorEnumValue.getCol();
+                xC = currentXgrid * 21;
+                yC = currentYgrid * 20;
+                currentInRoomNumber = 0;
+                inShortcutRoom = false;
+                playerMap = crm.requestPlayerMap();
+                repaint();
+                reqBtnArray = crm.requestBtns(currentXgrid,currentYgrid);
+                crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
+                clientFrame.addToLogConsole("Exited the " + roomName);
+                btnExitRoom.setEnabled(false);
+                btnShortcut.setEnabled(false);
+            }
+        } while (isDoorBlocked);
+    }
+
+    private void makeSuggestion(){
+        //get the character being suggested
+        String[] characterNamesArr = ClueGameConstants.CHARACTER_NAMES_ARRAY;
+        ImageIcon allCharsImageIcon  = new ImageIcon(getClass().getResource("resources/allCharacters.png"));
+        String suggestedChar = (String)JOptionPane.showInputDialog(null,
+                "Please Select Suggested Character", "Select Suggested Character",JOptionPane.PLAIN_MESSAGE,
+                allCharsImageIcon, characterNamesArr, characterNamesArr[0]);
+
+        //get the weapon being suggested
+        String[] weaponNamesArr = ClueGameConstants.WEAPON_NAMES_ARRAY;
+        ImageIcon allWeaponsImageIcon  = new ImageIcon(getClass().getResource("resources/allWeapons.png"));
+        String suggestedWeapon = (String)JOptionPane.showInputDialog(null,
+                "Please Select Suggested Character", "Select Suggested Weapon", JOptionPane.PLAIN_MESSAGE,
+                allWeaponsImageIcon, weaponNamesArr, weaponNamesArr[0]);
+
+        //convert character name, weapon name, and room number into single int number
+        int contentSuggestionNum = bph.getCombinedSuggestionContentNumber(suggestedChar,suggestedWeapon,currentInRoomNumber);
+
+        //submit contentSuggestionNum to server. submission will also trigger isSuggestionMade = true on gamestate
+        //crm.requestSubmitSuggestionContentNum(contentSuggestionNum);
+
+        //
     }
 
     public void drawInRoom(int roomNumber, int roomDirection)
@@ -528,8 +632,7 @@ public class BoardPanel extends JPanel {
         //cons:1 ; billiard:2; lib:3; study:4; ball: 5; hall:6; lounge:8; kitchen:9; dining: 10
         //room direction 0=up; 1=down; 2=left; 3=right
         int multiplier = currentPlayer.getCharacter().getTurnOrder();
-        if (roomNumber == 1) //conservatory down 2, left turn over num
-        {
+        if (roomNumber == 1) { //conservatory down 2, left turn over num
             yC += 20*2;
             xC += 21;
             currentXgrid++;
@@ -537,62 +640,51 @@ public class BoardPanel extends JPanel {
             currentYgrid = currentYgrid+2;
             currentXgrid = currentXgrid - multiplier;
         }
-        if (roomNumber == 10) //dining room
-        {
-            if (roomDirection == 1)
-            {
+        else if (roomNumber == 9) { //dining room
+            if (roomDirection == 1) {
                 yC += 20*2;
                 currentYgrid = currentYgrid+2;
             }
             xC += 21 * multiplier;
             currentXgrid = currentXgrid + multiplier;
         }
-        if (roomNumber == 4) //study //up 2, left multiplier
-        {
+        else if (roomNumber == 4) { //study //up 2, left multiplier
             yC-=20*2;
             xC-= 21* multiplier;
             currentYgrid = currentYgrid-2;
             currentXgrid = currentXgrid - multiplier;
         }
-        if (roomNumber == 8) //lounge //right 2, up mult
-        {
+        else if (roomNumber == 7) { //lounge //right 2, up mult
             yC -= 20*multiplier;
             xC += 21*2;
             currentYgrid = currentYgrid - multiplier;
             currentXgrid = currentXgrid + 2;
         }
-        if (roomNumber == 3) //library
-        {
-            if (roomDirection == 0)
-            {
+        else if (roomNumber == 3){ //library
+            if (roomDirection == 0) {
                 yC-= 20*2; //up 2
                 xC+= 21*3; //right 3
                 currentXgrid = currentXgrid+3;
                 xC-= 21*multiplier; //left by 6
                 currentYgrid = currentYgrid-2;
             }
-            else
-            {
+            else {
                 xC-= 21*multiplier;
             }
             currentXgrid = currentXgrid - multiplier;
         }
-        if (roomNumber == 9) //kitchen
-        {
+        else if (roomNumber == 8){ //kitchen
             yC+= 20* multiplier;
             xC+= 21;
             currentYgrid = currentYgrid + multiplier;
             currentXgrid++;
         }
-        if (roomNumber == 6) //hall
-        {
-            if (roomDirection == 0) //up
-            {
+        else if (roomNumber == 6){ //hall
+            if (roomDirection == 0){ //up
                 yC-= 20* multiplier; //up multiplier
                 currentYgrid = currentYgrid - multiplier;
             }
-            else //right
-            {
+            else{ //right
                 yC+= 20*2;
                 currentYgrid = currentYgrid + 2;
                 xC+= 21; //right one
@@ -601,16 +693,13 @@ public class BoardPanel extends JPanel {
                 currentXgrid++;
             }
         }
-        if (roomNumber == 2) //billiard
-        {
-            if (roomDirection == 2) //left
-            {
+        else if (roomNumber == 2){ //biilard
+            if (roomDirection == 2){ //left
                 yC+= 20;
                 xC-= 21*multiplier;
                 currentXgrid = currentXgrid - multiplier;
             }
-            else //down
-            {
+            else{ //down
                 xC-= 21*2;
                 currentXgrid= currentXgrid - 2;
                 yC+= 20;
@@ -619,30 +708,27 @@ public class BoardPanel extends JPanel {
             }
             currentYgrid++;
         }
-        if (roomNumber == 5) //ballroom
-        {
-            if (roomDirection == 1)
-            {
+        else if (roomNumber == 5){ //ballrom
+            if (roomDirection == 1) {
                 yC+= 20*multiplier;
             }
-            else
-            {
+            else {
                 yC-= 20*3; //up 3
                 currentYgrid = currentYgrid - 3;
-                if (roomDirection == 3) //right
-                {
+                if (roomDirection == 3){ //right
                     xC+= 21;
                     currentXgrid++;
                 }
-                else
-                {
+                else {
                     xC-= 21;
                     currentXgrid--;
                 }
                 yC+= 20*multiplier;
-                currentYgrid = currentYgrid + multiplier;
             }
+            currentYgrid = currentYgrid + multiplier;
         }
+        else
+            System.out.println("error in draw in room.");
     }
 
     private void initComponents(){
