@@ -1,25 +1,30 @@
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.LineBorder;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.geom.*;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.Timer;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
+
 
 public class BoardPanel extends JPanel {
 
+    //Added to prevent waring, JPanel extends Serializable
+    private static final long serialVersionUID = 1L;
+    
     final ImageIcon gameboard;
     Timer startGameTimer, currentTurnTimer;
     String value;
@@ -54,6 +59,7 @@ public class BoardPanel extends JPanel {
     ClientRequestManager crm;
     String[] reqBtnArray;
     int counterForShortCut = 0, enterRoomCounter = 0;
+    Boolean suggestion;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
         crm = new ClientRequestManager(clientConnection);
@@ -177,6 +183,17 @@ public class BoardPanel extends JPanel {
                 isPlayerCurrentTurn = crm.requestIsCurrentTurn();
                 playerMap = crm.requestPlayerMap();
                 repaint();
+
+                //has suggestion been made
+                suggestion = crm.requestIfSuggestionMade();
+                if(suggestion){
+                    String[] suggestion = crm.requestSuggestionContent();
+                    // TODO print out suggestion to console
+                    String card = crm.requestCardRevealed();
+                    //print to console if not null
+                    //need to handle if card is null,
+                    //seems easier to to just pass null if card not found
+                }
 
                 if(isPlayerCurrentTurn) {
                     counterForShortCut++;
