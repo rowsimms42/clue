@@ -111,7 +111,7 @@ public class ClientRequestManager {
 
     public void requestUpdatePlayerRoomLocation(int roomNum) {
         try {
-            clientConnection.send(new Message(ClueGameConstants.REQUEST_UPDATE_PLAYER_ROOM_NUMBER, Integer.valueOf(roomNum)));
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_UPDATE_PLAYER_ROOM_NUMBER, roomNum));
             messageReceived = clientConnection.getMessage();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
@@ -145,7 +145,6 @@ public class ClientRequestManager {
             clientConnection.send(new Message(ClueGameConstants.REQUEST_DICE_ROLL, null));
             messageReceived = clientConnection.getMessage();
             diceRoll = (int) messageReceived.getData();
-            //addToDiceLog(Integer.toString(diceRoll));
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
@@ -169,7 +168,6 @@ public class ClientRequestManager {
         int[] coords = {x, y};
         String btnValues = null;
         String coordinatesStr = x + ", " + y;
-        //clientFrame.addToLogConsole(coordinatesStr); // adds player location to console
         try {
             clientConnection.send(new Message(ClueGameConstants.REQUEST_MOVEMENT_BUTTON_VALUES, coords));
             messageReceived = clientConnection.getMessage();
@@ -180,16 +178,37 @@ public class ClientRequestManager {
         return new String[]{coordinatesStr, btnValues};
     }
 
-    public Boolean requestIfSuggestionMade(){
-        Boolean suggestion = false;
+    public boolean requestIfSuggestionMade(){
+        boolean isSuggestion = false;
         try{
-            clientConnection.send(new Message(ClueGameConstants.REQUEST_IF_SUGGESTION_MADE, null));
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_IS_SUGGESTION_MADE, null));
             messageReceived = clientConnection.getMessage();
-            suggestion = (Boolean) messageReceived.getData();
+            isSuggestion = (boolean) messageReceived.getData();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
-        return suggestion;
+        return isSuggestion;
+    }
+
+    public void requestSubmitSuggestionContentNum(int conentSugNumber){
+        try {
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_SUBMITTING_SUG_CONTENT_NUM, conentSugNumber));
+            messageReceived = clientConnection.getMessage();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Card> requestEnvelopeCardDeck() {
+        ArrayList<Card> envelopeDeck = new ArrayList<>();
+        try {
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_ENVELOPE_DECK , null));
+            messageReceived = clientConnection.getMessage();
+            envelopeDeck = (ArrayList<Card>) messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return envelopeDeck;
     }
 
     public String[] requestSuggestionContent(){
@@ -216,5 +235,8 @@ public class ClientRequestManager {
 
         return card;
     }
+
+
+
 
 }

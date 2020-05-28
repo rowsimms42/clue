@@ -1,9 +1,5 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 
 public class GameHandler {
 
@@ -240,5 +236,31 @@ public class GameHandler {
             default:
                 return msgObj; //returns same object sent
         }
+    }
+
+    //remove player from game
+    public void removePlayerFromGame(long ID, Player player){
+        String name = player.getName();
+       /* Character: 0 - Mr. Green, 1 - Professor Plumb, 2 - Mrs. White,
+		   3 - Colonel Mustard, 4 - Miss Scarlet, 5 - Mrs. Peacock */
+        switch (name) {
+            case "Mr. Green": gameState.setSpecificCharacterToAvailable(0);
+                break;
+            case "Professor Plumb": gameState.setSpecificCharacterToAvailable(1);
+                break;
+            case "Mrs. White": gameState.setSpecificCharacterToAvailable(2);
+                break;
+            case "Colonel Mustard": gameState.setSpecificCharacterToAvailable(3);
+                break;
+            case "Miss Scarlet": gameState.setSpecificCharacterToAvailable(4);
+                break;
+            case "Mrs. Peacock": gameState.setSpecificCharacterToAvailable(5);
+            default:
+                break;
+        }
+
+        gameState.removePlayer(ID);
+        //TODO make character the player was assigned to available.
+
     }
 } //end class

@@ -110,22 +110,41 @@ public final class ClueGameConstants {
 
     public static final int REPLY_FROM_SERVER_CONFIRM_PLAYER_ROOM_LOCATION = 59;
 
-    public static final int REQUEST_IF_SUGGESTION_MADE = 60;
+    public static final int REQUEST_IS_SUGGESTION_MADE = 60;
 
-    public static final int REQUEST_SUGGESTION_CONTENT = 61;
+    public static final int REPLY_FROM_SERVER_CONFIRM_IS_SUGGESTION_MADE = 61;
 
-    public static final int REQUEST_CARD_REVEALED = 62;
+    public static final int REQUEST_ENVELOPE_DECK = 62;
 
-    public static final int REPLY_IF_SUGGESTION_MADE = 63;
+    public static final int REPLY_FROM_SERVER_CONFIRM_ENVELOPE_DECK = 63;
 
-    public static final int REPLY_SUGGESTION_CONTENTS = 64;
+    public static final int REQUEST_SUGGESTION_CONTENT = 64;
 
-    public static final int REPLY_REVEALED_CARD = 65;
+    public static final int REPLY_FROM_SERVER_CONFIRM_CONFIRM_SUGGESTION_CONTENT = 65;
+
+    public static final int REQUEST_CARD_REVEALED = 66;
+
+    public static final int REPLY_FROM_SERVER_CONFIRM_CARD_REVEALED = 67;
+
+    public static final int REQUEST_SUBMITTING_SUG_CONTENT_NUM = 63;
+
+    public static final int REPLY_FROM_SERVER_CONFIRM_SUBMITTING_SUG_CONTENT_NUM = 64;
+
+
+
+
+
+
 
     public static final int UNSELECTABLE_TILE = -1;
 
     public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
             "Miss Scarlett", "Mrs. Peacock"};
+
+    public static final String[] ROOM_NAMES_ARRAY = {"Conversatory", "Billard Room", "Library", "Study", "Ballroom",
+            "Hall", "Lounge", "Kitchen","Dining Room"};
+
+    public static final String[] WEAPON_NAMES_ARRAY = {"Pipe", "Candle Stick", "Revolver", "Wrench", "Knife", "Rope"};
 
     public static enum ROOMS{
         Conservatory(new Rect(0,5,20,23), new Rect(1,4,19,23), 1, new double[]{1,2,3,4,5,6}),
@@ -134,10 +153,10 @@ public final class ClueGameConstants {
         Study(new Rect(0, 5, 0, 3), new Rect(0, 6, 1, 3), 4, new double[]{0,0}),
         Ballroom(new Rect(8, 15, 17, 22), new Rect(10,13,17,23), 5, new double[]{0,0}),
         Hall(new Rect(9, 14, 1, 6), new Rect(9, 14, 1, 6), 6, new double[]{0,0}),
-        StairCase(new Rect(9,13, 8, 11), new Rect(9,13, 8, 11), 7, new double[]{0,0}),
-        Lounge(new Rect(18, 23, 0, 5), new Rect(17,23,1,5), 8, new double[]{0,0}),
-        Kitchen(new Rect(18, 22, 18, 23), new Rect(18, 23, 18, 23), 9, new double[]{0,0}),
-        DinningHall(new Rect(16,23,9,14), new Rect(19,23,9,15), 10, new double[]{0,0}),
+        Lounge(new Rect(18, 23, 0, 5), new Rect(17,23,1,5), 7, new double[]{0,0}),
+        Kitchen(new Rect(18, 22, 18, 23), new Rect(18, 23, 18, 23), 8, new double[]{0,0}),
+        DinningHall(new Rect(16,23,9,14), new Rect(19,23,9,15), 9, new double[]{0,0}),
+        StairCase(new Rect(9,13, 8, 11), new Rect(9,13, 8, 11), 10, new double[]{0,0}),
         Logo(new Rect(9,13, 12, 14), new Rect(9,13,12,4), 11, new double[]{0,0});
 
         private Rect rect1, rect2;
@@ -169,35 +188,37 @@ public final class ClueGameConstants {
     };
 
     public static enum DOORS{
-        STUDY_DOOR1(6,4,0,4),
-        LIBRARY_DOOR1(7,8,2,3),
-        LIBRARY_DOOR2(3,11,0,3),
-        BILLARD_DOOR1(1,11,1,2),
-        BILLARD_DOOR2(6,15,2,2),
-        CONSERVATORY_DOOR1(5,19,2,1),
-        HALL_DOOR1(8,4,3,6),
-        HALL_DOOR2(11,7,0,6),
-        HALL_DOOR3(12,7,0,6),
-        BALLROOM_DOOR1(7,19,3,5),
-        BALLROOM_DOOR2(9,16,1,5),
-        BALLROOM_DOOR3(14,16,1,5),
-        BALLROOM_DOOR4(16,19,2,5),
-        LOUNGE_DOOR1(17,6,0,8),
-        DINNING_DOOR1(17,8,1,10),
-        DINNING_DOOR2(15,12,3,10),
-        KITCHEN_DOOR1(19,17,1,9);
+        STUDY_DOOR1(6,4,0,4, 1),
+        LIBRARY_DOOR2(7,8,2,3, 2),
+        LIBRARY_DOOR1(3,11,0,3, 1),
+        BILLARD_DOOR1(1,11,1,2, 1),
+        BILLARD_DOOR2(6,15,2,2, 2),
+        CONSERVATORY_DOOR1(5,19,2,1, 1),
+        HALL_DOOR1(8,4,3,6, 1),
+        HALL_DOOR2(11,7,0,6, 2),
+        HALL_DOOR3(12,7,0,6, 3),
+        BALLROOM_DOOR1(7,19,3,5,1),
+        BALLROOM_DOOR2(9,16,1,5,2),
+        BALLROOM_DOOR3(14,16,1,5,3),
+        BALLROOM_DOOR4(16,19,2,5,4),
+        LOUNGE_DOOR1(17,6,0,7, 1),
+        DINNING_DOOR2(17,8,1,9,2),
+        DINNING_DOOR1(15,12,3,9,1),
+        KITCHEN_DOOR1(19,17,1,8, 1);
 
-        private int row, col, direction, roomNumber;
-        DOORS(int row, int col, int direction, int roomNumber){
+        private int row, col, direction, roomNumber, doorID;
+        DOORS(int row, int col, int direction, int roomNumber, int doorID){
             this.row = row;
             this.col = col;
             this.direction = direction;
             this.roomNumber = roomNumber;
+            this.doorID = doorID;
         }
         public int getRow() {return row;}
         public int getCol() {return col;}
         public int getDirection() {return direction;}
         public int getRoomNumber() {return roomNumber;}
+        public int getDoorID(){return doorID;}
     };
 
     public static enum LEGEND{
