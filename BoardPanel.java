@@ -274,6 +274,12 @@ public class BoardPanel extends JPanel {
             }
         });
 
+        btnAccuse.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               new Accusation();
+            }
+         });
+
         enterButton[ENTER_ROOM].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //enterRoomCounter = counterForShortCut;

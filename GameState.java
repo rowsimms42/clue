@@ -15,7 +15,7 @@ public class GameState {
 	private HashMap<String, Characters> characterMap;
 	private MovementOptions movementOptions;
 	private ArrayList<Card> weaponCardDeck, suspectCardDeck, 
-							roomCardDeck, envelopeDeck, combinedDeck;
+							roomCardDeck, combinedDeck, envelopeDeck;
 	private ArrayList<Integer> playerTurnOrderArrayList;
 	private ArrayList<Characters> nonPlayingCharactersArrayList;
 	private int playOrderIndex;
@@ -56,6 +56,9 @@ public class GameState {
 		suspectCardDeck = createAndFillSuspectCardDeck();
 		envelopeDeck    = createAndFillenvelopedeck(); 
 		combinedDeck    = createAndFillCombinedDeck();
+	}
+	public ArrayList<Card> getEnvelopeDeck() {
+		return envelopeDeck;
 	}
 
 	public void addTurnOrder(int n) {

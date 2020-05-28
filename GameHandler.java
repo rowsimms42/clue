@@ -224,7 +224,8 @@ public class GameHandler {
             	}
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_PlAYERS_DECK,
             				    playersDeck);
-            	return returnMessage;
+            return returnMessage;
+                
             case ClueGameConstants.REQUEST_LIST_OF_NON_PLAYING_CHARACTERS:
             	nonPlayingCharList = gameState.getNonPlayingCharactersArrayList();
             	returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_LIST_OF_NON_PLAYING_CHARACTERS,
