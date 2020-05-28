@@ -126,16 +126,10 @@ public final class ClueGameConstants {
 
     public static final int REPLY_FROM_SERVER_CONFIRM_CARD_REVEALED = 67;
 
-    public static final int REQUEST_SUBMITTING_SUG_CONTENT_NUM = 63;
+    public static final int REQUEST_SUBMITTING_SUG_CONTENT_NUM = 68;
 
-    public static final int REPLY_FROM_SERVER_CONFIRM_SUBMITTING_SUG_CONTENT_NUM = 64;
-
-
-
-
-
-
-
+    public static final int REPLY_FROM_SERVER_CONFIRM_SUBMITTING_SUG_CONTENT_NUM = 69;
+    
     public static final int UNSELECTABLE_TILE = -1;
 
     public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
