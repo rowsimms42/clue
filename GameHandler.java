@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class GameHandler {
@@ -222,7 +223,12 @@ public class GameHandler {
                 int suggestedCharacter = suggestionConent / 100;
                 int suggestedWeapon = (suggestionConent - suggestedCharacter * 100) / 10;
                 int suggestedRoom = (suggestionConent % 100) % 10;
+                gameState.setIsSuggestionMade(true);
+                //build string [] 
                 //TODO continue;
+
+                //TODO update suggested player to draw in suggested room
+
             case ClueGameConstants.REQUEST_SUGGESTION_CONTENT:
                 //TODO get and parse suggestion player
                 returnMessage = new Message(ClueGameConstants., null);// TODO NOT NULL
@@ -241,24 +247,10 @@ public class GameHandler {
         String name = player.getName();
        /* Character: 0 - Mr. Green, 1 - Professor Plumb, 2 - Mrs. White,
 		   3 - Colonel Mustard, 4 - Miss Scarlet, 5 - Mrs. Peacock */
-        switch (name) {
-            case "Mr. Green": gameState.setSpecificCharacterToAvailable(0);
-                break;
-            case "Professor Plumb": gameState.setSpecificCharacterToAvailable(1);
-                break;
-            case "Mrs. White": gameState.setSpecificCharacterToAvailable(2);
-                break;
-            case "Colonel Mustard": gameState.setSpecificCharacterToAvailable(3);
-                break;
-            case "Miss Scarlet": gameState.setSpecificCharacterToAvailable(4);
-                break;
-            case "Mrs. Peacock": gameState.setSpecificCharacterToAvailable(5);
-            default:
-                break;
-        }
-
-        gameState.removePlayer(ID);
+        String[] characterNames = ClueGameConstants.CHARACTER_NAMES_ARRAY;
+        int index = Arrays.asList(characterNames).indexOf(name);
+        gameState.setSpecificCharacterToAvailable(index);
+        //gameState.removePlayer(ID);
         //TODO make character the player was assigned to available.
-
     }
 } //end class
