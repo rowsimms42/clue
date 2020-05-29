@@ -223,12 +223,10 @@ public class GameHandler {
                 int suggestedWeapon = (suggestionConent - suggestedCharacter * 100) / 10;
                 int suggestedRoom = (suggestionConent % 100) % 10;
                 //TODO continue;
-
             case ClueGameConstants.REQUEST_SUGGESTION_CONTENT:
                 //TODO get and parse suggestion player
                 returnMessage = new Message(ClueGameConstants., null);// TODO NOT NULL
                 return returnMessage;
-
             case ClueGameConstants.REQUEST_CARD_REVEALED:
                 //TODO cycle through suggestion and match with players' hands
                 returnMessage = new Message(ClueGameConstants.REPLY_REVEALED_CARD, null); //TODO not null

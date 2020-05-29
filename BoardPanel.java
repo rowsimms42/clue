@@ -14,6 +14,11 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.plaf.basic.BasicArrowButton;
+import java.awt.event.*; 
+import java.awt.*; 
+import javax.swing.*; 
+
+
 
 public class BoardPanel extends JPanel {
 
@@ -60,6 +65,7 @@ public class BoardPanel extends JPanel {
     //Hashtable roomExitPictures;
     int counterForShortCut = 0, enterRoomCounter = 0;
     boolean inShortcutRoom = false, inRoom = false, isSuggestionMade = false;
+    boolean WasICoreect = false;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
         crm = new ClientRequestManager(clientConnection);
@@ -277,12 +283,6 @@ public class BoardPanel extends JPanel {
             }
         });
 
-        btnAccuse.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-               new Accusation();
-            }
-         });
-
         enterButton[ENTER_ROOM].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -394,6 +394,13 @@ public class BoardPanel extends JPanel {
                btnSuggest.setEnabled(false);
             }
         });
+        btnAccuse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            Accusation();
+            }
+
+        });
     } //end constructor
 
     public ArrayList<Card> getPlayersCards(){
@@ -444,6 +451,9 @@ public class BoardPanel extends JPanel {
                 clientFrame.addToLogConsole(c.getName());
         }
         clientFrame.addToLogConsole("------------------------");
+
+
+
     }
 
     public void paint(Graphics g) {
@@ -795,4 +805,107 @@ public class BoardPanel extends JPanel {
         playersDeck = new ArrayList<>();
         legendList = new ArrayList<>();
     }
-} // end class
+
+
+    private void Accusation(){
+            
+            JFrame f; 
+         // label 
+          JLabel l, l1, l3, l4, I5, I6; 
+         // combobox 
+          JComboBox c1,c2,c3;
+
+           // create a new frame 
+          f = new JFrame("frame"); 
+          // array of string contating cities 
+          String s1[] = { "---", "Pipe", "Candle Stick","Revolver","Wrench","Knife", "Rope"}; 
+          String s2[] = { "---", "Conservatory", "Billiard Room", "Study Room", "Hall", "Lounge", "Dining Room", "Kitchen", "Ballroom", "Library" }; 
+          String s3[] = { "---", "Mr. Green","Professor Plum" , "Mrs. White", "Colonel Mustard", "Miss Scarlet", "Mrs. Peacock" }; 
+          // create checkbox 
+          c1 = new JComboBox(s1); 
+          c2 = new JComboBox(s2); 
+          c3 = new JComboBox(s3); 
+          // set Kolakata and male as selected items 
+          // using setSelectedIndex 
+          c1.setSelectedIndex(0); 
+          c2.setSelectedIndex(0); 
+          c3.setSelectedIndex(0); 
+          // set the checkbox as editable 
+          c1.setEditable(true); 
+          c2.setEditable(true); 
+          c3.setEditable(true); 
+          // create labels 
+          l = new JLabel("select your weapon"); 
+          l1 = new JLabel("weapon selected"); 
+          l3 = new JLabel("select your Room "); 
+          l4 = new JLabel("room selected"); 
+          I5 = new JLabel("select your suspect");
+          I6 = new JLabel("person selected");
+          // set color of text 
+          l.setForeground(Color.red); 
+          l1.setForeground(Color.blue); 
+          l3.setForeground(Color.red); 
+          l4.setForeground(Color.blue); 
+          I5.setForeground(Color.red); 
+          I6.setForeground(Color.blue); 
+          // create a new panel 
+          JPanel p = new JPanel(); 
+          p.add(l); 
+          // add combobox to panel 
+          p.add(c1); 
+          p.add(l1); 
+          p.add(l3); 
+          // add combobox to panel 
+          p.add(c2); 
+          p.add(l4); 
+          // add combobox to panel 
+          p.add(I5);
+          p.add(c3);
+          p.add(I6);
+          JButton send = new JButton("Send");
+          p.add(send);
+        // set a layout for panel 
+          p.setLayout(new FlowLayout()); 
+          // add panel to frame 
+          f.add(p); 
+            // set the size of frame 
+          f.setSize(400, 400); 
+             // new JButton
+             // panel.add(send);
+          f.show(); 
+  
+          send.addActionListener(new ActionListener() {
+  
+            public void actionPerformed(ActionEvent e) {
+             // setVisible(false);
+              String GuessFinal [] = {"---","---","---"};
+              GuessFinal[0] = (String) c1.getSelectedItem();
+              GuessFinal[2] = (String) c2.getSelectedItem();
+              GuessFinal[1] = (String) c3.getSelectedItem();
+              //try {
+               // send string to server
+               int numberCorrect = 0;
+               ArrayList<Card> envlopeDeck = crm.requestEnvelopeCardDeck();
+               for(int i = 0; i < 3;i++){
+                if(GuessFinal[i].equals((envlopeDeck.get(i).getName()))){
+                   numberCorrect++;
+                   }
+            }
+            if(numberCorrect == 3){
+              WasICoreect = true;
+            }
+               //WasICoreect = 
+  
+                if(WasICoreect == true){
+                    clientFrame.addToLogConsole("You WIN!!!!!!!!");
+                }
+               // run you win code
+                else{
+                    clientFrame.addToLogConsole("You Lose you can not play but you are still in the game");
+                }
+               // run you loss code
+              //}
+            }
+          });
+        }    
+  } 
