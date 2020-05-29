@@ -398,12 +398,6 @@ public class BoardPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 makeAccusation();
-                if(isAccusationCorrect){
-                    //stop the timer
-                }
-                else{
-
-                }
             }
 
         });
