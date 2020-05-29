@@ -220,12 +220,12 @@ public final class ClueGameConstants {
     };
 
     public static enum LEGEND{
-        MUSTARD(16576515, 690,600),
-        SCARLETT(16515918, 690,630),
-        GREEN(261123, 690,660),
+        MUSTARD(16576515, 690,610),
+        SCARLETT(16515918, 690,636),
+        GREEN(261123, 690,663),
         PEACOCK(234748, 690,690),
-        WHITE(16777212, 690,720),
-        PLUM(10290172, 690,750);
+        WHITE(16777212, 690,717),
+        PLUM(10290172, 690,744);
 
         private int color, x, y;
         LEGEND(int color, int x, int y){

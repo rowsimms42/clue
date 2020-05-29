@@ -30,20 +30,19 @@ import java.awt.Rectangle;
 public class ClientFrame extends JFrame {
 
 	private JPanel contentPane;
-	private StringBuilder noteStringBuilder, logStringBuilder, legendStringBuilder;
-	private JTextArea log_text_area, textAreaNotesAdded, textAreaGameNote, textAreaName, textAreaLegend;
-	private JScrollPane scrollPane, scrollPaneNotesAdded;
-	private JLabel lblConsoleLog, lblAddGameNote, lblGameNotes, lblScoreCard;
+	private StringBuilder logStringBuilder, legendStringBuilder;
+	private JTextArea log_text_area, textAreaGameNote, textAreaName, textAreaLegend;
+	private JScrollPane scrollPane;
+	private JLabel lblConsoleLog, lblAddGameNote, lblGameNotes, lblScoreCard, lblPlayerLegend;
 	private JMenuBar menuBar;
 	private JMenu gameMenu;
 	private JMenuItem gameRulesMenuItem, seeCardDeckMenuItem;
-	private JButton btnAddNote;
 
 	//private JTextArea yourCardsFrameInfo;
 	private int cardTotalInHand;
 	public int [] cardIdNumber = {0,0,0,0,0,0};
 	int xPieceName = 130;
-	int yPieceName = 20;
+	int yPieceName = 22;
 	
 	private JLabel[] yourPlayerCards;
 	private JPanel[] yourCardPanelArray;
@@ -54,9 +53,6 @@ public class ClientFrame extends JFrame {
 	Message messageRecieved;
 	Client client;
 	Player currentPlayer;
-	private int noteCounter = 0;
-	int rows = 24;
-	int coloums = 25;
 	String value;
 	private final BoardPanel gameBoardPanel;
 	private final ScoreCard scoreCardPanel;
@@ -123,15 +119,13 @@ public class ClientFrame extends JFrame {
 						yourCardContentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 						setContentPane(yourCardContentPane);
 						yourCardContentPane.setLayout(null);
-
 						setBounds(100, 100, 400, 650);
-					//	getContentPane().setLayout(new FlowLayout());
-					//	setBounds(6,6,494,693);
 						yourcardPanel = new JPanel();
 						yourcardPanel.setBounds(6, 6, 388, 480);
 						yourCardContentPane.add(yourcardPanel);
 						yourcardPanel.setLayout(new GridLayout(3, 2));
 						addingYourCardsToSee();
+						setLocationRelativeTo(null);
 						setVisible(true); 
 					}
 				}
@@ -187,7 +181,7 @@ public class ClientFrame extends JFrame {
 	}
 	
 	private Rectangle getBounds1(int x, int y) {
-        return new Rectangle(x + 30,y + 16,20,20);
+        return new Rectangle(x + 30,y + 16,18,18);
     }
 
 	private void addingYourCardsToSee() {
@@ -253,7 +247,6 @@ public class ClientFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		noteStringBuilder = new StringBuilder();
 		logStringBuilder  = new StringBuilder();
 		legendStringBuilder = new StringBuilder();
 		
@@ -266,13 +259,13 @@ public class ClientFrame extends JFrame {
 		contentPane.add(scrollPane);
 		
 		lblConsoleLog = new JLabel("Console Log");
-		lblConsoleLog.setFont(new Font("SansSerif", Font.BOLD, 13));
+		lblConsoleLog.setFont(new Font("Arial", Font.BOLD, 12));
 		lblConsoleLog.setBounds(6, 585, 80, 16);
 		contentPane.add(lblConsoleLog);
 		
 		lblAddGameNote = new JLabel("Add Game Note");
-		lblAddGameNote.setFont(new Font("SansSerif", Font.BOLD, 12));
-		lblAddGameNote.setBounds(774, 24, 113, 16);
+		lblAddGameNote.setFont(new Font("Arial", Font.BOLD, 12));
+		lblAddGameNote.setBounds(770, 24, 113, 16);
 		contentPane.add(lblAddGameNote);
 		
 		textAreaGameNote = new JTextArea();
@@ -280,11 +273,6 @@ public class ClientFrame extends JFrame {
 		textAreaGameNote.setLineWrap(true);
 		textAreaGameNote.setBounds(704, 52, 227, 98);
 		contentPane.add(textAreaGameNote);
-		
-		lblGameNotes = new JLabel(" ");
-		lblGameNotes.setFont(new Font("SansSerif", Font.BOLD, 12));
-		lblGameNotes.setBounds(755, 206, 151, 16);
-		contentPane.add(lblGameNotes);
 
 		menuBar = new JMenuBar();
 		gameMenu = new JMenu("Options");
@@ -296,23 +284,28 @@ public class ClientFrame extends JFrame {
 		menuBar.add(gameMenu);
 
 		textAreaName = new JTextArea();
-		textAreaName.setFont(new Font("SansSerif", Font.BOLD, 13));
+		textAreaName.setFont(new Font("Arial", Font.BOLD, 14));
 		textAreaName.setBackground(new Color(0, 204, 204));
-		textAreaName.setBounds(175, 6, 290, 20);
+		textAreaName.setBounds(180, 8, 290, 20);
 		textAreaName.setEditable(false);
 		contentPane.add(textAreaName);
 		
 		textAreaLegend = new JTextArea();
-		textAreaLegend.setFont(new Font("SansSerif", Font.BOLD, 11));
+		textAreaLegend.setFont(new Font("Arial", Font.BOLD, 11));
 		textAreaLegend.setEditable(false);
-		textAreaLegend.setBounds(740, 590, 171, 200);
+		textAreaLegend.setBounds(740, 600, 171, 200);
 		textAreaLegend.setBackground(new Color(0, 204, 204));
 		contentPane.add(textAreaLegend);
 
 		lblScoreCard = new JLabel("Score Card");
-	    lblScoreCard.setFont(new Font("SansSerif", Font.BOLD, 13));
-	    lblScoreCard.setBounds(775, 200, 90, 13);
-	    contentPane.add(lblScoreCard);
+	    lblScoreCard.setFont(new Font("Arial", Font.BOLD, 12));
+	    lblScoreCard.setBounds(785, 200, 90, 13);
+		contentPane.add(lblScoreCard);
+		
+		lblPlayerLegend = new JLabel("Player Legend");
+		lblPlayerLegend.setFont(new Font("Arial", Font.BOLD, 12));
+	    lblPlayerLegend.setBounds(774, 560, 150, 13);
+		contentPane.add(lblPlayerLegend);
 		
 		menuBar.setToolTipText("Options");
 		menuBar.setBounds(6, 6, 132, 22);
