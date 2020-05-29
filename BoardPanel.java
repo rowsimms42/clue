@@ -1,29 +1,19 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
+import java.awt.*;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.geom.*;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.plaf.basic.BasicArrowButton;
-import java.awt.event.*; 
-import java.awt.*; 
-import javax.swing.*; 
-
-
 
 public class BoardPanel extends JPanel {
 
@@ -69,8 +59,7 @@ public class BoardPanel extends JPanel {
 
     //Hashtable roomExitPictures;
     int counterForShortCut = 0, enterRoomCounter = 0;
-    boolean inShortcutRoom = false, inRoom = false, isSuggestionMade = false;
-    boolean WasICoreect = false;
+    boolean inShortcutRoom = false, inRoom = false, isSuggestionMade = false, isAccusationCorrect = false;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
         crm = new ClientRequestManager(clientConnection);
@@ -198,14 +187,18 @@ public class BoardPanel extends JPanel {
 
                 isSuggestionMade = crm.requestIfSuggestionMade();
                 if(isSuggestionMade){
-                    String suggestion = crm.requestSuggestionContent();
+                    //request the suggestion string
+                    String suggestionStr = crm.requestSuggestionContent();
+                    //"Mr.Green : I suggest Mrs. Plum with a knife in the kitchen."
+                    //print "Your cards are under review."
+                    //print
+                    //String[] suggestion = crm.requestSuggestionContent();
                     // TODO print out suggestion to console
-                    String card = crm.requestCardRevealed();
+                    //tring card = crm.requestCardRevealed();
                     //print to console if not null
                     //need to handle if card is null,
                     //seems easier to to just pass null if card not found
                 }
-
 
                 if(isPlayerCurrentTurn) {
                     counterForShortCut++;
@@ -309,6 +302,7 @@ public class BoardPanel extends JPanel {
                 }
                 inRoom = true;
                 repaint();
+                btnAccuse.setEnabled(true);
                 //TODO --- > enable the accuse button
                 //TODO ----> test appropriate room and enable shortcut button
             }
@@ -399,10 +393,17 @@ public class BoardPanel extends JPanel {
                btnSuggest.setEnabled(false);
             }
         });
+
         btnAccuse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            Accusation();
+                makeAccusation();
+                if(isAccusationCorrect){
+                    //stop the timer
+                }
+                else{
+
+                }
             }
 
         });
@@ -456,9 +457,6 @@ public class BoardPanel extends JPanel {
                 clientFrame.addToLogConsole(c.getName());
         }
         clientFrame.addToLogConsole("------------------------");
-
-
-
     }
 
     public void paint(Graphics g) {
@@ -626,6 +624,16 @@ public class BoardPanel extends JPanel {
         //
     }
 
+    private void makeAccusation(){
+        Accusation accusation = new Accusation(()->{
+            JOptionPane.showMessageDialog(null,"You won!!!");
+            //TODO ---> more actions here
+        }, ()->{
+            JOptionPane.showMessageDialog(null, "Your accusation was incorrect. Game will continue without you.");
+            //TODO ---> more actions here
+        }, crm);
+    }
+
     public void drawInRoom(int roomNumber, int roomDirection)
     {
         //cons:1 ; billiard:2; lib:3; study:4; ball: 5; hall:6; lounge:8; kitchen:9; dining: 10
@@ -730,6 +738,10 @@ public class BoardPanel extends JPanel {
             System.out.println("error in draw in room.");
     }
 
+    public void setIsAccusationCorrect(boolean bValue){
+        isAccusationCorrect = bValue;
+    }
+
     private void initComponents(){
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBackground(Color.PINK);
@@ -812,105 +824,4 @@ public class BoardPanel extends JPanel {
     }
 
 
-    private void Accusation(){
-            
-            JFrame f; 
-         // label 
-          JLabel l, l1, l3, l4, I5, I6; 
-         // combobox 
-          JComboBox c1,c2,c3;
-
-           // create a new frame 
-          f = new JFrame("frame"); 
-          // array of string contating cities 
-          String s1[] = { "---", "Pipe", "Candle Stick","Revolver","Wrench","Knife", "Rope"}; 
-          String s2[] = { "---", "Conservatory", "Billiard Room", "Study Room", "Hall", "Lounge", "Dining Room", "Kitchen", "Ballroom", "Library" }; 
-          String s3[] = { "---", "Mr. Green","Professor Plum" , "Mrs. White", "Colonel Mustard", "Miss Scarlet", "Mrs. Peacock" }; 
-          // create checkbox 
-          c1 = new JComboBox(s1); 
-          c2 = new JComboBox(s2); 
-          c3 = new JComboBox(s3); 
-          // set Kolakata and male as selected items 
-          // using setSelectedIndex 
-          c1.setSelectedIndex(0); 
-          c2.setSelectedIndex(0); 
-          c3.setSelectedIndex(0); 
-          // set the checkbox as editable 
-          c1.setEditable(true); 
-          c2.setEditable(true); 
-          c3.setEditable(true); 
-          // create labels 
-          l = new JLabel("select your weapon"); 
-          l1 = new JLabel("weapon selected"); 
-          l3 = new JLabel("select your Room "); 
-          l4 = new JLabel("room selected"); 
-          I5 = new JLabel("select your suspect");
-          I6 = new JLabel("person selected");
-          // set color of text 
-          l.setForeground(Color.red); 
-          l1.setForeground(Color.blue); 
-          l3.setForeground(Color.red); 
-          l4.setForeground(Color.blue); 
-          I5.setForeground(Color.red); 
-          I6.setForeground(Color.blue); 
-          // create a new panel 
-          JPanel p = new JPanel(); 
-          p.add(l); 
-          // add combobox to panel 
-          p.add(c1); 
-          p.add(l1); 
-          p.add(l3); 
-          // add combobox to panel 
-          p.add(c2); 
-          p.add(l4); 
-          // add combobox to panel 
-          p.add(I5);
-          p.add(c3);
-          p.add(I6);
-          JButton send = new JButton("Send");
-          p.add(send);
-        // set a layout for panel 
-          p.setLayout(new FlowLayout()); 
-          // add panel to frame 
-          f.add(p); 
-            // set the size of frame 
-          f.setSize(400, 400); 
-             // new JButton
-             // panel.add(send);
-          f.show(); 
-  
-          send.addActionListener(new ActionListener() {
-  
-            public void actionPerformed(ActionEvent e) {
-             // setVisible(false);
-              String GuessFinal [] = {"---","---","---"};
-              GuessFinal[0] = (String) c1.getSelectedItem();
-              GuessFinal[2] = (String) c2.getSelectedItem();
-              GuessFinal[1] = (String) c3.getSelectedItem();
-              //try {
-               // send string to server
-               int numberCorrect = 0;
-               ArrayList<Card> envlopeDeck = crm.requestEnvelopeCardDeck();
-               for(int i = 0; i < 3;i++){
-                if(GuessFinal[i].equals((envlopeDeck.get(i).getName()))){
-                   numberCorrect++;
-                   }
-            }
-            if(numberCorrect == 3){
-              WasICoreect = true;
-            }
-               //WasICoreect = 
-  
-                if(WasICoreect == true){
-                    clientFrame.addToLogConsole("You WIN!!!!!!!!");
-                }
-               // run you win code
-                else{
-                    clientFrame.addToLogConsole("You Lose you can not play but you are still in the game");
-                }
-               // run you loss code
-              //}
-            }
-          });
-        }    
-  } 
+} // end class

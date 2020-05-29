@@ -21,6 +21,7 @@ public class GameState {
     private int playOrderIndex;
     private boolean isGameStarted;
     private boolean isSuggestionMade;
+    private StringBuilder stringBuilder;
 
     public GameState(){
         playerMap = new ConcurrentHashMap<Long, Player>(); //<- has to be here
@@ -312,6 +313,22 @@ public class GameState {
                 return true;
         }
         return false;
+    }
+
+    public void buildeSuggestionString(int suggestedCharacter, int suggestedWeapon, int suggestedRoom, Player currentPlayer){
+        stringBuilder = new StringBuilder();
+        String suggestingCharacter = currentPlayer.getName();
+        String suggestedCharacterStr = ClueGameConstants.CHARACTER_NAMES_ARRAY[suggestedCharacter - 1];
+        String suggestedWeaponStr = ClueGameConstants.WEAPON_NAMES_ARRAY[suggestedWeapon - 1];
+        String suggestedRoomStr = ClueGameConstants.ROOM_NAMES_ARRAY[suggestedRoom - 1];
+        stringBuilder.append(suggestingCharacter);
+        stringBuilder.append("---> I suggest: ").append(suggestedCharacterStr);
+        stringBuilder.append(", with the ").append(suggestedWeaponStr);
+        stringBuilder.append(", in the ").append(suggestedRoomStr);
+    }
+
+    public String getSuggestionContentString(){
+        return stringBuilder.toString();
     }
 
     /*

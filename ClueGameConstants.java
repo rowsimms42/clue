@@ -132,8 +132,12 @@ public final class ClueGameConstants {
 
     public static final int REQUEST_CARD_LIST_REVEALED = 70;
 
-    public static final int REQUEST_SUGGESTION_FALSE = 71;
-    
+    public static final int REPLY_FROM_SERVER_CONFIRM_CARD_LIST_REVEALED = 71;
+
+    public static final int REQUEST_SET_SUGGESTION_FALSE = 72;
+
+    public static final int REPLY_FROM_SERVER_CONFIRM_SET_SUGGESTION_FALSE = 73;
+
     public static final int UNSELECTABLE_TILE = -1;
 
     public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
@@ -220,12 +224,12 @@ public final class ClueGameConstants {
     };
 
     public static enum LEGEND{
-        MUSTARD(16576515, 690,610),
-        SCARLETT(16515918, 690,636),
-        GREEN(261123, 690,663),
+        MUSTARD(16576515, 690,600),
+        SCARLETT(16515918, 690,630),
+        GREEN(261123, 690,660),
         PEACOCK(234748, 690,690),
-        WHITE(16777212, 690,717),
-        PLUM(10290172, 690,744);
+        WHITE(16777212, 690,720),
+        PLUM(10290172, 690,750);
 
         private int color, x, y;
         LEGEND(int color, int x, int y){
