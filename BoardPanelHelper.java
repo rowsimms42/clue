@@ -94,4 +94,24 @@ public class BoardPanelHelper {
         return i;
     }
 
+    public int getDoorId(int row, int col) {
+        for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
+            if(door.getRow() == row && door.getCol() == col)
+                return door.getRoomNumber();
+        }
+        return 0;
+    }
+
+    public int getDirection(int row, int col) {
+        for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
+            if(door.getRow() == row && door.getCol() == col)
+                return door.getDirection();
+        }
+        return 0;
+    }
+
+    public Player getCurrentPlayerFromMap(Player currentPlayer, HashMap<Long, Player> map) {
+        return map.get(currentPlayer.getPlayerId());
+    }
+
 }
