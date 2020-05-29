@@ -129,6 +129,10 @@ public final class ClueGameConstants {
     public static final int REQUEST_SUBMITTING_SUG_CONTENT_NUM = 68;
 
     public static final int REPLY_FROM_SERVER_CONFIRM_SUBMITTING_SUG_CONTENT_NUM = 69;
+
+    public static final int REQUEST_CARD_LIST_REVEALED = 70;
+
+    public static final int REQUEST_SUGGESTION_FALSE = 71;
     
     public static final int UNSELECTABLE_TILE = -1;
 

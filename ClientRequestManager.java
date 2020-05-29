@@ -211,12 +211,12 @@ public class ClientRequestManager {
         return envelopeDeck;
     }
 
-    public String[] requestSuggestionContent(){
-        String[] suggestionContent = {};
+    public String requestSuggestionContent(){
+        String suggestionContent = "";
         try{
             clientConnection.send(new Message(ClueGameConstants.REQUEST_SUGGESTION_CONTENT, null));
             messageReceived = clientConnection.getMessage();
-            suggestionContent = (String[])messageReceived.getData();
+            suggestionContent = (String)messageReceived.getData();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
@@ -236,7 +236,42 @@ public class ClientRequestManager {
         return card;
     }
 
+    /**
+     * Called after player who made the suggestion 
+     * closes their window that shows who showed what
+     * cliet uses results to set value of suggestion button
+     * @return
+     */
+    public boolean requestSetSuggestionToFalse(){
+        boolean suggestionState = false;
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_SUGGESTION_FALSE, null));
+            messageReceived = clientConnection.getMessage();
+            suggestionState = (boolean) messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return suggestionState;
+    }
 
+    /**
+     * Function requested by player who is making the accusation
+     * returns String[] of players and what card they had that 
+     * matched the suggestion, there can up three strings in the list 
+     * example <String[0]> == "Mr Green reveals 'The Kitchen' to you"
+     * @return String []
+     */
+    public String[] requestRevealedCardList(){
+        String[] revealedCardList = {};
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_CARD_LIST_REVEALED, null));
+            messageReceived = clientConnection.getMessage();
+            revealedCardList = (String[]) messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
 
+        return revealedCardList;
+    }
 
 }

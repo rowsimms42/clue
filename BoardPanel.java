@@ -1,18 +1,23 @@
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.Timer;
-import javax.swing.border.LineBorder;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.geom.*;
-import java.io.IOException;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.Timer;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 public class BoardPanel extends JPanel {
@@ -187,7 +192,7 @@ public class BoardPanel extends JPanel {
 
                 isSuggestionMade = crm.requestIfSuggestionMade();
                 if(isSuggestionMade){
-                    String[] suggestion = crm.requestSuggestionContent();
+                    String suggestion = crm.requestSuggestionContent();
                     // TODO print out suggestion to console
                     String card = crm.requestCardRevealed();
                     //print to console if not null
