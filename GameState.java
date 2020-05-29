@@ -130,6 +130,10 @@ public class GameState {
         return ((1 << n) | number);
     }
 
+    public void setSpecificCharacterToAvailable(int index){
+        //TODO use setNthBit to reverse character availability
+    }
+
     public  void setNumberOfPlayers(int n){
         numberOfPlayers = n;
     }
@@ -140,6 +144,10 @@ public class GameState {
 
     public void addPlayer(long threadID, Player player){
         playerMap.put(threadID, player);
+    }
+
+    public void removePlayer(long threadID){
+        playerMap.remove(threadID);
     }
 
     public ConcurrentHashMap<Long, Player> getPlayerMap() {

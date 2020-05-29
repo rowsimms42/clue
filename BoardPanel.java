@@ -17,6 +17,7 @@ import javax.swing.plaf.basic.BasicArrowButton;
 
 public class BoardPanel extends JPanel {
 
+    private static final long serialVersionUID = 1L;
     ImageIcon gameboard;
     Timer startGameTimer, currentTurnTimer;
     String value;
@@ -58,7 +59,7 @@ public class BoardPanel extends JPanel {
 
     //Hashtable roomExitPictures;
     int counterForShortCut = 0, enterRoomCounter = 0;
-    boolean inShortcutRoom = false, inRoom = false;
+    boolean inShortcutRoom = false, inRoom = false, isSuggestionMade = false;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
         crm = new ClientRequestManager(clientConnection);
@@ -184,9 +185,15 @@ public class BoardPanel extends JPanel {
                 playerMap = crm.requestPlayerMap();
                 repaint();
 
-                //boolean isSuggestion = requestHasSuggestionBeenMade();
-                //if(isSuggestion)
-                //  requestWhatCardsIHad()
+                isSuggestionMade = crm.requestIfSuggestionMade();
+                if(isSuggestionMade){
+                    String[] suggestion = crm.requestSuggestionContent();
+                    // TODO print out suggestion to console
+                    String card = crm.requestCardRevealed();
+                    //print to console if not null
+                    //need to handle if card is null,
+                    //seems easier to to just pass null if card not found
+                }
 
 
                 if(isPlayerCurrentTurn) {
@@ -200,8 +207,6 @@ public class BoardPanel extends JPanel {
                     disableButtons(movementButtons);
                     btnRollDice.setEnabled(true);
                     buttonRollLimit = 1;
-                    //if(currentInRoomNumber > 0)
-                      //  btnSuggest.setEnabled(true);
                 }
             }
         });
@@ -284,8 +289,8 @@ public class BoardPanel extends JPanel {
                 //enterRoomCounter = counterForShortCut;
                 diceRollValue = 0;
                 addToDiceLog(Integer.toString(diceRollValue));
-                currentInRoomNumber = getDoorId(currentXgrid, currentYgrid);
-                int roomDirection = getDirection(currentXgrid, currentYgrid);
+                currentInRoomNumber = bph.getDoorId(currentXgrid, currentYgrid);
+                int roomDirection = bph.getDirection(currentXgrid, currentYgrid);
                 crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
                 drawInRoom(currentInRoomNumber, roomDirection);
                 String enterRoomStr = "room number: "+currentInRoomNumber+" room direction: "+roomDirection;
@@ -299,7 +304,6 @@ public class BoardPanel extends JPanel {
                 }
                 inRoom = true;
                 repaint();
-                //TODO --- > enable the suggestion button
                 //TODO --- > enable the accuse button
                 //TODO ----> test appropriate room and enable shortcut button
             }
@@ -420,26 +424,6 @@ public class BoardPanel extends JPanel {
         }
     }
 
-    public Player getCurrentPlayerFromMap(Player currentPlayer, HashMap<Long, Player> map) {
-        return (Player) map.get(currentPlayer.getPlayerId());
-    }
-
-    private int getDoorId(int row, int col) {
-        for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
-            if(door.getRow() == row && door.getCol() == col)
-                return door.getRoomNumber();
-        }
-        return 0;
-    }
-
-    private int getDirection(int row, int col) {
-        for(ClueGameConstants.DOORS door : ClueGameConstants.DOORS.values()) {
-            if(door.getRow() == row && door.getCol() == col)
-                return door.getDirection();
-        }
-        return 0;
-    }
-
     private void printCardsInPlayersDeck(ArrayList<Card> deck) {
         clientFrame.addToLogConsole("------------------------");
         clientFrame.addToLogConsole("Your cards are: ");
@@ -548,13 +532,13 @@ public class BoardPanel extends JPanel {
     }
 
     protected void addToDiceLog(String input){
-        textAreaDice.setText(input.toString());
+        textAreaDice.setText(input);
     }
 
     private void exitRoom(int roomNumber){
         ArrayList<Boolean[]> attemptedDoorsListArray = bph.getAttemptedDoorsList();
-        boolean isDoorBlocked = false;
-        int attemptedDoorsAmt = 0;
+        boolean isDoorBlocked;
+        int attemptedDoorsAmt;
 
         do {
             String roomName = ClueGameConstants.ROOM_NAMES_ARRAY[roomNumber - 1];
@@ -615,7 +599,7 @@ public class BoardPanel extends JPanel {
         String[] weaponNamesArr = ClueGameConstants.WEAPON_NAMES_ARRAY;
         ImageIcon allWeaponsImageIcon  = new ImageIcon(getClass().getResource("resources/allWeapons.png"));
         String suggestedWeapon = (String)JOptionPane.showInputDialog(null,
-                "Please Select Suggested Character", "Select Suggested Weapon", JOptionPane.PLAIN_MESSAGE,
+                "Please Select Suggested Weapon", "Select Suggested Weapon", JOptionPane.PLAIN_MESSAGE,
                 allWeaponsImageIcon, weaponNamesArr, weaponNamesArr[0]);
 
         //convert character name, weapon name, and room number into single int number
