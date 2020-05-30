@@ -211,9 +211,7 @@ public class BoardPanel extends JPanel {
                     printAndAssignBtnsArray(reqBtnArray);
                     enableOrdisableBtns(movementButtons);
                     disableButtons(movementButtons);
-                    btnShortcut.setEnabled(true); // added for testing
                     btnRollDice.setEnabled(true);
-                    btnShortcut.setEnabled(true); // redundent but neccarsyy
                     buttonRollLimit = 1;
                 }
             }
@@ -305,16 +303,10 @@ public class BoardPanel extends JPanel {
                     inShortcutRoom = true;
                 }
 
-                if (currentInRoomNumber == 1 || currentInRoomNumber == 8 || currentInRoomNumber == 4
-                        || currentInRoomNumber == 9) {
-                    inshortcutRoom = true;
-                }
-
                 inRoom = true;
                 repaint();
                 btnAccuse.setEnabled(true);
-                // TODO --- > enable the accuse button
-                // TODO ----> test appropriate room and enable shortcut button
+                btnSuggest.setEnabled(true);
             }
         });
 
@@ -438,6 +430,7 @@ public class BoardPanel extends JPanel {
                 buttonRollLimit--;
                 enableOrdisableBtns(movementButtons);
                 btnEndTurn.setEnabled(true);
+                btnAccuse.setEnabled(true);
             }
         });
 
@@ -614,6 +607,7 @@ public class BoardPanel extends JPanel {
         btnShortcut.setEnabled(false);
         btnExitRoom.setEnabled(false);
         btnSuggest.setEnabled(false);
+        btnAccuse.setEnabled(false);
     }
 
     protected void addToDiceLog(String input) {
