@@ -52,7 +52,7 @@ public class BoardPanel extends JPanel {
     ClientRequestManager crm;
     BoardPanelHelper bph;
     String[] reqBtnArray;
-    boolean inshortcutRoom = false, shortcutLimitChecker = false;
+    boolean shortcutLimitChecker = false;
     int suggestionCountForTimer = 0;
     final String[] roomExitPictureStrs = {"resources/conservatoryExit.png", "resources/billardExit.png",
             "resources/libraryExit.png", "resources/studyExit.png", "resources/ballroomExit.png",
@@ -321,12 +321,16 @@ public class BoardPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 btnShortcut.setEnabled(false);
                 btnExitRoom.setEnabled(false);
-                if (!shortcutLimitChecker) {
-                    if (currentInRoomNumber == 1) shortCutToLounge();
-                    if (currentInRoomNumber == 7) shortCutToConservatory();
-                    if (currentInRoomNumber == 4) shortCutToKitchen();
-                    if (currentInRoomNumber == 8) shortCutToStudy();
-                }
+                shortcutLimitChecker = false;
+
+                if(currentInRoomNumber == 1 && !shortcutLimitChecker)
+                    shortCutToLounge();
+                if(currentInRoomNumber == 7 && !shortcutLimitChecker)
+                    shortCutToConservatory();
+                if(currentInRoomNumber == 4 && !shortcutLimitChecker)
+                    shortCutToKitchen();
+                if(currentInRoomNumber == 8 && !shortcutLimitChecker)
+                    shortCutToStudy();
             }
         });
 
@@ -451,9 +455,9 @@ public class BoardPanel extends JPanel {
     }
 
     public void paint(Graphics g) {
-        //clientFrame.addToLogConsole("Paint start.....")
         super.paint(g);
         g.drawImage(gameboard.getImage(), 0, 0, null);
+        //Draw yourself as you move through the board
         g.setColor(new Color(currentPlayer.getCharacter().getColor()));
         Rectangle rectBounds = bph.getBounds(xC, yC);
         int rectXBounds = (int) rectBounds.getX();
@@ -461,7 +465,7 @@ public class BoardPanel extends JPanel {
         int rectBoundsHeight = (int) rectBounds.getHeight();
         int rectBoundsWidth  = (int) rectBounds.getWidth();
         g.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
-
+        //Draw other players at their present locations
         for(Entry<Long, Player> p : playerMap.entrySet()) {
             long id = (long)p.getKey();
             Player player = p.getValue();
