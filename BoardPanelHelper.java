@@ -72,7 +72,7 @@ public class BoardPanelHelper {
     }
 
     public boolean isRoomAShortCutRoom(int roomNumber){
-        return roomNumber == 1 || roomNumber == 8 || roomNumber == 4 || roomNumber == 7;
+        return roomNumber == 1 || roomNumber == 8 || roomNumber == 4 || roomNumber == 9;
     }
 
     public Rectangle getBounds(int x, int y) {

@@ -122,17 +122,17 @@ public final class ClueGameConstants {
 
     public static final int REPLY_FROM_SERVER_CONFIRM_CONFIRM_SUGGESTION_CONTENT = 65;
 
-    public static final int REQUEST_CARD_REVEALED = 66;
+    public static final int REQUEST_REVEALED_CARD = 66;
 
-    public static final int REPLY_FROM_SERVER_CONFIRM_CARD_REVEALED = 67;
+    public static final int REPLY_FROM_SERVER_CONFIRM__REVEALED_CARD = 67;
 
     public static final int REQUEST_SUBMITTING_SUG_CONTENT_NUM = 68;
 
     public static final int REPLY_FROM_SERVER_CONFIRM_SUBMITTING_SUG_CONTENT_NUM = 69;
 
-    public static final int REQUEST_CARD_LIST_REVEALED = 70;
+    public static final int REQUEST_REVEALED_CARD_LIST = 70;
 
-    public static final int REPLY_FROM_SERVER_CONFIRM_CARD_LIST_REVEALED = 71;
+    public static final int REPLY_FROM_SERVER_CONFIRM_REVEALED_CARD_LIST = 71;
 
     public static final int REQUEST_SET_SUGGESTION_FALSE = 72;
 
@@ -208,7 +208,7 @@ public final class ClueGameConstants {
         DINNING_DOOR1(15,12,3,9,1),
         KITCHEN_DOOR1(19,17,1,8, 1);
 
-        private int row, col, direction, roomNumber, doorID;
+        private final int row, col, direction, roomNumber,doorID;
         DOORS(int row, int col, int direction, int roomNumber, int doorID){
             this.row = row;
             this.col = col;
@@ -231,7 +231,7 @@ public final class ClueGameConstants {
         WHITE(16777212, 690,717),
         PLUM(10290172, 690,744);
 
-        private int color, x, y;
+        private final int color, x, y;
         LEGEND(int color, int x, int y){
             this.color = color;
             this.x = x;

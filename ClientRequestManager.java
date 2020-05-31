@@ -226,7 +226,7 @@ public class ClientRequestManager {
     public String requestCardRevealed(){
         String card = "";
         try{
-            clientConnection.send(new Message(ClueGameConstants.REQUEST_CARD_REVEALED, null));
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_REVEALED_CARD, null));
             messageReceived = clientConnection.getMessage();
             card = (String) messageReceived.getData();
         } catch (ClassNotFoundException | IOException e) {
@@ -260,7 +260,7 @@ public class ClientRequestManager {
     public ArrayList<String[]> requestRevealedCardList(){
        ArrayList<String[]> revealedCardsList = new ArrayList<>();
         try{
-            clientConnection.send(new Message(ClueGameConstants.REQUEST_CARD_LIST_REVEALED, null));
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_REVEALED_CARD_LIST, null));
             messageReceived = clientConnection.getMessage();
             revealedCardsList = (ArrayList<String[]>) messageReceived.getData();
         } catch (ClassNotFoundException | IOException e) {
@@ -268,8 +268,4 @@ public class ClientRequestManager {
         }
         return revealedCardsList;
     }
-
-
-
-
 }
