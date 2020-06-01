@@ -40,6 +40,7 @@ public class Accusation extends JFrame {
                     incorrectRun.run();
 
                 f.setVisible(false);
+                    dispose();
             }
         });
     }

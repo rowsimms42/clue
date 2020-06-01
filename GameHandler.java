@@ -221,6 +221,14 @@ public class GameHandler {
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_ENVELOPE_DECK;
                 returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_ENVELOPE_DECK, envelopeDeck);
                 return returnMessage;
+
+            case ClueGameConstants.REQUEST_REMOVE_PLAYER:
+                tempPlayer = (Player) msgObj.getData();
+                Long PlayerId =  tempPlayer.getPlayerId();
+                removePlayerFromGame(PlayerId, tempPlayer);
+                returnMessage = new Message(returnMessageID, tempPlayer);
+                return returnMessage;
+            
             /*
                 //function: requestSetSuggestionToFalse()
                 function: gameState.buildeSuggestionString(suggestedCharacter, suggestedWeapon, suggestedRoom);
@@ -265,11 +273,12 @@ public class GameHandler {
     }
 
     //remove player from game
+
     public void removePlayerFromGame(long ID, Player player){
         String name = player.getName();
         String[] characterNames = ClueGameConstants.CHARACTER_NAMES_ARRAY;
         int index = Arrays.asList(characterNames).indexOf(name);
-        gameState.setSpecificCharacterToAvailable(index);
+        gameState.removeFromTurnOrder(index);
 
 
         //gameState.removePlayer(ID);
