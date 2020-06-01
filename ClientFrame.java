@@ -25,6 +25,7 @@ import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.Arrays;
 
 public class ClientFrame extends JFrame {
 
@@ -37,7 +38,7 @@ public class ClientFrame extends JFrame {
     private JMenu gameMenu;
     private JMenuItem gameRulesMenuItem, seeCardDeckMenuItem;
     private int cardTotalInHand;
-    public int [] cardIdNumber = {0,0,0,0,0,0};
+    public int [] cardIdNumberArray = {-1,-1,-1,-1,-1,-1};
     int xPieceName = 130;
     int yPieceName = 22;
 
@@ -56,22 +57,20 @@ public class ClientFrame extends JFrame {
     int xe = 0;
     int ye = 0;
 
-    private final String[] playerCardscheaker = {"Pipe", "Candle Stick","Revolver","Wrench","Knife", "Rope",
-            "Conservatory", "Billiard Room", "Study Room", "Hall", "Lounge", "Dining Room", "Kitchen",
-            "Ballroom", "Library", "Mr. Green","Professor Plum" , "Mrs. White", "Colonel Mustard",
-            "Miss Scarlet", "Mrs. Peacock"};
+    ArrayList<String> playerCardsCheakerList;
 
     private final String[] pullPlayerCardsImageArray = { "resources/Lead_Pipe.JPG", "resources/Candlestick.JPG",
             "resources/Revolver.JPG", "resources/Wrench.JPG", "resources/Knife.JPG", "resources/Rope.JPG",
-            "resources/Conservatory.JPG", "resources/Billiard_Room.JPG","resources/Study.JPG","resources/Hall.JPG",
-            "resources/Lounge.JPG", "resources/Dinning_Room.JPG","resources/Kitchen.JPG","resources/BallRoom.JPG",
-            "resources/Library.JPG", "resources/green.png", "resources/plum.png", "resources/white.png",
+            "resources/Conservatory.JPG", "resources/Billiard_Room.JPG","resources/Library.JPG","resources/Study.JPG",
+            "resources/Ballroom.JPG", "resources/Hall.JPG","resources/Lounge.JPG","resources/Kitchen.JPG",
+            "resources/Dinning_room.JPG", "resources/green.png", "resources/plum.png", "resources/white.png",
             "resources/mustard.png", "resources/scarlett.png", "resources/peacock.png"};
     /**
      * Create the frame.
      */
     public ClientFrame(Client clientConnection) {
         client = clientConnection;
+        playerCardsCheakerList = getCardsList();
 
         //initialize all gui components minus the game board panel
         initComponents();
@@ -178,7 +177,6 @@ public class ClientFrame extends JFrame {
         g2.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
     }
 
-
     private Rectangle getBounds1(int x, int y) {
         return new Rectangle(x + 30,y + 16,18,18);
     }
@@ -192,12 +190,17 @@ public class ClientFrame extends JFrame {
     private void yourcards (){
         for(int i = 0; i < cardTotalInHand; i++){
             String yourhandofcards = gameBoardPanel.getPlayersCards().get(i).getName();
-            for(int j = 0; j <= 20; j++){
-                if (yourhandofcards.equals(playerCardscheaker[j])){
-                    cardIdNumber [i] = j;
-                }
-            }
+            cardIdNumberArray[i] = findCardInArray(yourhandofcards);;
         }
+    }
+
+    public int findCardInArray(String cardToFind){
+        for(int i = 0; i < playerCardsCheakerList.size(); i++){
+            String cardInList = playerCardsCheakerList.get(i);
+            if(cardInList.equals(cardToFind))
+                return i;
+        }
+        return -1;
     }
 
     private void initPanelsInArrayYourCards() {
@@ -212,7 +215,7 @@ public class ClientFrame extends JFrame {
         }
 
         for (int i = 0; i < cardTotalInHand; i++) {
-            int imageIndex  = cardIdNumber[i];
+            int imageIndex  = cardIdNumberArray[i];
             String imageStr = pullPlayerCardsImageArray[imageIndex];
             yourCardsImages[i] = new ImageIcon(getClass().getResource(imageStr));
             yourPlayerCards[i] = new JLabel(yourCardsImages[i]);
@@ -235,6 +238,17 @@ public class ClientFrame extends JFrame {
     protected void addToLegend(String input){
         legendStringBuilder.append(input).append("\n").append("\n");
         textAreaLegend.setText(legendStringBuilder.toString());
+    }
+
+    private ArrayList<String> getCardsList(){
+        ArrayList<String> allCardsList = new ArrayList<>();
+        String[] weaponCards = ClueGameConstants.WEAPON_NAMES_ARRAY;
+        String[] characterCards = ClueGameConstants.CHARACTER_NAMES_ARRAY;
+        String[] roomCards = ClueGameConstants.ROOM_NAMES_ARRAY;
+        allCardsList.addAll(Arrays.asList(weaponCards));
+        allCardsList.addAll(Arrays.asList(roomCards));
+        allCardsList.addAll(Arrays.asList(characterCards));
+        return allCardsList;
     }
 
     private void initComponents() {
