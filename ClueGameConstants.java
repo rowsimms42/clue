@@ -137,8 +137,10 @@ public final class ClueGameConstants {
     public static final int REQUEST_SET_SUGGESTION_FALSE = 72;
 
     public static final int REPLY_FROM_SERVER_CONFIRM_SET_SUGGESTION_FALSE = 73;
-    
-    public static final int  REQUEST_REMOVE_PLAYER = 74;
+
+    public static final int  REQUEST_REMOVE_PLAYER_FROM_TURN_ORDER = 74;
+
+    public static final int REPLY_FROM_SERVER_CONFIRM_REMOVE_PLAYER_FROM_TURN_ORDER = 75;
 
     public static final int UNSELECTABLE_TILE = -1;
 
