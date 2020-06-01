@@ -634,9 +634,30 @@ public class BoardPanel extends JPanel {
     private void makeAccusation(){
         Accusation accusation = new Accusation(()->{
             JOptionPane.showMessageDialog(null,"You won!!!");
+            diceRollValue = 0;
+            addToDiceLog(Integer.toString(diceRollValue));
+            crm.requestEndOfTurn();
+            disableButtons(movementButtons);
+            playerMap = crm.requestPlayerMap();
+            repaint();
+            if (!currentTurnTimer.isRunning()) {
+                currentTurnTimer.start();
+                btnEndTurn.setEnabled(false);
+            }
             //TODO ---> more actions here
         }, ()->{
             JOptionPane.showMessageDialog(null, "Your accusation was incorrect. Game will continue without you.");
+            diceRollValue = 0;
+            addToDiceLog(Integer.toString(diceRollValue));
+            crm.requestEndOfTurn();
+            disableButtons(movementButtons);
+            playerMap = crm.requestPlayerMap();
+            repaint();
+            if (!currentTurnTimer.isRunning()) {
+                currentTurnTimer.start();
+                btnEndTurn.setEnabled(false);
+            }
+            crm.requestRemovePlayer(currentPlayer.getPlayerId(), currentPlayer);
             //TODO ---> more actions here
         }, crm);
     }

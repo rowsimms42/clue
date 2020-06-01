@@ -244,6 +244,13 @@ public class GameHandler {
                 returnMessage = new Message(returnMessageID, tempPlayer.getCardSelectedToReveal());
                 return returnMessage;
 
+            case ClueGameConstants.REQUEST_REMOVE_PLAYER:
+                tempPlayer = (Player) msgObj.getData();
+                Long PlayerId =  tempPlayer.getPlayerId();
+                removePlayerFromGame(PlayerId, tempPlayer);
+                returnMessage = new Message(returnMessageID, tempPlayer);
+                return returnMessage;
+
 
             default:
                 return msgObj; //returns same object sent
