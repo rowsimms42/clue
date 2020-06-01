@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Arrays;
 
 public class GameHandler {
 
@@ -247,6 +246,12 @@ public class GameHandler {
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
                 gameState.removeFromTurnOrder(tempPlayer);
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_REMOVE_PLAYER_FROM_TURN_ORDER;
+                returnMessage = new Message(returnMessageID, null);
+                return returnMessage;
+            
+            case ClueGameConstants.REQUEST_SET_SUGGESTION_FALSE:
+                gameState.setIsSuggestionMade(false);
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFROM_SUGGESTION_FALSE;
                 returnMessage = new Message(returnMessageID, null);
                 return returnMessage;
 

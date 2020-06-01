@@ -6,7 +6,6 @@ public class ClueClient {
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 				new ClueStartFrame().setVisible(true);
-	
 			}
 		});
 

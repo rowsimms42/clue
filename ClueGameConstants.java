@@ -142,6 +142,8 @@ public final class ClueGameConstants {
 
     public static final int REPLY_FROM_SERVER_CONFIRM_REMOVE_PLAYER_FROM_TURN_ORDER = 75;
 
+    public static final int REPLY_FROM_SERVER_CONFROM_SUGGESTION_FALSE = 76;
+
     public static final int UNSELECTABLE_TILE = -1;
 
     public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",

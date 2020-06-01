@@ -1,18 +1,23 @@
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.Timer;
-import javax.swing.border.LineBorder;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.geom.*;
-import java.io.IOException;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.Timer;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 public class BoardPanel extends JPanel {
@@ -188,25 +193,33 @@ public class BoardPanel extends JPanel {
                 repaint();
 
                 isSuggestionMade = crm.requestIfSuggestionMade();
-
                 if(isSuggestionMade){
-                    if(suggestionCountForTimer == 0)
-                        clientFrame.addToLogConsole("-- A suggestion has been made ---");
+                    if(suggestionCountForTimer == 0){
+                        clientFrame.addToLogConsole("--- A suggestion has been made ---");
+                    }
                     //request the suggestion string
                     String suggestionStr = crm.requestSuggestionContent();
                     //Display the suggestion string to console log
-                   // playerMap = crm.requestPlayerMap();
-                    //Player tempPlayer = bph.getCurrentPlayerFromMap(currentPlayer, playerMap);
-                    //tempPlayer.getCardSelectedToReveal();
-                    //tempPlayer.getIsBeingSuggested();
+                    clientFrame.addToLogConsole(suggestionStr);
 
-                    //tring card = crm.requestCardRevealed();
-                    //print to console if not null
-                    //need to handle if card is null,
-                    //seems easier to to just pass null if card not found
+                    //Display the card, if matched, that was revealed
+                    String card = crm.requestCardRevealed();
+                    if(card != null) {
+                        clientFrame.addToLogConsole("You revealed: " + card);
+                    } else {
+                        clientFrame.addToLogConsole("You did not have matching card to the suggestion.");
+                    }
 
-                    //turn off am I being usggested
+                    //Get current player ID to test if they are the one being suggested
+                    playerMap = crm.requestPlayerMap();
+                    Player tempPlayer = bph.getCurrentPlayerFromMap(currentPlayer, playerMap);
+                    
+                    if(tempPlayer.getIsBeingSuggested()){
+                        //TODO draw the player in the room that was suggested
+                        //turn off am I being usggested
+                    }
                     suggestionCountForTimer++;
+                    crm.requestSetSuggestionToFalse();
                 }
 
                 if(isPlayerCurrentTurn) {
@@ -624,7 +637,7 @@ public class BoardPanel extends JPanel {
         }
 
         //tell server to turn set isSuggestion to false
-        crm.requestSetSuggestionToFalse();
+        //crm.requestSetSuggestionToFalse();
 
 
         suggestionCountForTimer = 0; // <--JOHN KEEP THIS and in the turn timer
