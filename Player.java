@@ -11,16 +11,18 @@ public class Player implements Serializable{
     private ArrayList<Card> playerCardDeck;
     private int currentXLocation, currentYLocation;
     /*Rooms in the ROOM enum have a id value of 1 - 10.
-    If player is in a room, then roomNumber will have a 
+    If player is in a room, then roomNumber will have a
     value between 1 - 10. If not in a room, then value is 0*/
-    private int roomNumber = 0; 
+    private int roomNumber = 0;
     private boolean isPlayerTurn = false;
     private boolean isBeingSuggested = false;
     private boolean isBeingAccused = false;
     private boolean isGoingFirst = false;
     private boolean isCanStartgame = false;
-	
-    
+    private int amountOfSuggestedCardsInDeck = 0;
+    private String cardSelectedToReveal = null;
+    private String suggestionRoomNameRelocation;
+
     public Player(long Id){
         this.Id = Id;
         playerCardDeck = new ArrayList<Card>();
@@ -28,58 +30,61 @@ public class Player implements Serializable{
 
     //Copy constructor
     public Player(Player oldPlayer) {
-    	this.playerCardDeck =  new ArrayList<Card>();
-    	this.playerCharacter = oldPlayer.playerCharacter;
-    	this.locationArray = oldPlayer.locationArray;
-    	this.Id = oldPlayer.Id;
-    	this.playerCardDeck = oldPlayer.playerCardDeck;
-    	//Collections.copy(this.playerCardDeck,oldPlayer.playerCardDeck);
-    	this.currentXLocation = oldPlayer.currentXLocation;
-    	this.currentYLocation = oldPlayer.currentYLocation;
-    	this.roomNumber = oldPlayer.roomNumber;
-    	this.isPlayerTurn = oldPlayer.isPlayerTurn;
-    	this.isBeingSuggested = oldPlayer.isBeingSuggested;
-    	this.isBeingAccused = oldPlayer.isBeingAccused;
-    	this.isGoingFirst = oldPlayer.isGoingFirst;
-    	this.isCanStartgame = oldPlayer.isCanStartgame;
+        this.playerCardDeck =  new ArrayList<Card>();
+        this.playerCharacter = oldPlayer.playerCharacter;
+        this.locationArray = oldPlayer.locationArray;
+        this.Id = oldPlayer.Id;
+        this.playerCardDeck = oldPlayer.playerCardDeck;
+        this.currentXLocation = oldPlayer.currentXLocation;
+        this.currentYLocation = oldPlayer.currentYLocation;
+        this.roomNumber = oldPlayer.roomNumber;
+        this.isPlayerTurn = oldPlayer.isPlayerTurn;
+        this.isBeingSuggested = oldPlayer.isBeingSuggested;
+        this.isBeingAccused = oldPlayer.isBeingAccused;
+        this.isGoingFirst = oldPlayer.isGoingFirst;
+        this.isCanStartgame = oldPlayer.isCanStartgame;
+        this.amountOfSuggestedCardsInDeck = oldPlayer.amountOfSuggestedCardsInDeck;
+        this.cardSelectedToReveal = oldPlayer.cardSelectedToReveal;
+        this.suggestionRoomNameRelocation = oldPlayer.suggestionRoomNameRelocation;
+
     }
-    
+
     public long getPlayerId(){
         return Id;
     }
-    
+
     public void setIsCanStartGame(boolean value) {
-    	isCanStartgame = value;
+        isCanStartgame = value;
     }
-    
+
     public boolean getIsCanStartGame() {
-    	return isCanStartgame;
+        return isCanStartgame;
     }
-    
+
     public void setIsGoingFirst(boolean value) {
-    	isGoingFirst = value;
+        isGoingFirst = value;
     }
-    
+
     public boolean getIsGoingFirst() {
-    	return isGoingFirst;
+        return isGoingFirst;
     }
-    
+
     public void setIsBeingSuggest(boolean value) {
-    	isBeingSuggested = value;
+        isBeingSuggested = value;
     }
-    
+
     public boolean getIsBeingSuggested() {
-    	return isBeingSuggested;
+        return isBeingSuggested;
     }
-    
+
     public void setIsBeingAccused(boolean value) {
-    	isBeingAccused = value;
+        isBeingAccused = value;
     }
-    
+
     public boolean getIsBeingAccused() {
-    	return isBeingAccused;
+        return isBeingAccused;
     }
-    
+
     public void setRoomLocation(int roomNumber){
         this.roomNumber = roomNumber;
     }
@@ -87,27 +92,39 @@ public class Player implements Serializable{
     public int getRoomLocation(){
         return roomNumber;
     }
-    
+
     public void setIsPlayerTurn(boolean value) {
-    	isPlayerTurn = value;
+        isPlayerTurn = value;
     }
-    
+
     public boolean getIsPlayerTurn() {
-    	return isPlayerTurn;
+        return isPlayerTurn;
     }
+
+    public void setAmountOfSuggestedCardsInDeck(int amount) {amountOfSuggestedCardsInDeck = amount;}
+
+    public int getAmountOfSuggestedCardsInDeck(){ return amountOfSuggestedCardsInDeck;}
+
+    public void setCardSelectedToReveal(String revealCard){ cardSelectedToReveal = revealCard;}
+
+    public String getCardSelectedToReveal(){return cardSelectedToReveal;}
+
+    public void setSuggestionRoomNameRelocation(String newRoomName){suggestionRoomNameRelocation = newRoomName;}
+
+    public String getSuggestionRoomNameRelocation(){return suggestionRoomNameRelocation;}
 
     public void setCharacter(Characters character) {
         playerCharacter = character;
         setCurrentXLocation(playerCharacter.getxStarting());
         setCurrentYLocation(playerCharacter.getyStarting());
     }
-    
+
     public Characters getCharacter() {
-    	return playerCharacter;
+        return playerCharacter;
     }
 
     public String getName(){
-       return playerCharacter.getName();
+        return playerCharacter.getName();
     }
 
     public void setLocation(int[] playerLocation){
@@ -139,4 +156,3 @@ public class Player implements Serializable{
         return currentYLocation;
     }
 } //end class
-

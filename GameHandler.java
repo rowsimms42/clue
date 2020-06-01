@@ -10,11 +10,7 @@ public class GameHandler {
 
     GameHandler(GameState gameState) {
         this.gameState = gameState;
-        playerMapTemp = new HashMap<Long, Player>();
-    }
-
-    public GameState getGameState() {
-        return this.gameState;
+        playerMapTemp = new HashMap<>();
     }
 
     /* Increment the number of players in the game state class */
@@ -34,33 +30,28 @@ public class GameHandler {
 
     public Message parseMessage(Message msgObj, long threadID) {
         Message returnMessage;
-        Player tempPlayer, nextPlayer;
+        Player tempPlayer, nextPlayer, suggestingPlayer;
         Characters tempCharacter;
-        HashMap<Long, Player> playerMapTemp = new HashMap<Long, Player>();
-        ArrayList<Card> playersDeck = new ArrayList<>();
         ArrayList<Characters> nonPlayingCharList;
-        ArrayList<Card> envelopeDeck = new ArrayList<>();
         int returnMessageID = 0;
         int msgID = msgObj.getMessageID();
-        // System.out.println("Incoming to server MessageID: " + msgID);
         switch (msgID) {
 
             case ClueGameConstants.REQUEST_AVAILABLE_CHARACTERS:
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_AVAILABLE_CHARACTERS;
-                returnMessage = new Message(returnMessageID, Integer.valueOf(gameState.getAvailableCharacters()));
+                returnMessage = new Message(returnMessageID, gameState.getAvailableCharacters());
                 return returnMessage;
 
             case ClueGameConstants.REQUEST_IS_SELECTED_CHARACTER_AVAILABLE:
                 characterIndex = (Integer) msgObj.getData();
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_IS_CHARACTER_AVAILABLE;
-                returnMessage = new Message(returnMessageID, Boolean.valueOf(gameState.isSpecificCharacterAvailable(characterIndex)));
+                returnMessage = new Message(returnMessageID, gameState.isSpecificCharacterAvailable(characterIndex));
                 return returnMessage;
 
             case ClueGameConstants.REQUEST_INDEED_CHARACTER_AVAILABLE:
                 characterIndex = (Integer) msgObj.getData();
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_IS_CHARACTER_AVAILABLE;
-                returnMessage = new Message(returnMessageID, Boolean.valueOf(gameState.isSpecificCharacterAvailable(characterIndex)));
-                //System.out.println("Client wants to confirm that character is indeed available");
+                returnMessage = new Message(returnMessageID, gameState.isSpecificCharacterAvailable(characterIndex));
                 return returnMessage;
 
             case ClueGameConstants.REQUEST_MARK_CHARACTER_AS_TAKEN:
@@ -103,8 +94,7 @@ public class GameHandler {
                 return returnMessage;
 
             case ClueGameConstants.REQUEST_PLAYER_MAP:
-                playerMapTemp.clear();
-                playerMapTemp.putAll(gameState.getPlayerMap());
+                HashMap<Long, Player> playerMapTemp = new HashMap<>(gameState.getPlayerMap());
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_PLAYER_MAP;
                 returnMessage = new Message(returnMessageID, playerMapTemp);
                 return returnMessage;
@@ -181,7 +171,7 @@ public class GameHandler {
             case ClueGameConstants.REQUEST_IF_GAME_HAS_STARTED:
                 boolean isHasGameStarted = gameState.getIsGameStarted();
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_IF_GAME_HAS_STARTED;
-                returnMessage = new Message(returnMessageID, Boolean.valueOf(isHasGameStarted));
+                returnMessage = new Message(returnMessageID, isHasGameStarted);
                 return returnMessage;
 
             case ClueGameConstants.REQUEST_DEAL_CARDS:
@@ -192,8 +182,7 @@ public class GameHandler {
 
             case ClueGameConstants.REQUEST_PlAYERS_DECK:
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-                playersDeck.clear();
-                playersDeck.addAll(tempPlayer.getPlayerDeck());
+                ArrayList<Card> playersDeck = new ArrayList<>(tempPlayer.getPlayerDeck());
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_PlAYERS_DECK;
                 returnMessage = new Message(returnMessageID, playersDeck);
                 return returnMessage;
@@ -216,56 +205,45 @@ public class GameHandler {
                 return returnMessage;
 
             case ClueGameConstants.REQUEST_ENVELOPE_DECK:
-                envelopeDeck.clear();
-                envelopeDeck.addAll(gameState.getEnvelopeDeck());
+                ArrayList<Card> envelopeDeck = new ArrayList<>(gameState.getEnvelopeDeck());
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_ENVELOPE_DECK;
-                returnMessage = new Message(ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_ENVELOPE_DECK, envelopeDeck);
+                returnMessage = new Message(returnMessageID, envelopeDeck);
                 return returnMessage;
 
-            case ClueGameConstants.REQUEST_REMOVE_PLAYER:
-                tempPlayer = (Player) msgObj.getData();
-                Long PlayerId =  tempPlayer.getPlayerId();
-                removePlayerFromGame(PlayerId, tempPlayer);
-                returnMessage = new Message(returnMessageID, tempPlayer);
+            case ClueGameConstants.REQUEST_SUGGESTION_CONTENT:
+                String suggestionContentString = gameState.getSuggestionContentString();
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_CONFIRM_SUGGESTION_CONTENT;
+                returnMessage = new Message(returnMessageID, suggestionContentString);
                 return returnMessage;
-            
-            /*
-                //function: requestSetSuggestionToFalse()
-                function: gameState.buildeSuggestionString(suggestedCharacter, suggestedWeapon, suggestedRoom);
-                //function: requestRevealedCardsList()
-                //function: gameState.buildRevealedCardsList();
 
             case ClueGameConstants.REQUEST_SUBMITTING_SUG_CONTENT_NUM:
                 int suggestionConent = (int) msgObj.getData();
                 int suggestedCharacter = suggestionConent / 100;
                 int suggestedWeapon = (suggestionConent - suggestedCharacter * 100) / 10;
                 int suggestedRoom = (suggestionConent % 100) % 10;
-                tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-                //gameState.setIsSuggestionMade(true);
-                gameState.buildeSuggestionString(suggestedCharacter, suggestedWeapon, suggestedRoom, tempPlayer);
+                suggestingPlayer = (Player) gameState.getPlayerMap().get(threadID);
+                gameState.setIsSuggestionMade(true);
+                gameState.buildSuggestionString(suggestedCharacter, suggestedWeapon, suggestedRoom, suggestingPlayer);
                 //TODO --> update suggested player's location to draw in suggested room
-                    //suggestedPlayer.setCurrentXLocation(4);
-                    //suggestedPlayer.setCurrentYLocation(7);
-                //TODO ---> trigger reviewing other's cards.
-
-
-                //TODO:
-                //TODO continue; */
-            /*
-            case ClueGameConstants.REQUEST_SUGGESTION_CONTENT:
-                String suggestionContentString = gameState.getSuggestionContentString();
-                returnMessage = new Message(ClueGameConstants., suggestionContentString);
-                return returnMessage;*/
-            /*
-            case ClueGameConstants.REQUEST_REVEALED_CARDS_ARRAY:
-                //TODO cycle through suggestion and match with players' hands
-                gameState.builderRevealedCardsList();
-                ArrayList<Sting[]> revealedCards = new ArrayList<>();
-                revealedCards.add(new String[]{"Mr.Whte", "card they had"});
-                returnMessage = new Message(ClueGameConstants.REPLY_REVEALED_CARD, null); //TODO not null
+                //suggestedPlayer.setCurrentXLocation(4);
+                //suggestedPlayer.setCurrentYLocation(7);
+                gameState.buildRevealedCardsList();
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_SUBMITTING_SUG_CONTENT_NUM;
+                returnMessage = new Message(returnMessageID, null);
                 return returnMessage;
 
-            case ClueGameConstants.REQUEST_REVEALED_CARD: */
+            case ClueGameConstants.REQUEST_REVEALED_CARD_LIST:
+            returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_REVEALED_CARD_LIST;
+            ArrayList<String[]> revealedList = gameState.getRevealedCardsList();
+            returnMessage = new Message(returnMessageID, revealedList);
+            return returnMessage;
+
+            case ClueGameConstants.REQUEST_REVEALED_CARD:
+                tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM__REVEALED_CARD;
+                returnMessage = new Message(returnMessageID, tempPlayer.getCardSelectedToReveal());
+                return returnMessage;
+
 
             default:
                 return msgObj; //returns same object sent

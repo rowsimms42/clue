@@ -3,6 +3,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.HashMap;
 
 class RequestHandler extends Thread {
     private Socket socket;
@@ -12,13 +13,9 @@ class RequestHandler extends Thread {
     ObjectOutputStream oos;
     Player player;
 
-
     RequestHandler(Socket socket, GameHandler gameHandler) {
-    	System.out.println("In Request Handler: gameHandler: " + gameHandler);
-    	System.out.println("In Request Handler: gameState: " + gameHandler.getGameState());
         this.socket = socket;
         this.gameHandler = gameHandler;
-        //player = Player();
 
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
@@ -36,9 +33,9 @@ class RequestHandler extends Thread {
             //Print the thread id
             System.out.println("Thread ID is: " + getId());
 
-            //Create a new player and assign its id from the thread ID. 
+            //Create a new player and assign its id from the thread ID.
             player = new Player(getId());
-            
+
             //add the new player to the gamestate
             gameHandler.addPlayerToGame(getId(), player);
 
@@ -47,19 +44,19 @@ class RequestHandler extends Thread {
             System.out.println("Player amount: " + gameHandler.getNumberOfCurrentPlayers());
 
             // sleep gives time to client to set up input & output streams
-            Thread.sleep(100); 
+            Thread.sleep(100);
 
             while (socket.isConnected()) {
                  /*listen for a message from the client and handle
                  the message logic. Also return new message to be sent
                  to the client */
-                 returnedMessage = listenForMessageFromClient();
-                 //Send the new messaget to the client. 
-                 sendMessageToClient(returnedMessage);
+                returnedMessage = listenForMessageFromClient();
+                //Send the new messaget to the client.
+                sendMessageToClient(returnedMessage);
             }
-        
+
         } catch (Exception e) {
-        	System.out.println("\nException handled in Request Handler run(), client is disconnected");
+            System.out.println("\nException handled in Request Handler run(), client is disconnected");
             try {
                 socket.close(); //close the socket
                 Server.removeSocket(socket); //remove socket from clientSocketList
@@ -68,7 +65,7 @@ class RequestHandler extends Thread {
             }
             System.out.println("Connection closed for player: " + this.getId());
             System.out.println("Server listening for more connectoins...");
-            /* TODO add function to set character to available
+             /* TODO add function to set character to available
                TODO to add function to decrement player count */
         }
     }
@@ -85,7 +82,6 @@ class RequestHandler extends Thread {
             Message returnObject = gameHandler.parseMessage(gameObject, getId());
             return returnObject;
         } catch (SocketException e) {
-            //e.printStackTrace();
             Message errorMessage = new Message(ClueGameConstants.ERROR_CODE, new String("Error!!!"));
             try {
                 ois.close();
@@ -114,5 +110,4 @@ class RequestHandler extends Thread {
             return errorMessage;
         }
     }
-
 } // Class RequestHandler

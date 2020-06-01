@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameState {
 
     private int availableCharacters;
-    private Boolean availableCharactersArray[];
+    private Boolean[] availableCharactersArray;
     private int numberOfPlayers;
     private final ConcurrentHashMap<Long, Player> playerMap ;
     private HashMap<String, Characters> characterMap;
@@ -22,6 +23,8 @@ public class GameState {
     private boolean isGameStarted;
     private boolean isSuggestionMade;
     private StringBuilder stringBuilder;
+    private String suggestedCharacterStr, suggestedWeaponStr, suggestedRoomStr;
+    private ArrayList<String[]> revealedCardsList;
 
     public GameState(){
         playerMap = new ConcurrentHashMap<Long, Player>(); //<- has to be here
@@ -42,6 +45,7 @@ public class GameState {
         movementOptions = new MovementOptions();
         playerTurnOrderArrayList = new ArrayList<>();
         nonPlayingCharactersArrayList = new ArrayList<>();
+        revealedCardsList = new ArrayList<>();
 
         availableCharacters = 0;
         numberOfPlayers = 0;
@@ -82,6 +86,8 @@ public class GameState {
         return nonPlayingCharactersArrayList;
     }
 
+    public ArrayList<String[]> getRevealedCardsList(){return revealedCardsList;}
+
     public int getPlayOrderIndex() {
         return playOrderIndex;
     }
@@ -90,9 +96,7 @@ public class GameState {
         playOrderIndex = value;
     }
 
-    public void setIsGameStarted(boolean value) {
-        isGameStarted = value;
-    }
+    public void setIsGameStarted(boolean value) { isGameStarted = value; }
 
     public boolean getIsGameStarted() {
         return isGameStarted;
@@ -172,6 +176,8 @@ public class GameState {
         return ClueGameConstants.CHARACTER_NAMES_ARRAY[index - 1];
     }
 
+    public String getSuggestionContentString(){ return stringBuilder.toString(); }
+
     public int rollDice(){
         Random rand = new Random();
         int dice_1 = rand.nextInt(6) + 1;
@@ -194,39 +200,30 @@ public class GameState {
 
     private ArrayList<Card> createAndFillWeaponCardDeck(){
         ArrayList<Card> weaponsList = new ArrayList<Card>();
-        weaponsList.add(new WeaponCard("Pipe", 1, 1));
-        weaponsList.add(new WeaponCard("Candle Stick", 2, 1));
-        weaponsList.add(new WeaponCard("Revolver", 3, 1));
-        weaponsList.add(new WeaponCard("Wrench", 4, 1));
-        weaponsList.add(new WeaponCard("Knife", 5, 1));
-        weaponsList.add(new WeaponCard("Rope", 6, 1));
+        for(int i = 0; i < 6; i++) {
+            String weaponName = ClueGameConstants.WEAPON_NAMES_ARRAY[i];
+            weaponsList.add(new WeaponCard(weaponName, i+1, 1));
+        }
         Collections.shuffle(weaponsList);
         return weaponsList;
     }
 
     private ArrayList<Card> createAndFillRoomCardDeck(){
         ArrayList<Card> roomList = new ArrayList<Card>();
-        roomList.add(new RoomCard("Conservatory", 1, 3));
-        roomList.add(new RoomCard("Billard Room", 2, 3));
-        roomList.add(new RoomCard("Study Room", 3, 3));
-        roomList.add(new RoomCard("Hall", 4, 3));
-        roomList.add(new RoomCard("Lounge", 5, 3));
-        roomList.add(new RoomCard("Dining Room", 6, 3));
-        roomList.add(new RoomCard("Kitchen", 7, 3));
-        roomList.add(new RoomCard("Ballroom", 8, 3));
-        roomList.add(new RoomCard("Library", 9, 3));
+        for(int i = 0; i < 9; i++) {
+            String roomName = ClueGameConstants.ROOM_NAMES_ARRAY[i];
+            roomList.add(new RoomCard(roomName, i+1, 3));
+        }
         Collections.shuffle(roomList);
         return roomList;
     }
 
     private ArrayList<Card> createAndFillSuspectCardDeck(){
         ArrayList<Card> suspectList = new ArrayList<Card>();
-        suspectList.add(new SuspectCard("Colonel Mustard", 1, 2));
-        suspectList.add(new SuspectCard("Miss Scarlet", 2, 2));
-        suspectList.add(new SuspectCard("Professor Plum", 3, 2));
-        suspectList.add(new SuspectCard("Mr. Green", 4, 2));
-        suspectList.add(new SuspectCard("Mrs. White", 5, 2));
-        suspectList.add(new SuspectCard("Mrs. Peacock", 6, 2));
+        for(int i = 0; i < 6; i++){
+            String characterName = ClueGameConstants.CHARACTER_NAMES_ARRAY[i];
+            suspectList.add(new SuspectCard(characterName,i+1, 2));
+        }
         Collections.shuffle(suspectList);
         return suspectList;
     }
@@ -295,7 +292,6 @@ public class GameState {
 
     public boolean findIfPlayerCanStartGame(Player player) {
         long lowestIDNumber = Collections.min(playerMap.keySet());
-        //return (player.getPlayerId() == lowestIDNumber) ? true : false;
         return player.getPlayerId() == lowestIDNumber;
     }
 
@@ -311,7 +307,7 @@ public class GameState {
         }
     }
 
-    private boolean isCharacterInMap(String name) {
+    public boolean isCharacterInMap(String name) {
         for(long id : playerMap.keySet()){
             Characters character = playerMap.get(id).getCharacter();
             if(character.getName().equals(name))
@@ -320,25 +316,86 @@ public class GameState {
         return false;
     }
 
-    public void buildeSuggestionString(int suggestedCharacter, int suggestedWeapon, int suggestedRoom, Player currentPlayer){
+    public Player getPlayerFromMap(String characterName){
+        for(long id : playerMap.keySet()) {
+            Player player = playerMap.get(id);
+            if(player.getName().equals(characterName))
+                return player;
+        }
+        return null;
+    }
+
+    public void buildSuggestionString(int suggestedCharacter, int suggestedWeapon, int suggestedRoom, Player currentPlayer){
         stringBuilder = new StringBuilder();
         String suggestingCharacter = currentPlayer.getName();
-        String suggestedCharacterStr = ClueGameConstants.CHARACTER_NAMES_ARRAY[suggestedCharacter - 1];
-        String suggestedWeaponStr = ClueGameConstants.WEAPON_NAMES_ARRAY[suggestedWeapon - 1];
-        String suggestedRoomStr = ClueGameConstants.ROOM_NAMES_ARRAY[suggestedRoom - 1];
+        suggestedCharacterStr = ClueGameConstants.CHARACTER_NAMES_ARRAY[suggestedCharacter - 1];
+        suggestedWeaponStr = ClueGameConstants.WEAPON_NAMES_ARRAY[suggestedWeapon - 1];
+        suggestedRoomStr = ClueGameConstants.ROOM_NAMES_ARRAY[suggestedRoom - 1];
         stringBuilder.append(suggestingCharacter);
         stringBuilder.append("---> I suggest: ").append(suggestedCharacterStr);
         stringBuilder.append(", with the ").append(suggestedWeaponStr);
         stringBuilder.append(", in the ").append(suggestedRoomStr);
     }
 
-    public String getSuggestionContentString(){
-        return stringBuilder.toString();
+    public void buildRevealedCardsList(){
+        Player newPlayer;
+        if(!revealedCardsList.isEmpty()) revealedCardsList.clear();
+        String characterName, cardName;
+        ArrayList<String> tempListCardsFoundInPlayerDeck = new ArrayList<>();
+        for(long id : playerMap.keySet()){
+            Player player = playerMap.get(id);
+            characterName = player.getName();
+            for(int i = 0; i < player.getPlayerDeck().size(); i++){
+                Card tempCard = player.getPlayerDeck().get(i);
+                fillTempListCardsFound(tempCard, tempListCardsFoundInPlayerDeck);
+            }
+            if(tempListCardsFoundInPlayerDeck.size() >= 2) {
+                cardName = getRandomCardToReveal(tempListCardsFoundInPlayerDeck);
+                player.setCardSelectedToReveal(cardName);
+                player.setAmountOfSuggestedCardsInDeck(tempListCardsFoundInPlayerDeck.size());
+                newPlayer = new Player(player);
+                playerMap.put(newPlayer.getPlayerId(), newPlayer);
+            }
+            else if(tempListCardsFoundInPlayerDeck.size() == 1) {
+                cardName = tempListCardsFoundInPlayerDeck.get(0);
+                player.setCardSelectedToReveal(cardName);
+                player.setAmountOfSuggestedCardsInDeck(tempListCardsFoundInPlayerDeck.size());
+                newPlayer = new Player(player);
+                playerMap.put(newPlayer.getPlayerId(), newPlayer);
+            }
+            else {
+                cardName = "no cards";
+                player.setCardSelectedToReveal(cardName);
+                player.setAmountOfSuggestedCardsInDeck(tempListCardsFoundInPlayerDeck.size());
+                newPlayer = new Player(player);
+                playerMap.put(newPlayer.getPlayerId(), newPlayer);
+            }
+            revealedCardsList.add(new String[]{characterName,cardName});
+            tempListCardsFoundInPlayerDeck.clear();
+        }
+    }
+
+    private void fillTempListCardsFound(Card card, ArrayList<String> tempCardList){
+        if(card.getName().equals(suggestedCharacterStr))
+            tempCardList.add(card.getName());
+        else if(card.getName().equals(suggestedWeaponStr))
+            tempCardList.add(card.getName());
+        else if(card.getName().equals(suggestedRoomStr))
+            tempCardList.add(card.getName());
+    }
+
+    private String getRandomCardToReveal(ArrayList<String> cardList){
+        Random random = new Random();
+        int max = cardList.size() - 1;
+        int min = 1;
+        int randomNumber = random.nextInt((max-min) + 1) + min;
+        int randomIndex = randomNumber - 1;
+        return cardList.get(randomIndex);
     }
 
 
 
-  
+    /*
     public void removePlayerFromGame(long ID, Player player) {
         String name = player.getName();
         String[] characterNames = ClueGameConstants.CHARACTER_NAMES_ARRAY;
@@ -347,5 +404,5 @@ public class GameState {
     } 
 
 
-
+*/
 } //end class
