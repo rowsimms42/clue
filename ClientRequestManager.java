@@ -269,14 +269,12 @@ public class ClientRequestManager {
         return revealedCardsList;
     }
 
-    public void requestRemovePlayer(long ID, Player player){
+    public void requestRemovePlayer(){
         try{
-            clientConnection.send(new Message(ClueGameConstants.REQUEST_REMOVE_PLAYER, player));
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_REMOVE_PLAYER_FROM_TURN_ORDER, null));
             messageReceived = clientConnection.getMessage();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
     }
-
-
 }

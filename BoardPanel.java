@@ -322,7 +322,6 @@ public class BoardPanel extends JPanel {
                 btnShortcut.setEnabled(false);
                 btnExitRoom.setEnabled(false);
                 shortcutLimitChecker = false;
-
                 if(currentInRoomNumber == 1 && !shortcutLimitChecker)
                     shortCutToLounge();
                 if(currentInRoomNumber == 7 && !shortcutLimitChecker)
@@ -657,7 +656,8 @@ public class BoardPanel extends JPanel {
                 currentTurnTimer.start();
                 btnEndTurn.setEnabled(false);
             }
-            crm.requestRemovePlayer(currentPlayer.getPlayerId(), currentPlayer);
+            //remove the current player from the turn order
+            crm.requestRemovePlayer();
             //TODO ---> more actions here
         }, crm);
     }

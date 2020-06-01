@@ -118,7 +118,6 @@ public class GameHandler {
                 int nextTurnOrder = gameState.getNextPlayerTurnNumber();
                 gameState.setPlayOrderIndex(gameState.getPlayOrderIndex() + 1);
                 nextPlayer = (Player) gameState.getPlayerByTurnOrder(nextTurnOrder);
-                if (nextPlayer == null) System.out.println("Next turn player was null");
                 assert nextPlayer != null;
                 tempPlayer = new Player((Player) gameState.getPlayerMap().get(nextPlayer.getPlayerId()));
                 tempPlayer.setIsPlayerTurn(true);
@@ -244,30 +243,22 @@ public class GameHandler {
                 returnMessage = new Message(returnMessageID, tempPlayer.getCardSelectedToReveal());
                 return returnMessage;
 
-            case ClueGameConstants.REQUEST_REMOVE_PLAYER:
-                tempPlayer = (Player) msgObj.getData();
-                Long PlayerId =  tempPlayer.getPlayerId();
-                removePlayerFromGame(PlayerId, tempPlayer);
-                returnMessage = new Message(returnMessageID, tempPlayer);
+            case ClueGameConstants.REQUEST_REMOVE_PLAYER_FROM_TURN_ORDER:
+                tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
+                gameState.removeFromTurnOrder(tempPlayer);
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_REMOVE_PLAYER_FROM_TURN_ORDER;
+                returnMessage = new Message(returnMessageID, null);
                 return returnMessage;
-
 
             default:
                 return msgObj; //returns same object sent
         }
     }
 
-    //remove player from game
-
-    public void removePlayerFromGame(long ID, Player player){
-        String name = player.getName();
-        String[] characterNames = ClueGameConstants.CHARACTER_NAMES_ARRAY;
-        int index = Arrays.asList(characterNames).indexOf(name);
-        gameState.removeFromTurnOrder(index);
 
 
         //gameState.removePlayer(ID);
         //TODO make character the player was assigned to available.
 
-    }
+
 } //end class

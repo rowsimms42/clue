@@ -68,10 +68,10 @@ public class GameState {
         playerTurnOrderArrayList.add(n);
         Collections.sort(playerTurnOrderArrayList);
     }
-    public void removeFromTurnOrder(int n) {
-        int holder = playerTurnOrderArrayList.indexOf(n);
-        playerTurnOrderArrayList.remove(holder - 1);
-        Collections.sort(playerTurnOrderArrayList);
+
+    public void removeFromTurnOrder(Player currentPlayer){
+        int currentPlayerTurnOrderNumber = currentPlayer.getCharacter().getTurnOrder();
+        playerTurnOrderArrayList.remove((Integer) currentPlayerTurnOrderNumber);
     }
 
     public ArrayList<Integer> getTurnOrderList(){
@@ -140,7 +140,7 @@ public class GameState {
         return ((1 << n) | number);
     }
 
-    public void setSpecificCharacterToAvailable(long index){
+    public void setSpecificCharacterToAvailable(int index){
         //TODO use setNthBit to reverse character availability
     }
 
@@ -393,16 +393,4 @@ public class GameState {
         return cardList.get(randomIndex);
     }
 
-
-
-    /*
-    public void removePlayerFromGame(long ID, Player player) {
-        String name = player.getName();
-        String[] characterNames = ClueGameConstants.CHARACTER_NAMES_ARRAY;
-        int index = Arrays.asList(characterNames).indexOf(name);
-        removePlayer(index);
-    } 
-
-
-*/
 } //end class
