@@ -1,10 +1,9 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameState {
@@ -24,7 +23,8 @@ public class GameState {
     private boolean isSuggestionMade;
     private StringBuilder stringBuilder;
     private String suggestedCharacterStr, suggestedWeaponStr, suggestedRoomStr;
-    private ArrayList<String[]> revealedCardsList;
+	private ArrayList<String[]> revealedCardsList;
+	private int suggestionCount;
 
     public GameState(){
         playerMap = new ConcurrentHashMap<Long, Player>(); //<- has to be here
@@ -51,7 +51,8 @@ public class GameState {
         numberOfPlayers = 0;
         playOrderIndex = 0;
         isGameStarted = false;
-        isSuggestionMade = false;
+		isSuggestionMade = false;
+		suggestionCount = 0;
 
         availableCharactersArray = new Boolean[ ClueGameConstants.MAX_CHARACTERS ];
         Arrays.fill(availableCharactersArray, true);
@@ -177,6 +178,18 @@ public class GameState {
     }
 
     public String getSuggestionContentString(){ return stringBuilder.toString(); }
+
+	/**
+	 * 
+	 */
+	public void incrementSuggestionCount(){
+		suggestionCount++;
+		if (suggestionCount == (numberOfPlayers - 1)){
+			suggestionCount = 0;
+			isSuggestionMade = false;
+		}
+	}
+
 
     public int rollDice(){
         Random rand = new Random();

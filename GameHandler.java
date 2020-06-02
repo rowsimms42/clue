@@ -255,6 +255,10 @@ public class GameHandler {
                 returnMessage = new Message(returnMessageID, null);
                 return returnMessage;
 
+            case ClueGameConstants.REQUEST_INCREMENT_SUG_COUNT:
+                gameState.incrementSuggestionCount();
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFRIM_INCREMENT_SUG_COUNT;
+                returnMessage = new Message(returnMessageID, null);
             default:
                 return msgObj; //returns same object sent
         }

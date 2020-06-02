@@ -277,4 +277,25 @@ public class ClientRequestManager {
             e.printStackTrace();
         }
     }
+
+    public int requestNumberofPlayers(){
+        int numPlayers = 0;
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_NUMBER_OF_PLAYERS, null));
+            messageReceived = clientConnection.getMessage();
+            numPlayers = (int)messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return numPlayers;
+    }
+
+    public void requestIncrementSuggestionCount(){
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_INCREMENT_SUG_COUNT, null));
+            messageReceived = clientConnection.getMessage();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -219,7 +219,7 @@ public class BoardPanel extends JPanel {
                         //turn off am I being usggested
                     }
                     suggestionCountForTimer++;
-                    crm.requestSetSuggestionToFalse();
+                    crm.requestIncrementSuggestionCount();
                 }
 
                 if(isPlayerCurrentTurn) {

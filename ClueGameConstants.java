@@ -144,6 +144,14 @@ public final class ClueGameConstants {
 
     public static final int REPLY_FROM_SERVER_CONFROM_SUGGESTION_FALSE = 76;
 
+    public static final int REQUEST_NUMBER_OF_PLAYERS = 77;
+
+    public static final int REPLY_FROM_SERVER_NUMBER_OF_PLAYERS = 78;
+
+    public static final int REQUEST_INCREMENT_SUG_COUNT = 79;
+
+    public static final int REPLY_FROM_SERVER_CONFRIM_INCREMENT_SUG_COUNT = 80;
+
     public static final int UNSELECTABLE_TILE = -1;
 
     public static final String[] CHARACTER_NAMES_ARRAY = {"Mr. Green", "Professor Plum", "Mrs. White", "Colonel Mustard",
