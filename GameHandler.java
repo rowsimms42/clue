@@ -234,10 +234,10 @@ public class GameHandler {
                 return returnMessage;
 
             case ClueGameConstants.REQUEST_REVEALED_CARD_LIST:
-            returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_REVEALED_CARD_LIST;
-            ArrayList<String[]> revealedList = gameState.getRevealedCardsList();
-            returnMessage = new Message(returnMessageID, revealedList);
-            return returnMessage;
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_REVEALED_CARD_LIST;
+                ArrayList<String[]> revealedList = gameState.getRevealedCardsList();
+                returnMessage = new Message(returnMessageID, revealedList);
+                return returnMessage;
 
             case ClueGameConstants.REQUEST_REVEALED_CARD:
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
@@ -289,19 +289,19 @@ public class GameHandler {
 
             case ClueGameConstants.REQUEST_INCREMENT_SUG_COUNT:
                 gameState.incrementSuggestionCount();
-                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFRIM_INCREMENT_SUG_COUNT;
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_INCREMENT_SUG_COUNT;
                 returnMessage = new Message(returnMessageID, null);
+                return returnMessage;
+
+            case ClueGameConstants.REQUEST_AM_REMAINING_PLAYER:
+                boolean isOnlyRemainingPlayer;
+                isOnlyRemainingPlayer = gameState.getNumberOfPlayers() - gameState.getRemovedFromPlayingAmount() == 1;
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_AM_REMAINING_PLAYER;
+                returnMessage = new Message(returnMessageID, isOnlyRemainingPlayer);
                 return returnMessage;
 
             default:
                 return msgObj; //returns same object sent
         }
     }
-
-
-
-        //gameState.removePlayer(ID);
-        //TODO make character the player was assigned to available.
-
-
 } //end class

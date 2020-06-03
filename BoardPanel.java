@@ -99,15 +99,13 @@ public class BoardPanel extends JPanel {
 
         //Start game timer
         clientFrame.addToLogConsole("Waiting for other players to join the game.........");
-        //if (!isGameStarted) {
-        //startGameTimer.start();
         startGameTimer =  new Timer(2000,new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 if (startTimerUpdate==1) {
                     clientFrame.addToLogConsole("Start timer running..."); //for testing
                     startTimerUpdate--;
                 }
-
+                //determine if this player can start the game
                 boolean canStart = crm.requestIfPlayerCanStartGame();
 
                 if (numOfPlayers >= 3 && playerNumberUpdate == 1 && canStart) {
@@ -225,14 +223,31 @@ public class BoardPanel extends JPanel {
                     clientFrame.addToLogConsole(accusationStr);
                     isAccusationCorrect = crm.requestIsAccusationCorrect();
                     if(isAccusationCorrect){
+                        currentTurnTimer.stop();
+                        disableButtons(movementButtons);
                         clientFrame.addToLogConsole("The accusation was correct!!");
                         clientFrame.addToLogConsole( accusingPlayerName + " has won");
                         clientFrame.addToLogConsole("GAME OVER");
+                        //TODO --> disable every button
+                        //currentTurnTimer.stop();
                     }
                     else{
                         clientFrame.addToLogConsole("The accusation was incorrect!!");
                         clientFrame.addToLogConsole(accusingPlayerName + " is out of the game.");
                     }
+                }
+
+                //determine is the only remaining player
+                boolean isThisOnlyRemaingPlayer = crm.requestAmIRemainingPlayer();
+                Player thisPlayer = crm.requestThisPlayerObject();
+                if(isThisOnlyRemaingPlayer && thisPlayer.getIsStillPlaying()){
+                    disableButtons(movementButtons);
+                    btnRollDice.setEnabled(false);
+                    //TODO --> disable all the buttons. 
+                    String winningStr = currentPlayer.getName() + ": You are the only remaining player. You win.";
+                    JOptionPane.showMessageDialog(null, winningStr);
+                    clientFrame.addToLogConsole(winningStr);
+                    currentTurnTimer.stop();
                 }
 
                 if(isPlayerCurrentTurn) {
@@ -416,8 +431,8 @@ public class BoardPanel extends JPanel {
         btnSuggest.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               makeSuggestion();
-               btnSuggest.setEnabled(false);
+                makeSuggestion();
+                btnSuggest.setEnabled(false);
             }
         });
 
@@ -434,7 +449,7 @@ public class BoardPanel extends JPanel {
     }
 
     private void printAndAssignBtnsArray(String[] btsStrArray){
-        clientFrame.addToLogConsole(btsStrArray[0]);
+        //clientFrame.addToLogConsole(btsStrArray[0]);
         cArray_movement_enter = btsStrArray[1].toCharArray();
     }
 
@@ -652,8 +667,7 @@ public class BoardPanel extends JPanel {
         //tell server to turn set isSuggestion to false
         crm.requestSetSuggestionToFalse();
 
-
-        suggestionCountForTimer = 0; // <--JOHN KEEP THIS and in the turn timer
+        suggestionCountForTimer = 0;
     }
 
     private void makeAccusation(){
@@ -666,10 +680,13 @@ public class BoardPanel extends JPanel {
             playerMap = crm.requestPlayerMap();
             repaint();
             if (!currentTurnTimer.isRunning()) {
-                currentTurnTimer.start();
+                //currentTurnTimer.stop();
+                disableButtons(movementButtons);
+                btnRollDice.setEnabled(false);
                 btnEndTurn.setEnabled(false);
+                clientFrame.addToLogConsole("---- YOU HAVE WON THE GAME!!!! -----");
+                //TODO --> disable every button
             }
-            //TODO ---> more actions here
         }, ()->{
             JOptionPane.showMessageDialog(null, "Your accusation was incorrect.");
             currentPlayerLost = true;

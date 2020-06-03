@@ -353,5 +353,27 @@ public class ClientRequestManager {
         }
     }
 
-
+    public boolean requestAmIRemainingPlayer(){
+        boolean isRemainingPlayer = false;
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_AM_REMAINING_PLAYER, null));
+            messageReceived = clientConnection.getMessage();
+            isRemainingPlayer = (boolean) messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return isRemainingPlayer;
+    }
+    
+    public Player requestThisPlayerObject(){
+        Player thisPlayer = null;
+        try {
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_PLAYER_OBJECT, null));
+            messageReceived = clientConnection.getMessage();
+            thisPlayer = (Player) messageReceived.getData();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return thisPlayer;
+    }
 }

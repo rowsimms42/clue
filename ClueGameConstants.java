@@ -168,11 +168,11 @@ public final class ClueGameConstants {
 
     public static final int REQUEST_INCREMENT_SUG_COUNT = 92;
 
-    public static final int REPLY_FROM_SERVER_CONFRIM_INCREMENT_SUG_COUNT = 93;
+    public static final int REPLY_FROM_SERVER_CONFIRM_INCREMENT_SUG_COUNT = 93;
 
+    public static final int REQUEST_AM_REMAINING_PLAYER = 94;
 
-
-
+    public static final int REPLY_FROM_SERVER_CONFIRM_AM_REMAINING_PLAYER = 95;
 
     public static final int UNSELECTABLE_TILE = -1;
 

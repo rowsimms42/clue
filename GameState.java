@@ -19,7 +19,7 @@ public class GameState {
             roomCardDeck, envelopeDeck, combinedDeck;
     private ArrayList<Integer> playerTurnOrderArrayList;
     private ArrayList<Characters> nonPlayingCharactersArrayList;
-    private int playOrderIndex, suggestionCount;
+    private int playOrderIndex, suggestionCount, removedFromPlayingAmount;
     private boolean isGameStarted, isSuggestionMade, isAccusationMade;
     private StringBuilder stringBuilderSuggestion, stringBuilderAccusation;
     private String suggestedCharacterStr, suggestedWeaponStr, suggestedRoomStr;
@@ -47,8 +47,8 @@ public class GameState {
         nonPlayingCharactersArrayList = new ArrayList<>();
         revealedCardsList = new ArrayList<>();
 
-        availableCharacters = numberOfPlayers = playOrderIndex = suggestionCount = 0;
-        isGameStarted = isSuggestionMade = isAccusationMade  = false;
+        availableCharacters = numberOfPlayers = playOrderIndex = suggestionCount = removedFromPlayingAmount = 0;
+        isGameStarted = isSuggestionMade = isAccusationMade = false;
 
         availableCharactersArray = new Boolean[ ClueGameConstants.MAX_CHARACTERS ];
         Arrays.fill(availableCharactersArray, true);
@@ -61,17 +61,7 @@ public class GameState {
         combinedDeck    = createAndFillCombinedDeck();
     }
 
-    public void addTurnOrder(int n) {
-        playerTurnOrderArrayList.add(n);
-        Collections.sort(playerTurnOrderArrayList);
-    }
-
-    public void removeFromPlaying(Player currentPlayer){
-        Player newPlayer;
-        currentPlayer.setIsStillPlaying(false);
-        newPlayer = new Player(currentPlayer);
-        playerMap.put(newPlayer.getPlayerId(), newPlayer);
-    }
+    public int getRemovedFromPlayingAmount(){return removedFromPlayingAmount;}
 
     public ArrayList<Integer> getTurnOrderList(){
         return playerTurnOrderArrayList;
@@ -244,6 +234,8 @@ public class GameState {
         //add the top card from the room card deck to the envelope
         envelopeList.add(roomCardDeck.get(0));
         roomCardDeck.remove(0);
+        for(Card c : envelopeList)
+            System.out.println("In envelope: " + c.getName());
         return envelopeList;
     }
 
@@ -413,12 +405,19 @@ public class GameState {
     public boolean isAccusationCorrect(){
         int correctAnswerAmount = 0;
         String[] accusingContentArray = {accusedCharacterStr, accusedRoomStr, accusedWeaponStr};
-        for(int i = 0; i < 3;i++){
-            if(accusingContentArray[i].equals((envelopeDeck.get(i).getName()))){
-                correctAnswerAmount++;
-            }
+        for (String s : accusingContentArray) {
+            boolean isCardFound = isCardInEnvelopeDeck(s);
+            if (isCardFound) correctAnswerAmount++;
         }
-        return correctAnswerAmount == 3;
+        return correctAnswerAmount == envelopeDeck.size(); //size is 3
+    }
+
+    private boolean isCardInEnvelopeDeck(String cardName){
+        for(Card card : envelopeDeck) {
+            if (card.getName().equals(cardName))
+                return true;
+        }
+        return false;
     }
 
     public void incrementSuggestionCount(){
@@ -429,14 +428,27 @@ public class GameState {
         }
     }
 
+    public void addTurnOrder(int n) {
+        playerTurnOrderArrayList.add(n);
+        Collections.sort(playerTurnOrderArrayList);
+    }
+
+    public void removeFromPlaying(Player currentPlayer){
+        Player newPlayer;
+        currentPlayer.setIsStillPlaying(false);
+        newPlayer = new Player(currentPlayer);
+        playerMap.put(newPlayer.getPlayerId(), newPlayer);
+        removedFromPlayingAmount++;
+    }
+
+
+
     /*
     public void movePlayer(int suggestedCharacter, int suggestedRoom){
         String suggestedChar = ClueGameConstants.CHARACTER_NAMES_ARRAY[suggestedCharacter - 1];
-
         if (isCharacterInMap(suggestedChar)){
             Player player = getPlayerFromMap(suggestedChar);
             int turnOder = player.getCharacter().getTurnOrder();
-
             switch(suggestedRoom){
                 case 7: //lounge
                     player.setCurrentXLocation(17+2);
@@ -446,7 +458,6 @@ public class GameState {
                     player.setCurrentXLocation(6-2);
                     player.setCurrentYLocation(4-turnOder);
                     break;
-
             }
            // return player;
         }
@@ -455,5 +466,3 @@ public class GameState {
 
 
 } //end class
-
-//gameState.moveSuggestedPlayer(suggestedCharacter, suggestedRoom);
