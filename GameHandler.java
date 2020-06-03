@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Arrays;
 
 public class GameHandler {
 
@@ -29,7 +30,7 @@ public class GameHandler {
 
     public Message parseMessage(Message msgObj, long threadID) {
         Message returnMessage;
-        Player tempPlayer, nextPlayer, suggestingPlayer;
+        Player tempPlayer, nextPlayer, suggestingPlayer, accusingPlayer;
         Characters tempCharacter;
         ArrayList<Characters> nonPlayingCharList;
         int returnMessageID = 0;
@@ -114,10 +115,12 @@ public class GameHandler {
                 tempPlayer = new Player((Player) gameState.getPlayerMap().get(threadID));
                 tempPlayer.setIsPlayerTurn(false);
                 gameState.getPlayerMap().put(threadID, tempPlayer);
-                int nextTurnOrder = gameState.getNextPlayerTurnNumber();
-                gameState.setPlayOrderIndex(gameState.getPlayOrderIndex() + 1);
-                nextPlayer = (Player) gameState.getPlayerByTurnOrder(nextTurnOrder);
-                assert nextPlayer != null;
+                do {
+                    int nextTurnOrder = gameState.getNextPlayerTurnNumber();
+                    gameState.setPlayOrderIndex(gameState.getPlayOrderIndex() + 1);
+                    nextPlayer = (Player) gameState.getPlayerByTurnOrder(nextTurnOrder);
+                } while (!nextPlayer.getIsStillPlaying());
+                //assert nextPlayer != null;
                 tempPlayer = new Player((Player) gameState.getPlayerMap().get(nextPlayer.getPlayerId()));
                 tempPlayer.setIsPlayerTurn(true);
                 gameState.getPlayerMap().put(tempPlayer.getPlayerId(), tempPlayer);
@@ -136,7 +139,7 @@ public class GameHandler {
 
             case ClueGameConstants.REQUEST_DOES_CURRENT_PLAYER_GO_FIRST:
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-                int firstTurnNumberInList = gameState.getTurnOrderList().get(0);
+                int firstTurnNumberInList = gameState.getTurnOrderList().get(gameState.getPlayOrderIndex());
                 boolean doesGoFirst = tempPlayer.getCharacter().getTurnOrder() == firstTurnNumberInList;
                 if (doesGoFirst) {
                     tempPlayer = new Player((Player) gameState.getPlayerMap().get(threadID));
@@ -210,15 +213,15 @@ public class GameHandler {
 
             case ClueGameConstants.REQUEST_SUGGESTION_CONTENT:
                 String suggestionContentString = gameState.getSuggestionContentString();
-                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_CONFIRM_SUGGESTION_CONTENT;
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_SUGGESTION_CONTENT;
                 returnMessage = new Message(returnMessageID, suggestionContentString);
                 return returnMessage;
 
             case ClueGameConstants.REQUEST_SUBMITTING_SUG_CONTENT_NUM:
-                int suggestionConent = (int) msgObj.getData();
-                int suggestedCharacter = suggestionConent / 100;
-                int suggestedWeapon = (suggestionConent - suggestedCharacter * 100) / 10;
-                int suggestedRoom = (suggestionConent % 100) % 10;
+                int suggestionContent = (int) msgObj.getData();
+                int suggestedCharacter = suggestionContent / 100;
+                int suggestedWeapon = (suggestionContent - suggestedCharacter * 100) / 10;
+                int suggestedRoom = (suggestionContent % 100) % 10;
                 suggestingPlayer = (Player) gameState.getPlayerMap().get(threadID);
                 gameState.setIsSuggestionMade(true);
                 gameState.buildSuggestionString(suggestedCharacter, suggestedWeapon, suggestedRoom, suggestingPlayer);
@@ -242,16 +245,45 @@ public class GameHandler {
                 returnMessage = new Message(returnMessageID, tempPlayer.getCardSelectedToReveal());
                 return returnMessage;
 
-            case ClueGameConstants.REQUEST_REMOVE_PLAYER_FROM_TURN_ORDER:
+            case ClueGameConstants.REQUEST_REMOVE_PLAYER_FROM_PLAYING: //TODO <<--- rename this
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-                gameState.removeFromTurnOrder(tempPlayer);
-                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_REMOVE_PLAYER_FROM_TURN_ORDER;
+                gameState.removeFromPlaying(tempPlayer);
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_REMOVE_PLAYER_FROM_PLAYING;
                 returnMessage = new Message(returnMessageID, null);
                 return returnMessage;
-            
-            case ClueGameConstants.REQUEST_SET_SUGGESTION_FALSE:
-                gameState.setIsSuggestionMade(false);
-                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFROM_SUGGESTION_FALSE;
+
+            case ClueGameConstants.REQUEST_SUBMIT_ACCUSE_CONTENT:
+                int accuseContent = (int) msgObj.getData();
+                int accusedCharacter = accuseContent / 100;
+                int accusedWeapon = (accuseContent - accusedCharacter * 100) / 10;
+                int accusedRoom = (accuseContent % 100) % 10;
+                accusingPlayer = (Player) gameState.getPlayerMap().get(threadID);
+                gameState.setIsAccusationMade(true);
+                gameState.buildAccusationString(accusedCharacter,accusedWeapon,accusedRoom, accusingPlayer);
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_CONFIRM_SUBMIT_ACCUSE_CONTENT;
+                returnMessage = new Message(returnMessageID, null);
+                return returnMessage;
+
+            case ClueGameConstants.REQUEST_IS_ACCUSATION_MADE:
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_IS_ACCUSATION_MADE;
+                returnMessage = new Message(returnMessageID, gameState.getIsAccusationMade());
+                return returnMessage;
+
+            case ClueGameConstants.REQUEST_ACCUSATION_CONTENT:
+                String accusationContentString = gameState.getAccusationContentString();
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_CONFIRM_ACCUSATION_CONTENT;
+                returnMessage = new Message(returnMessageID, accusationContentString);
+                return returnMessage;
+
+            case ClueGameConstants.REQUEST_IS_ACCUSATION_CORRECT:
+                boolean isAccusationCorrect = gameState.isAccusationCorrect();
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_IS_ACCUSATION_CORRECT;
+                returnMessage = new Message(returnMessageID, isAccusationCorrect);
+                return returnMessage;
+
+            case ClueGameConstants.REQUEST_SET_IS_ACCUSATION_MADE_TO_FALSE:
+                gameState.setIsAccusationMade(false);
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_SET_IS_ACCUSATION_MADE_TO_FALSE;
                 returnMessage = new Message(returnMessageID, null);
                 return returnMessage;
 
@@ -259,6 +291,8 @@ public class GameHandler {
                 gameState.incrementSuggestionCount();
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFRIM_INCREMENT_SUG_COUNT;
                 returnMessage = new Message(returnMessageID, null);
+                return returnMessage;
+
             default:
                 return msgObj; //returns same object sent
         }

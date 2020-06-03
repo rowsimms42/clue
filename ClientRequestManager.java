@@ -269,9 +269,63 @@ public class ClientRequestManager {
         return revealedCardsList;
     }
 
-    public void requestRemovePlayer(){
+    public void requestRemovePlayerFromPlaying(){
         try{
-            clientConnection.send(new Message(ClueGameConstants.REQUEST_REMOVE_PLAYER_FROM_TURN_ORDER, null));
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_REMOVE_PLAYER_FROM_PLAYING, null));
+            messageReceived = clientConnection.getMessage();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void requestSubmitAccuseContent(int accusedContentNum){
+        try {
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_SUBMIT_ACCUSE_CONTENT, accusedContentNum));
+            messageReceived = clientConnection.getMessage();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean requestIfAccusationMade(){
+        boolean isAccusationMade = false;
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_IS_ACCUSATION_MADE, null));
+            messageReceived = clientConnection.getMessage();
+            isAccusationMade = (boolean) messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return isAccusationMade;
+    }
+
+    public String requestAccusationContent() {
+        String accusationContent = null;
+        try {
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_ACCUSATION_CONTENT, null));
+            messageReceived = clientConnection.getMessage();
+            accusationContent = (String) messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return accusationContent;
+    }
+
+    public boolean requestIsAccusationCorrect(){
+        boolean isAccusationCorrect = false;
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_IS_ACCUSATION_CORRECT, null));
+            messageReceived = clientConnection.getMessage();
+            isAccusationCorrect = (boolean) messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return isAccusationCorrect;
+    }
+
+    public void requestSetIsAccusationMadeToFalse(){
+        try{
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_SET_IS_ACCUSATION_MADE_TO_FALSE, null));
             messageReceived = clientConnection.getMessage();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
@@ -298,4 +352,6 @@ public class ClientRequestManager {
             e.printStackTrace();
         }
     }
+
+
 }

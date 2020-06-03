@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Accusation extends JFrame {
 
@@ -20,29 +21,52 @@ public class Accusation extends JFrame {
         send.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String[] finalGues = new String[3];
-                finalGues[0] = (String) c1.getSelectedItem();
-                finalGues[2] = (String) c2.getSelectedItem();
-                finalGues[1] = (String) c3.getSelectedItem();
-
-                int correctAnswerAmount = 0;
-                ArrayList<Card> envlopeDeck = crm.requestEnvelopeCardDeck();
-                for(int i = 0; i < 3;i++){
-                    assert finalGues[i] != null;
-                    if(finalGues[i].equals((envlopeDeck.get(i).getName()))){
-                        correctAnswerAmount++;
-                    }
+                String[] finalGuess = new String[3];
+                Arrays.fill(finalGuess, null);
+                finalGuess[0] = (String) c1.getSelectedItem();
+                finalGuess[2] = (String) c2.getSelectedItem();
+                finalGuess[1] = (String) c3.getSelectedItem();
+                if(finalGuess[0] == null || finalGuess[1] == null || finalGuess[2] == null) {
+                    JOptionPane.showMessageDialog(null,"Invalid selection",
+                            "One or more items isnt selected.",
+                            JOptionPane.WARNING_MESSAGE);
                 }
+                else{
+                    int combinedAccusedContent = getCombinedAccusationContentNumber(finalGuess[1],finalGuess[0],finalGuess[2]);
+                    crm.requestSubmitAccuseContent(combinedAccusedContent);
+                    boolean isAccusationCorrect = crm.requestIsAccusationCorrect();
+                    if(isAccusationCorrect)
+                        correctRun.run();
+                    else
+                        incorrectRun.run();
 
-                if(correctAnswerAmount == 3)
-                    correctRun.run();
-                else
-                    incorrectRun.run();
-
-                f.setVisible(false);
+                    f.setVisible(false);
                     dispose();
+                }
             }
         });
+    }
+
+    private int getCombinedAccusationContentNumber(String accusedChar, String accusedWeapon, String accusedRoom){
+        int accusedCharacterNum = getAccusedContentIndex(accusedChar,3);
+        int accusedWeaponNum = getAccusedContentIndex(accusedWeapon,1);
+        int accusedRoomNum = getAccusedContentIndex(accusedRoom,2);
+        return ((accusedCharacterNum + 1) * 100) + ((accusedWeaponNum + 1) * 10) + (accusedRoomNum + 1);
+    }
+
+    private int getAccusedContentIndex(String accusedStr, int whichArray){
+        if(whichArray == 1){
+            String[] weaponArray = ClueGameConstants.WEAPON_NAMES_ARRAY;
+            return Arrays.asList(weaponArray).indexOf(accusedStr);
+        }
+        else if(whichArray == 2){
+            String[] roomArray = ClueGameConstants.ROOM_NAMES_ARRAY;
+            return Arrays.asList(roomArray).indexOf(accusedStr);
+        }
+        else{
+            String[] characterArray = ClueGameConstants.CHARACTER_NAMES_ARRAY;
+            return Arrays.asList(characterArray).indexOf(accusedStr);
+        }
     }
 
     private void initComponents(){
@@ -98,3 +122,5 @@ public class Accusation extends JFrame {
         f.setVisible(true);
     }
 }
+
+

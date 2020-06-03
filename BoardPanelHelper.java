@@ -117,4 +117,9 @@ public class BoardPanelHelper {
         return map.get(currentPlayer.getPlayerId());
     }
 
+    public String getAccusingPlayerName(String name){
+        int index = name.indexOf("-");
+        return name.substring(0, index);
+    }
+
 }

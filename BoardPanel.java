@@ -1,23 +1,18 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
+import java.awt.*;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.geom.*;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 public class BoardPanel extends JPanel {
@@ -46,7 +41,7 @@ public class BoardPanel extends JPanel {
     int currentYgrid = 0; //y coordinate location for tile grid. this y coord is sent to server
     HashMap<Long, Player> playerMap;
     boolean isPlayerCurrentTurn = false;
-    boolean isGameStarted = false, isCurrentPlayerGoFirst = false;
+    boolean isGameStarted = false, isCurrentPlayerGoFirst = false, currentPlayerLost = false;
     private JButton btnExitRoom, btnSuggest, btnAccuse, btnShortcut, btnEndTurn, btnRollDice, btnStartGame;
     int turnTimerUpdate = 1, startTimerUpdate=1, playerNumberUpdate = 1, tempNum = 0;//testing for timer
     int numOfPlayers = 0, tempNumPlayers = 0, buttonRollLimit = 1, currentTurnCount = 0;
@@ -66,7 +61,8 @@ public class BoardPanel extends JPanel {
 
     //Hashtable roomExitPictures;
     int counterForShortCut = 0, enterRoomCounter = 0;
-    boolean inShortcutRoom = false, inRoom = false, isSuggestionMade = false, isAccusationCorrect = false;
+    boolean inShortcutRoom = false, inRoom = false, isSuggestionMade = false, isAccusationCorrect = false,
+            isAccusationMade = false;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
         crm = new ClientRequestManager(clientConnection);
@@ -141,6 +137,8 @@ public class BoardPanel extends JPanel {
                     buildNamesForLegend(nonPlayingCharList);
                     playersDeck = crm.requestPlayersCardDeck();
                     printCardsInPlayersDeck(playersDeck);
+                    String viewCardsInstructions = "To view your cards, click Options (top left), then View Cards.";
+                    clientFrame.addToLogConsole(viewCardsInstructions);
                     startGameTimer.stop();
                     currentTurnTimer.start();
                 }
@@ -163,7 +161,8 @@ public class BoardPanel extends JPanel {
         //current turn timer
         currentTurnTimer =  new Timer(2000,new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                if (turnTimerUpdate!=0) {
+                if (turnTimerUpdate!=0 && !currentPlayerLost) {
+                    //System.out.println(currentPlayer.getName() +" --- in waiting for your turn.");
                     clientFrame.addToLogConsole("Waiting for your turn..."); //for testing
                     turnTimerUpdate--;
                 }
@@ -194,32 +193,46 @@ public class BoardPanel extends JPanel {
 
                 isSuggestionMade = crm.requestIfSuggestionMade();
                 if(isSuggestionMade){
-                    if(suggestionCountForTimer == 0){
-                        clientFrame.addToLogConsole("--- A suggestion has been made ---");
-                    }
+                    if(suggestionCountForTimer == 0)
+                        clientFrame.addToLogConsole("-- A suggestion has been made ---");
                     //request the suggestion string
                     String suggestionStr = crm.requestSuggestionContent();
                     //Display the suggestion string to console log
                     clientFrame.addToLogConsole(suggestionStr);
-
                     //Display the card, if matched, that was revealed
-                    String card = crm.requestCardRevealed();
-                    if(card != null) {
-                        clientFrame.addToLogConsole("You revealed: " + card);
+                    String revealedCard = crm.requestCardRevealed();
+                    if(revealedCard != null) {
+                        clientFrame.addToLogConsole("You revealed: " + revealedCard);
                     } else {
                         clientFrame.addToLogConsole("You did not have matching card to the suggestion.");
                     }
-
                     //Get current player ID to test if they are the one being suggested
                     playerMap = crm.requestPlayerMap();
                     Player tempPlayer = bph.getCurrentPlayerFromMap(currentPlayer, playerMap);
-                    
                     if(tempPlayer.getIsBeingSuggested()){
                         //TODO draw the player in the room that was suggested
                         //turn off am I being usggested
                     }
                     suggestionCountForTimer++;
                     crm.requestIncrementSuggestionCount();
+                }
+
+                isAccusationMade = crm.requestIfAccusationMade();
+                if(isAccusationMade){
+                    String accusationStr = crm.requestAccusationContent();
+                    String accusingPlayerName = bph.getAccusingPlayerName(accusationStr);
+                    clientFrame.addToLogConsole("--- AN ACCUSATION HAS BEEN MADE ---");
+                    clientFrame.addToLogConsole(accusationStr);
+                    isAccusationCorrect = crm.requestIsAccusationCorrect();
+                    if(isAccusationCorrect){
+                        clientFrame.addToLogConsole("The accusation was correct!!");
+                        clientFrame.addToLogConsole( accusingPlayerName + " has won");
+                        clientFrame.addToLogConsole("GAME OVER");
+                    }
+                    else{
+                        clientFrame.addToLogConsole("The accusation was incorrect!!");
+                        clientFrame.addToLogConsole(accusingPlayerName + " is out of the game.");
+                    }
                 }
 
                 if(isPlayerCurrentTurn) {
@@ -637,7 +650,7 @@ public class BoardPanel extends JPanel {
         }
 
         //tell server to turn set isSuggestion to false
-        //crm.requestSetSuggestionToFalse();
+        crm.requestSetSuggestionToFalse();
 
 
         suggestionCountForTimer = 0; // <--JOHN KEEP THIS and in the turn timer
@@ -658,20 +671,21 @@ public class BoardPanel extends JPanel {
             }
             //TODO ---> more actions here
         }, ()->{
-            JOptionPane.showMessageDialog(null, "Your accusation was incorrect. Game will continue without you.");
+            JOptionPane.showMessageDialog(null, "Your accusation was incorrect.");
+            currentPlayerLost = true;
+            clientFrame.addToLogConsole("You lost. The game will continue without you.");
             diceRollValue = 0;
             addToDiceLog(Integer.toString(diceRollValue));
-            crm.requestEndOfTurn();
             disableButtons(movementButtons);
             playerMap = crm.requestPlayerMap();
             repaint();
+            crm.requestEndOfTurn();
+            crm.requestRemovePlayerFromPlaying();
+            crm.requestSetIsAccusationMadeToFalse();
             if (!currentTurnTimer.isRunning()) {
                 currentTurnTimer.start();
                 btnEndTurn.setEnabled(false);
             }
-            //remove the current player from the turn order
-            crm.requestRemovePlayer();
-            //TODO ---> more actions here
         }, crm);
     }
 

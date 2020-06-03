@@ -19,6 +19,7 @@ public class Player implements Serializable{
     private boolean isBeingAccused = false;
     private boolean isGoingFirst = false;
     private boolean isCanStartgame = false;
+    private boolean isStillPlaying;
     private int amountOfSuggestedCardsInDeck = 0;
     private String cardSelectedToReveal = null;
     private String suggestionRoomNameRelocation;
@@ -26,6 +27,7 @@ public class Player implements Serializable{
     public Player(long Id){
         this.Id = Id;
         playerCardDeck = new ArrayList<Card>();
+        isStillPlaying = true;
     }
 
     //Copy constructor
@@ -46,7 +48,7 @@ public class Player implements Serializable{
         this.amountOfSuggestedCardsInDeck = oldPlayer.amountOfSuggestedCardsInDeck;
         this.cardSelectedToReveal = oldPlayer.cardSelectedToReveal;
         this.suggestionRoomNameRelocation = oldPlayer.suggestionRoomNameRelocation;
-
+        this.isStillPlaying = oldPlayer.isStillPlaying;
     }
 
     public long getPlayerId(){
@@ -112,6 +114,10 @@ public class Player implements Serializable{
     public void setSuggestionRoomNameRelocation(String newRoomName){suggestionRoomNameRelocation = newRoomName;}
 
     public String getSuggestionRoomNameRelocation(){return suggestionRoomNameRelocation;}
+
+    public void setIsStillPlaying(boolean bValue){isStillPlaying = bValue;}
+
+    public boolean getIsStillPlaying(){return isStillPlaying;}
 
     public void setCharacter(Characters character) {
         playerCharacter = character;

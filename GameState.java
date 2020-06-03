@@ -1,9 +1,10 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameState {
@@ -18,13 +19,12 @@ public class GameState {
             roomCardDeck, envelopeDeck, combinedDeck;
     private ArrayList<Integer> playerTurnOrderArrayList;
     private ArrayList<Characters> nonPlayingCharactersArrayList;
-    private int playOrderIndex;
-    private boolean isGameStarted;
-    private boolean isSuggestionMade;
-    private StringBuilder stringBuilder;
+    private int playOrderIndex, suggestionCount;
+    private boolean isGameStarted, isSuggestionMade, isAccusationMade;
+    private StringBuilder stringBuilderSuggestion, stringBuilderAccusation;
     private String suggestedCharacterStr, suggestedWeaponStr, suggestedRoomStr;
-	private ArrayList<String[]> revealedCardsList;
-	private int suggestionCount;
+    private String accusedCharacterStr, accusedWeaponStr, accusedRoomStr, accusingPlayer;
+    private ArrayList<String[]> revealedCardsList;
 
     public GameState(){
         playerMap = new ConcurrentHashMap<Long, Player>(); //<- has to be here
@@ -47,12 +47,8 @@ public class GameState {
         nonPlayingCharactersArrayList = new ArrayList<>();
         revealedCardsList = new ArrayList<>();
 
-        availableCharacters = 0;
-        numberOfPlayers = 0;
-        playOrderIndex = 0;
-        isGameStarted = false;
-		isSuggestionMade = false;
-		suggestionCount = 0;
+        availableCharacters = numberOfPlayers = playOrderIndex = suggestionCount = 0;
+        isGameStarted = isSuggestionMade = isAccusationMade  = false;
 
         availableCharactersArray = new Boolean[ ClueGameConstants.MAX_CHARACTERS ];
         Arrays.fill(availableCharactersArray, true);
@@ -70,9 +66,11 @@ public class GameState {
         Collections.sort(playerTurnOrderArrayList);
     }
 
-    public void removeFromTurnOrder(Player currentPlayer){
-        int currentPlayerTurnOrderNumber = currentPlayer.getCharacter().getTurnOrder();
-        playerTurnOrderArrayList.remove((Integer) currentPlayerTurnOrderNumber);
+    public void removeFromPlaying(Player currentPlayer){
+        Player newPlayer;
+        currentPlayer.setIsStillPlaying(false);
+        newPlayer = new Player(currentPlayer);
+        playerMap.put(newPlayer.getPlayerId(), newPlayer);
     }
 
     public ArrayList<Integer> getTurnOrderList(){
@@ -110,6 +108,10 @@ public class GameState {
     public void setIsSuggestionMade(boolean value){
         isSuggestionMade = value;
     }
+
+    public boolean getIsAccusationMade(){return isAccusationMade;}
+
+    public void setIsAccusationMade(boolean bValue){ isAccusationMade = bValue;}
 
     public int getNextPlayerTurnNumber() {
         if(playOrderIndex < playerTurnOrderArrayList.size()) {
@@ -177,19 +179,9 @@ public class GameState {
         return ClueGameConstants.CHARACTER_NAMES_ARRAY[index - 1];
     }
 
-    public String getSuggestionContentString(){ return stringBuilder.toString(); }
+    public String getSuggestionContentString(){ return stringBuilderSuggestion.toString(); }
 
-	/**
-	 * 
-	 */
-	public void incrementSuggestionCount(){
-		suggestionCount++;
-		if (suggestionCount == (numberOfPlayers - 1)){
-			suggestionCount = 0;
-			isSuggestionMade = false;
-		}
-	}
-
+    public String getAccusationContentString(){ return stringBuilderAccusation.toString(); }
 
     public int rollDice(){
         Random rand = new Random();
@@ -339,15 +331,27 @@ public class GameState {
     }
 
     public void buildSuggestionString(int suggestedCharacter, int suggestedWeapon, int suggestedRoom, Player currentPlayer){
-        stringBuilder = new StringBuilder();
+        stringBuilderSuggestion = new StringBuilder();
         String suggestingCharacter = currentPlayer.getName();
         suggestedCharacterStr = ClueGameConstants.CHARACTER_NAMES_ARRAY[suggestedCharacter - 1];
         suggestedWeaponStr = ClueGameConstants.WEAPON_NAMES_ARRAY[suggestedWeapon - 1];
         suggestedRoomStr = ClueGameConstants.ROOM_NAMES_ARRAY[suggestedRoom - 1];
-        stringBuilder.append(suggestingCharacter);
-        stringBuilder.append("---> I suggest: ").append(suggestedCharacterStr);
-        stringBuilder.append(", with the ").append(suggestedWeaponStr);
-        stringBuilder.append(", in the ").append(suggestedRoomStr);
+        stringBuilderSuggestion.append(suggestingCharacter);
+        stringBuilderSuggestion.append("---> I suggest: ").append(suggestedCharacterStr);
+        stringBuilderSuggestion.append(", with the ").append(suggestedWeaponStr);
+        stringBuilderSuggestion.append(", in the ").append(suggestedRoomStr);
+    }
+
+    public void buildAccusationString(int accusedCharacter, int accusedWeapon, int accusedRoom, Player currentPlayer){
+        stringBuilderAccusation = new StringBuilder();
+        String accusingCharacter = currentPlayer.getName();
+        accusedCharacterStr = ClueGameConstants.CHARACTER_NAMES_ARRAY[accusedCharacter - 1];
+        accusedWeaponStr = ClueGameConstants.WEAPON_NAMES_ARRAY[accusedWeapon - 1];
+        accusedRoomStr = ClueGameConstants.ROOM_NAMES_ARRAY[accusedRoom - 1];
+        stringBuilderAccusation.append(accusingCharacter);
+        stringBuilderAccusation.append("---> I accuse: ").append(accusedCharacterStr);
+        stringBuilderAccusation.append(", with the ").append(accusedWeaponStr);
+        stringBuilderAccusation.append(", in the ").append(accusedRoomStr);
     }
 
     public void buildRevealedCardsList(){
@@ -406,4 +410,50 @@ public class GameState {
         return cardList.get(randomIndex);
     }
 
+    public boolean isAccusationCorrect(){
+        int correctAnswerAmount = 0;
+        String[] accusingContentArray = {accusedCharacterStr, accusedRoomStr, accusedWeaponStr};
+        for(int i = 0; i < 3;i++){
+            if(accusingContentArray[i].equals((envelopeDeck.get(i).getName()))){
+                correctAnswerAmount++;
+            }
+        }
+        return correctAnswerAmount == 3;
+    }
+
+    public void incrementSuggestionCount(){
+        suggestionCount++;
+        if (suggestionCount == (numberOfPlayers - 1)){
+            suggestionCount = 0;
+            isSuggestionMade = false;
+        }
+    }
+
+    /*
+    public void movePlayer(int suggestedCharacter, int suggestedRoom){
+        String suggestedChar = ClueGameConstants.CHARACTER_NAMES_ARRAY[suggestedCharacter - 1];
+
+        if (isCharacterInMap(suggestedChar)){
+            Player player = getPlayerFromMap(suggestedChar);
+            int turnOder = player.getCharacter().getTurnOrder();
+
+            switch(suggestedRoom){
+                case 7: //lounge
+                    player.setCurrentXLocation(17+2);
+                    player.setCurrentYLocation(6-turnOder);
+                    break;
+                case 4: //study
+                    player.setCurrentXLocation(6-2);
+                    player.setCurrentYLocation(4-turnOder);
+                    break;
+
+            }
+           // return player;
+        }
+       // return null;
+    } */
+
+
 } //end class
+
+//gameState.moveSuggestedPlayer(suggestedCharacter, suggestedRoom);

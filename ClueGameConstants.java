@@ -120,7 +120,7 @@ public final class ClueGameConstants {
 
     public static final int REQUEST_SUGGESTION_CONTENT = 64;
 
-    public static final int REPLY_FROM_SERVER_CONFIRM_CONFIRM_SUGGESTION_CONTENT = 65;
+    public static final int REPLY_FROM_SERVER_CONFIRM_SUGGESTION_CONTENT = 65;
 
     public static final int REQUEST_REVEALED_CARD = 66;
 
@@ -138,19 +138,41 @@ public final class ClueGameConstants {
 
     public static final int REPLY_FROM_SERVER_CONFIRM_SET_SUGGESTION_FALSE = 73;
 
-    public static final int  REQUEST_REMOVE_PLAYER_FROM_TURN_ORDER = 74;
+    public static final int  REQUEST_REMOVE_PLAYER_FROM_PLAYING = 74;
 
-    public static final int REPLY_FROM_SERVER_CONFIRM_REMOVE_PLAYER_FROM_TURN_ORDER = 75;
+    public static final int REPLY_FROM_SERVER_CONFIRM_REMOVE_PLAYER_FROM_PLAYING = 75;
 
-    public static final int REPLY_FROM_SERVER_CONFROM_SUGGESTION_FALSE = 76;
+    public static final int REQUEST_SUBMIT_ACCUSE_CONTENT = 76;
 
-    public static final int REQUEST_NUMBER_OF_PLAYERS = 77;
+    public static final int REPLY_FROM_SERVER_CONFIRM_CONFIRM_SUBMIT_ACCUSE_CONTENT = 77;
 
-    public static final int REPLY_FROM_SERVER_NUMBER_OF_PLAYERS = 78;
+    public static final int REQUEST_IS_ACCUSATION_MADE = 82;
 
-    public static final int REQUEST_INCREMENT_SUG_COUNT = 79;
+    public static final int REPLY_FROM_SERVER_CONFIRM_IS_ACCUSATION_MADE = 83;
 
-    public static final int REPLY_FROM_SERVER_CONFRIM_INCREMENT_SUG_COUNT = 80;
+    public static final int REQUEST_ACCUSATION_CONTENT = 84;
+
+    public static final int REPLY_FROM_SERVER_CONFIRM_CONFIRM_ACCUSATION_CONTENT = 85;
+
+    public static final int REQUEST_IS_ACCUSATION_CORRECT = 86;
+
+    public static final int REPLY_FROM_SERVER_CONFIRM_IS_ACCUSATION_CORRECT = 87;
+
+    public static final int REQUEST_SET_IS_ACCUSATION_MADE_TO_FALSE = 88;
+
+    public static final int REPLY_FROM_SERVER_CONFIRM_SET_IS_ACCUSATION_MADE_TO_FALSE = 89;
+
+    public static final int REQUEST_NUMBER_OF_PLAYERS = 90;
+
+    public static final int REPLY_FROM_SERVER_NUMBER_OF_PLAYERS = 91;
+
+    public static final int REQUEST_INCREMENT_SUG_COUNT = 92;
+
+    public static final int REPLY_FROM_SERVER_CONFRIM_INCREMENT_SUG_COUNT = 93;
+
+
+
+
 
     public static final int UNSELECTABLE_TILE = -1;
 
