@@ -174,14 +174,9 @@ public final class ClueGameConstants {
 
     public static final int REPLY_FROM_SERVER_CONFIRM_AM_REMAINING_PLAYER = 95;
 
-    public static final int REQUEST_SUGGESTED_PLAYER = 96;
+    public static final int REQUEST_SUGGESTED_ROOM_STRING = 96;
 
-    public static final int REPLY_FROM_SERVER_CONFIRM_SUGGESTED_PLAYER = 97;
-
-    public static final int REQUEST_UPDATE_MAP_WITH_NEW_PLAYER = 98;
-
-    public static final int REPLY_FROM_SERVER_CONFIRM_UPDATE_MAP_WITH_NEW_PLAYER = 99;
-
+    public static final int REPLY_FROM_SERVER_CONFIRM_SUGGESTED_ROOM_STRING = 97;
 
     public static final int UNSELECTABLE_TILE = -1;
 

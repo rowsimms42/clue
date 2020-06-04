@@ -176,6 +176,9 @@ public class GameState {
 
     public String getSuggestedCharacterStr(){return suggestedCharacterStr;}
 
+    public String getSuggestedRoomStr(){ return suggestedRoomStr;}
+
+
     public int rollDice(){
         Random rand = new Random();
         int dice_1 = rand.nextInt(6) + 1;
@@ -443,34 +446,6 @@ public class GameState {
         playerMap.put(newPlayer.getPlayerId(), newPlayer);
         removedFromPlayingAmount++;
     }
-
-    public void updateMapNewPlayer(Player player){
-        Player newPlayer = new Player(player);
-        playerMap.put(newPlayer.getPlayerId(), newPlayer);
-    }
-
-
-
-    /*
-    public void movePlayer(int suggestedCharacter, int suggestedRoom){
-        String suggestedChar = ClueGameConstants.CHARACTER_NAMES_ARRAY[suggestedCharacter - 1];
-        if (isCharacterInMap(suggestedChar)){
-            Player player = getPlayerFromMap(suggestedChar);
-            int turnOder = player.getCharacter().getTurnOrder();
-            switch(suggestedRoom){
-                case 7: //lounge
-                    player.setCurrentXLocation(17+2);
-                    player.setCurrentYLocation(6-turnOder);
-                    break;
-                case 4: //study
-                    player.setCurrentXLocation(6-2);
-                    player.setCurrentYLocation(4-turnOder);
-                    break;
-            }
-           // return player;
-        }
-       // return null;
-    } */
 
 
 } //end class

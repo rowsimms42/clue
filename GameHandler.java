@@ -297,18 +297,10 @@ public class GameHandler {
                 returnMessage = new Message(returnMessageID, isOnlyRemainingPlayer);
                 return returnMessage;
 
-            case ClueGameConstants.REQUEST_SUGGESTED_PLAYER:
-                String suggestedPlayerName = (String) msgObj.getData();
-                Player suggestedPlayer = gameState.getPlayerFromMap(suggestedPlayerName);
-                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_SUGGESTED_PLAYER;
-                returnMessage = new Message(returnMessageID, suggestedPlayer);
-                return returnMessage;
-
-            case ClueGameConstants.REQUEST_UPDATE_MAP_WITH_NEW_PLAYER:
-                tempPlayer = (Player) msgObj.getData();
-                gameState.updateMapNewPlayer(tempPlayer);
-                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_UPDATE_MAP_WITH_NEW_PLAYER;
-                returnMessage = new Message(returnMessageID, null);
+            case ClueGameConstants.REQUEST_SUGGESTED_ROOM_STRING:
+                String suggestRoomStr = gameState.getSuggestedRoomStr();
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_SUGGESTED_ROOM_STRING;
+                returnMessage = new Message(returnMessageID, suggestRoomStr);
                 return returnMessage;
 
             default:

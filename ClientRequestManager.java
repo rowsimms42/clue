@@ -377,26 +377,15 @@ public class ClientRequestManager {
         return thisPlayer;
     }
 
-    public Player requestSuggestedPlayer(String playerName){
-        Player suggestedPlayer = null;
+    public String requestSuggestedRoomString() {
+        String suggestedRoom = null;
         try {
-            clientConnection.send(new Message(ClueGameConstants.REQUEST_SUGGESTED_PLAYER, playerName));
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_SUGGESTED_ROOM_STRING, null));
             messageReceived = clientConnection.getMessage();
-            suggestedPlayer = (Player) messageReceived.getData();
-        } catch (IOException | ClassNotFoundException e) {
+            suggestedRoom = (String) messageReceived.getData();
+        } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
-        return suggestedPlayer;
+        return suggestedRoom;
     }
-
-    public void requestUpdateMapWithNewPlayer(Player newPlayer){
-        try {
-            clientConnection.send(new Message(ClueGameConstants.REQUEST_UPDATE_MAP_WITH_NEW_PLAYER, newPlayer));
-            messageReceived = clientConnection.getMessage();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }
