@@ -43,6 +43,7 @@ public class BoardPanelHelper {
         return false;
     }
 
+
     public ArrayList<Boolean[]> getAttemptedDoorsList(){
         ArrayList<Boolean[]> attemptedDoorsListArray = new ArrayList<>();
         for(int i = 0; i < 9; i++){

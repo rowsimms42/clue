@@ -119,6 +119,7 @@ public class Accusation extends JFrame {
         f.add(panel);
         // set the size of frame
         f.setSize(400, 400);
+        setLocationRelativeTo(null);
         f.setVisible(true);
     }
 }

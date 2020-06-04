@@ -62,7 +62,8 @@ public class BoardPanel extends JPanel {
     //Hashtable roomExitPictures;
     int counterForShortCut = 0, enterRoomCounter = 0;
     boolean inShortcutRoom = false, inRoom = false, isSuggestionMade = false, isAccusationCorrect = false,
-            isAccusationMade = false;
+            isAccusationMade = false, playerAlreadySuggested = false;
+            ;
 
     public BoardPanel(Client clientConnection, ClientFrame clientFrame, Player player) {
         crm = new ClientRequestManager(clientConnection);
@@ -193,33 +194,95 @@ public class BoardPanel extends JPanel {
                 if(isSuggestionMade){
                     if(suggestionCountForTimer == 0)
                         clientFrame.addToLogConsole("-- A suggestion has been made ---");
-                    //request the suggestion string
                     String suggestionStr = crm.requestSuggestionContent();
-                    //get the name of the player being suggested
                     String playerBeingSuggestedName = bph.getNameFromSuggestedString(suggestionStr);
-                    //System.out.println("Suggested name:" + playerBeingSuggestedName);
-                    //Display the suggestion string to console log
+                    System.out.println("Suggested name:" + playerBeingSuggestedName);
                     clientFrame.addToLogConsole(suggestionStr);
-                    //Display the card, if matched, that was revealed
+                    String suggestedRoomStr = crm.requestSuggestedRoomString();
+                    String[] roomNameArray = ClueGameConstants.ROOM_NAMES_ARRAY;
+                    int roomNum = Arrays.asList(roomNameArray).indexOf(suggestedRoomStr)+1;
                     String revealedCard = crm.requestCardRevealed();
                     if(revealedCard != null) {
                         clientFrame.addToLogConsole("You revealed: " + revealedCard);
                     } else {
                         clientFrame.addToLogConsole("You did not have matching card to the suggestion.");
                     }
-                    //Get current player ID to test if they are the one being suggested
                     playerMap = crm.requestPlayerMap();
-                    //Player tempPlayer = bph.getCurrentPlayerFromMap(currentPlayer, playerMap);
                     if(currentPlayer.getName().equals(playerBeingSuggestedName)){
                         clientFrame.addToLogConsole("I am being suggested.");
-                        /*
-                        Player tempPlayer = crm.requestSuggestedPlayer(playerBeingSuggestedName);
-                        //Player updatedPlayer = new Player(tempPlayer);
-                        //TODO --> add updatedPlayer new locations here
-                        //lounge
-                        tempPlayer.setCurrentXLocation(19);
-                        tempPlayer.setCurrentYLocation(6 - tempPlayer.getCharacter().getTurnOrder());
-                        crm.requestUpdateMapWithNewPlayer(tempPlayer);*/
+                        currentInRoomNumber = roomNum;
+                        crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
+
+                        switch(currentInRoomNumber){
+                            case 1: //conservatory
+                                currentXgrid = 5;
+                                currentYgrid = 19;
+                                xC = currentXgrid * 21;
+                                yC = currentYgrid * 20;
+                                break;
+                            case 2: //billiard
+                                currentXgrid = 1;
+                                currentYgrid = 11;
+                                xC = currentXgrid * 21;
+                                yC = currentYgrid * 20;
+                                break;
+                            case 3: //library
+                                currentXgrid = 3;
+                                currentYgrid = 11;
+                                xC = currentXgrid * 21;
+                                yC = currentYgrid * 20;
+                                break;
+                            case 4: //study
+                                currentXgrid = 6;
+                                currentYgrid = 4;
+                                xC = currentXgrid * 21;
+                                yC = currentYgrid * 20;
+                                break;
+                            case 5: //ballroom
+                                currentXgrid = 7;
+                                currentYgrid = 19;
+                                xC = currentXgrid * 21;
+                                yC = currentYgrid * 20;
+                                break;
+                            case 6: //hall
+                                currentXgrid = 8;
+                                currentYgrid = 4;
+                                xC = currentXgrid * 21;
+                                yC = currentYgrid * 20;
+                                break;
+                            case 7: //lounge
+                                currentXgrid = 17;
+                                currentYgrid = 6;
+                                xC = currentXgrid * 21;
+                                yC = currentYgrid * 20;
+                                break;
+                            case 8: //kitchen
+                                currentXgrid = 19;
+                                currentYgrid = 17;
+                                xC = currentXgrid * 21;
+                                yC = currentYgrid * 20;
+                                break;
+                            case 9: //dining room
+                                currentXgrid = 17;
+                                currentYgrid = 8;
+                                xC = currentXgrid * 21;
+                                yC = currentYgrid * 20;
+                                break;
+                            default:
+                                System.out.println("error in suggestion switch statement");
+                        }
+
+                        int doorNum = bph.getDirection(currentXgrid, currentYgrid);
+                        drawInRoom(currentInRoomNumber, doorNum);
+                        reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                        repaint();
+                        disableButtons(movementButtons);
+                        if(bph.isRoomAShortCutRoom(currentInRoomNumber)) {
+                            inShortcutRoom = true;
+                        }
+                        inRoom = true;
+                        playerAlreadySuggested = false;
+                        clientFrame.addToLogConsole("You were moved to the: " + suggestedRoomStr + "x: " + currentXgrid + ", y: " + currentYgrid); 
                     }
                     suggestionCountForTimer++;
                     crm.requestIncrementSuggestionCount();
@@ -359,7 +422,7 @@ public class BoardPanel extends JPanel {
                 enterButton[ENTER_ROOM].setEnabled(false);
                 if(bph.isRoomAShortCutRoom(currentInRoomNumber)) {
                     inShortcutRoom = true;
-                }
+                }                    
                 inRoom = true;
                 repaint();
                 btnAccuse.setEnabled(true);
@@ -373,6 +436,8 @@ public class BoardPanel extends JPanel {
                 btnShortcut.setEnabled(false);
                 btnExitRoom.setEnabled(false);
                 shortcutLimitChecker = false;
+                playerAlreadySuggested = false;
+
                 if(currentInRoomNumber == 1 && !shortcutLimitChecker)
                     shortCutToLounge();
                 if(currentInRoomNumber == 7 && !shortcutLimitChecker)
@@ -434,6 +499,7 @@ public class BoardPanel extends JPanel {
                     inRoom = false;
                     btnExitRoom.setEnabled(false);
                     btnSuggest.setEnabled(false);
+                    playerAlreadySuggested = false;
                 }
             }
         });
@@ -443,6 +509,8 @@ public class BoardPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 makeSuggestion();
                 btnSuggest.setEnabled(false);
+                btnAccuse.setEnabled(false);
+                playerAlreadySuggested = true;
             }
         });
 
@@ -575,7 +643,12 @@ public class BoardPanel extends JPanel {
         enterButton[ENTER_ROOM].setEnabled(roomOptions);
         if (inRoom) {
             btnExitRoom.setEnabled(true);
-            btnSuggest.setEnabled(true);
+            if (!playerAlreadySuggested){
+                btnSuggest.setEnabled(true);
+            }
+            else{
+                btnSuggest.setEnabled(false);
+            }
         }
     }
 
@@ -704,6 +777,13 @@ public class BoardPanel extends JPanel {
             clientFrame.addToLogConsole("You lost. The game will continue without you.");
             diceRollValue = 0;
             addToDiceLog(Integer.toString(diceRollValue));
+            currentXgrid = currentPlayer.getCharacter().getxStarting();
+            currentYgrid = currentPlayer.getCharacter().getyStarting();
+            xC = currentXgrid*21;
+            yC = currentYgrid*20;
+            playerMap = crm.requestPlayerMap();
+            repaint();
+            reqBtnArray = crm.requestBtns(currentXgrid,currentYgrid);
             disableButtons(movementButtons);
             playerMap = crm.requestPlayerMap();
             repaint();
