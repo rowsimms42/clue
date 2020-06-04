@@ -98,23 +98,22 @@ public class BoardPanel extends JPanel {
         btnExitRoom.setEnabled(false);
 
         //Start game timer
-        clientFrame.addToLogConsole("Waiting for other players to join the game.........");
         startGameTimer =  new Timer(2000,new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 if (startTimerUpdate==1) {
-                    clientFrame.addToLogConsole("Start timer running..."); //for testing
+                    clientFrame.addToLogConsole("Waiting for other players to join the game...");
                     startTimerUpdate--;
                 }
                 //determine if this player can start the game
                 boolean canStart = crm.requestIfPlayerCanStartGame();
 
                 if (numOfPlayers >= 3 && playerNumberUpdate == 1 && canStart) {
-                    clientFrame.addToLogConsole("UPDATE: enough players have joined to start game");
+                    clientFrame.addToLogConsole("UPDATE: enough players have joined to start game. Press 'Start Game' to begin the game.");
                     playerNumberUpdate--;
                     btnStartGame.setEnabled(true);
                 }
                 else if(numOfPlayers >= 3 && playerNumberUpdate == 1 && !canStart) {
-                    clientFrame.addToLogConsole("UPDATE: enough players have joined to start game and for player 1 to start it");
+                    clientFrame.addToLogConsole("UPDATE: enough players have joined the game. Waiting for player 1 to start the game.");
                     playerNumberUpdate--;
                 }
 
@@ -128,8 +127,9 @@ public class BoardPanel extends JPanel {
                 repaint();
 
                 boolean isHasGameStarted = crm.requestIfGameHasStarted();
-                clientFrame.addToLogConsole("Has the game started: " + isHasGameStarted);
+                //clientFrame.addToLogConsole("Has the game started: " + isHasGameStarted);
                 if(isHasGameStarted) {
+                    clientFrame.addToLogConsole("The game has started.");
                     isGameStarted = true;
                     nonPlayingCharList = crm.requestListNonPlayingChars();
                     buildNamesForLegend(nonPlayingCharList);
@@ -219,7 +219,7 @@ public class BoardPanel extends JPanel {
                             if(bph.isRoomAShortCutRoom(currentInRoomNumber)) inShortcutRoom = true;
                             inRoom = true;
                             playerAlreadySuggested = false;
-                            String movedInfoStr = "You were moved to the "+suggestedRoomStr;
+                            String movedInfoStr = "You were moved to the "+suggestedRoomStr + ".";
                             clientFrame.addToLogConsole(movedInfoStr);
                         }
                         else{
@@ -355,8 +355,8 @@ public class BoardPanel extends JPanel {
                 int roomDirection = bph.getDirection(currentXgrid, currentYgrid);
                 crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
                 drawInRoom(currentInRoomNumber, roomDirection);
-                String enterRoomStr = "room number: "+currentInRoomNumber+" room direction: "+roomDirection;
-                clientFrame.addToLogConsole(enterRoomStr);
+                String enterRoomStr = ClueGameConstants.ROOM_NAMES_ARRAY[currentInRoomNumber - 1];
+                clientFrame.addToLogConsole("You entered the " + enterRoomStr + ".");
                 reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
                 printAndAssignBtnsArray(reqBtnArray);
                 enableOrdisableBtns(movementButtons);
@@ -919,7 +919,7 @@ public class BoardPanel extends JPanel {
     }
 
     private void shortCutToLounge(){
-        clientFrame.addToLogConsole("I'm using a secret passage to go to the lounge");
+        clientFrame.addToLogConsole("You used a secret passage to go to the lounge.");
         currentInRoomNumber = 7;
         crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
         currentXgrid = 17;
@@ -936,7 +936,7 @@ public class BoardPanel extends JPanel {
     }
 
     private void shortCutToConservatory(){
-        clientFrame.addToLogConsole("I'm using a secret passage to go to the conseravtory");
+        clientFrame.addToLogConsole("You used a secret passage to go to the conservatory.");
         currentInRoomNumber = 1;
         crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
         currentXgrid = 5;
@@ -953,7 +953,7 @@ public class BoardPanel extends JPanel {
     }
 
     private void shortCutToKitchen(){
-        clientFrame.addToLogConsole("I'm using a secret passage to go to the kitchen");
+        clientFrame.addToLogConsole("You used a secret passage to go to the kitchen.");
         currentInRoomNumber = 8;
         crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
         currentXgrid = 19;
@@ -970,7 +970,7 @@ public class BoardPanel extends JPanel {
     }
 
     private void shortCutToStudy(){
-        clientFrame.addToLogConsole("I'm using a secret passage to go to the study");
+        clientFrame.addToLogConsole("You used a secret passage to go to the study.");
         currentInRoomNumber = 4;
         crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
         currentXgrid = 6;
