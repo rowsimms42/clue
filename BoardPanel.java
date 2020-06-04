@@ -206,7 +206,7 @@ public class BoardPanel extends JPanel {
                     //Get current player ID to test if they are the one being suggested
                     playerMap = crm.requestPlayerMap();
                     if (currentPlayer.getName().equals(playerBeingSuggestedName)) {
-                        clientFrame.addToLogConsole("I am being suggested.");
+                        clientFrame.addToLogConsole("You were suggested of commiting the murder.");
                         currentInRoomNumber = roomNum;
                         crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
                         updateXCYCCurrentXY(currentInRoomNumber);
@@ -218,7 +218,7 @@ public class BoardPanel extends JPanel {
                         if(bph.isRoomAShortCutRoom(currentInRoomNumber)) inShortcutRoom = true;
                         inRoom = true;
                         playerAlreadySuggested = false;
-                        String movedInfoStr = "You were moved to the: "+suggestedRoomStr +"x: "+currentXgrid+", y: "+currentYgrid;
+                        String movedInfoStr = "You were moved to the : "+suggestedRoomStr;
                         clientFrame.addToLogConsole(movedInfoStr);
                     }
                     suggestionCountForTimer++;
@@ -586,8 +586,12 @@ public class BoardPanel extends JPanel {
         enterButton[ENTER_ROOM].setEnabled(roomOptions);
         if (inRoom) {
             btnExitRoom.setEnabled(true);
-            boolean toDisableSuggestBtn = !playerAlreadySuggested;
-            btnSuggest.setEnabled(!toDisableSuggestBtn);
+            if (!playerAlreadySuggested){
+                btnSuggest.setEnabled(true);
+            }
+            else{
+                btnSuggest.setEnabled(false);
+            }
         }
     }
 

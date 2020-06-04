@@ -316,6 +316,7 @@ public class CharacterSelectFrame extends JFrame {
         // Create, assign, fill the character panels
         initCharacterPanels();
         // set the character select frame to visibility to true
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
