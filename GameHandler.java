@@ -116,8 +116,8 @@ public class GameHandler {
                 tempPlayer.setIsPlayerTurn(false);
                 gameState.getPlayerMap().put(threadID, tempPlayer);
                 do {
-                    int nextTurnOrder = gameState.getNextPlayerTurnNumber();
                     gameState.setPlayOrderIndex(gameState.getPlayOrderIndex() + 1);
+                    int nextTurnOrder = gameState.getNextPlayerTurnNumber();
                     nextPlayer = (Player) gameState.getPlayerByTurnOrder(nextTurnOrder);
                 } while (!nextPlayer.getIsStillPlaying());
                 //assert nextPlayer != null;
@@ -139,13 +139,13 @@ public class GameHandler {
 
             case ClueGameConstants.REQUEST_DOES_CURRENT_PLAYER_GO_FIRST:
                 tempPlayer = (Player) gameState.getPlayerMap().get(threadID);
-                int firstTurnNumberInList = gameState.getTurnOrderList().get(gameState.getPlayOrderIndex());
+                int playerOderIndex = gameState.getPlayOrderIndex();
+                int firstTurnNumberInList = gameState.getTurnOrderList().get(playerOderIndex);
                 boolean doesGoFirst = tempPlayer.getCharacter().getTurnOrder() == firstTurnNumberInList;
                 if (doesGoFirst) {
                     tempPlayer = new Player((Player) gameState.getPlayerMap().get(threadID));
                     tempPlayer.setIsGoingFirst(doesGoFirst); //true
                     gameState.getPlayerMap().put(threadID, tempPlayer);
-                    gameState.setPlayOrderIndex(gameState.getPlayOrderIndex() + 1);
                 }
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_DOES_CURRENT_PLAYER_GO_FIRST;
                 returnMessage = new Message(returnMessageID, tempPlayer.getIsGoingFirst());
@@ -226,8 +226,6 @@ public class GameHandler {
                 gameState.setIsSuggestionMade(true);
                 gameState.buildSuggestionString(suggestedCharacter, suggestedWeapon, suggestedRoom, suggestingPlayer);
                 //TODO --> update suggested player's location to draw in suggested room
-                //suggestedPlayer.setCurrentXLocation(4);
-                //suggestedPlayer.setCurrentYLocation(7);
                 gameState.buildRevealedCardsList();
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_SUBMITTING_SUG_CONTENT_NUM;
                 returnMessage = new Message(returnMessageID, null);
@@ -294,10 +292,23 @@ public class GameHandler {
                 return returnMessage;
 
             case ClueGameConstants.REQUEST_AM_REMAINING_PLAYER:
-                boolean isOnlyRemainingPlayer;
-                isOnlyRemainingPlayer = gameState.getNumberOfPlayers() - gameState.getRemovedFromPlayingAmount() == 1;
+                boolean isOnlyRemainingPlayer = gameState.getNumberOfPlayers() - gameState.getRemovedFromPlayingAmount() == 1;
                 returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_AM_REMAINING_PLAYER;
                 returnMessage = new Message(returnMessageID, isOnlyRemainingPlayer);
+                return returnMessage;
+
+            case ClueGameConstants.REQUEST_SUGGESTED_PLAYER:
+                String suggestedPlayerName = (String) msgObj.getData();
+                Player suggestedPlayer = gameState.getPlayerFromMap(suggestedPlayerName);
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_SUGGESTED_PLAYER;
+                returnMessage = new Message(returnMessageID, suggestedPlayer);
+                return returnMessage;
+
+            case ClueGameConstants.REQUEST_UPDATE_MAP_WITH_NEW_PLAYER:
+                tempPlayer = (Player) msgObj.getData();
+                gameState.updateMapNewPlayer(tempPlayer);
+                returnMessageID = ClueGameConstants.REPLY_FROM_SERVER_CONFIRM_UPDATE_MAP_WITH_NEW_PLAYER;
+                returnMessage = new Message(returnMessageID, null);
                 return returnMessage;
 
             default:

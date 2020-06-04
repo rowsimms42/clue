@@ -113,13 +113,20 @@ public class BoardPanelHelper {
         return 0;
     }
 
-    public Player getCurrentPlayerFromMap(Player currentPlayer, HashMap<Long, Player> map) {
-        return map.get(currentPlayer.getPlayerId());
+    /*
+    public Player getPlayerFromMap(String characterName, HashMap<Long, Player> map) {
+        for()
+        return map.get(player.getPlayerId());
+    } */
+
+    public String getNameFromAccusingString(String inputStr){
+        int index = inputStr.indexOf("-");
+        return inputStr.substring(0, index);
     }
 
-    public String getAccusingPlayerName(String name){
-        int index = name.indexOf("-");
-        return name.substring(0, index);
+    public String getNameFromSuggestedString(String inputStr){
+        int colonIndex = inputStr.indexOf(":");
+        int commaIndex = inputStr.indexOf(",");
+        return inputStr.substring(colonIndex+2, commaIndex);
     }
-
 }

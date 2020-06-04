@@ -376,4 +376,27 @@ public class ClientRequestManager {
         }
         return thisPlayer;
     }
+
+    public Player requestSuggestedPlayer(String playerName){
+        Player suggestedPlayer = null;
+        try {
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_SUGGESTED_PLAYER, playerName));
+            messageReceived = clientConnection.getMessage();
+            suggestedPlayer = (Player) messageReceived.getData();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return suggestedPlayer;
+    }
+
+    public void requestUpdateMapWithNewPlayer(Player newPlayer){
+        try {
+            clientConnection.send(new Message(ClueGameConstants.REQUEST_UPDATE_MAP_WITH_NEW_PLAYER, newPlayer));
+            messageReceived = clientConnection.getMessage();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

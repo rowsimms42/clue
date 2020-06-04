@@ -195,6 +195,9 @@ public class BoardPanel extends JPanel {
                         clientFrame.addToLogConsole("-- A suggestion has been made ---");
                     //request the suggestion string
                     String suggestionStr = crm.requestSuggestionContent();
+                    //get the name of the player being suggested
+                    String playerBeingSuggestedName = bph.getNameFromSuggestedString(suggestionStr);
+                    //System.out.println("Suggested name:" + playerBeingSuggestedName);
                     //Display the suggestion string to console log
                     clientFrame.addToLogConsole(suggestionStr);
                     //Display the card, if matched, that was revealed
@@ -206,10 +209,17 @@ public class BoardPanel extends JPanel {
                     }
                     //Get current player ID to test if they are the one being suggested
                     playerMap = crm.requestPlayerMap();
-                    Player tempPlayer = bph.getCurrentPlayerFromMap(currentPlayer, playerMap);
-                    if(tempPlayer.getIsBeingSuggested()){
-                        //TODO draw the player in the room that was suggested
-                        //turn off am I being usggested
+                    //Player tempPlayer = bph.getCurrentPlayerFromMap(currentPlayer, playerMap);
+                    if(currentPlayer.getName().equals(playerBeingSuggestedName)){
+                        clientFrame.addToLogConsole("I am being suggested.");
+                        /*
+                        Player tempPlayer = crm.requestSuggestedPlayer(playerBeingSuggestedName);
+                        //Player updatedPlayer = new Player(tempPlayer);
+                        //TODO --> add updatedPlayer new locations here
+                        //lounge
+                        tempPlayer.setCurrentXLocation(19);
+                        tempPlayer.setCurrentYLocation(6 - tempPlayer.getCharacter().getTurnOrder());
+                        crm.requestUpdateMapWithNewPlayer(tempPlayer);*/
                     }
                     suggestionCountForTimer++;
                     crm.requestIncrementSuggestionCount();
@@ -218,7 +228,7 @@ public class BoardPanel extends JPanel {
                 isAccusationMade = crm.requestIfAccusationMade();
                 if(isAccusationMade){
                     String accusationStr = crm.requestAccusationContent();
-                    String accusingPlayerName = bph.getAccusingPlayerName(accusationStr);
+                    String accusingPlayerName = bph.getNameFromAccusingString(accusationStr);
                     clientFrame.addToLogConsole("--- AN ACCUSATION HAS BEEN MADE ---");
                     clientFrame.addToLogConsole(accusationStr);
                     isAccusationCorrect = crm.requestIsAccusationCorrect();
@@ -507,7 +517,7 @@ public class BoardPanel extends JPanel {
         g.fillRect(rectXBounds, rectYBounds, rectBoundsHeight, rectBoundsWidth);
         //Draw other players at their present locations
         for(Entry<Long, Player> p : playerMap.entrySet()) {
-            long id = (long)p.getKey();
+            //long id = (long)p.getKey();
             Player player = p.getValue();
             if(player.getCharacter().getName().equals(currentPlayer.getCharacter().getName()))
                 continue;
@@ -644,13 +654,14 @@ public class BoardPanel extends JPanel {
                 "Please Select Suggested Character", "Select Suggested Character",JOptionPane.PLAIN_MESSAGE,
                 allCharsImageIcon, characterNamesArr, characterNamesArr[0]);
 
+        System.out.println("Suggested Char: " + suggestedChar);
         //get the weapon being suggested
         String[] weaponNamesArr = ClueGameConstants.WEAPON_NAMES_ARRAY;
         ImageIcon allWeaponsImageIcon  = new ImageIcon(getClass().getResource("resources/allWeapons.png"));
         String suggestedWeapon = (String)JOptionPane.showInputDialog(null,
                 "Please Select Suggested Weapon", "Select Suggested Weapon", JOptionPane.PLAIN_MESSAGE,
                 allWeaponsImageIcon, weaponNamesArr, weaponNamesArr[0]);
-
+        System.out.println("Suggested Weapon: " + suggestedWeapon);
         //convert character name, weapon name, and room number into single int number
         int contentSuggestionNum = bph.getCombinedSuggestionContentNumber(suggestedChar,suggestedWeapon,currentInRoomNumber);
 

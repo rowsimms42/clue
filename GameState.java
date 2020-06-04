@@ -103,6 +103,7 @@ public class GameState {
 
     public void setIsAccusationMade(boolean bValue){ isAccusationMade = bValue;}
 
+    //2,4,5,6
     public int getNextPlayerTurnNumber() {
         if(playOrderIndex < playerTurnOrderArrayList.size()) {
             return playerTurnOrderArrayList.get(playOrderIndex);
@@ -172,6 +173,8 @@ public class GameState {
     public String getSuggestionContentString(){ return stringBuilderSuggestion.toString(); }
 
     public String getAccusationContentString(){ return stringBuilderAccusation.toString(); }
+
+    public String getSuggestedCharacterStr(){return suggestedCharacterStr;}
 
     public int rollDice(){
         Random rand = new Random();
@@ -439,6 +442,11 @@ public class GameState {
         newPlayer = new Player(currentPlayer);
         playerMap.put(newPlayer.getPlayerId(), newPlayer);
         removedFromPlayingAmount++;
+    }
+
+    public void updateMapNewPlayer(Player player){
+        Player newPlayer = new Player(player);
+        playerMap.put(newPlayer.getPlayerId(), newPlayer);
     }
 
 
