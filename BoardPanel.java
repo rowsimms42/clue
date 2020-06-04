@@ -206,20 +206,25 @@ public class BoardPanel extends JPanel {
                     //Get current player ID to test if they are the one being suggested
                     playerMap = crm.requestPlayerMap();
                     if (currentPlayer.getName().equals(playerBeingSuggestedName)) {
-                        clientFrame.addToLogConsole("You were suggested of commiting the murder.");
-                        currentInRoomNumber = roomNum;
-                        crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
-                        updateXCYCCurrentXY(currentInRoomNumber);
-                        int doorNum = bph.getDirection(currentXgrid, currentYgrid);
-                        drawInRoom(currentInRoomNumber, doorNum);
-                        reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
-                        repaint();
-                        disableButtons(movementButtons);
-                        if(bph.isRoomAShortCutRoom(currentInRoomNumber)) inShortcutRoom = true;
-                        inRoom = true;
-                        playerAlreadySuggested = false;
-                        String movedInfoStr = "You were moved to the : "+suggestedRoomStr;
-                        clientFrame.addToLogConsole(movedInfoStr);
+                        clientFrame.addToLogConsole("You were suggested of committing the murder.");
+                        if (currentInRoomNumber!= roomNum){
+                            currentInRoomNumber = roomNum;
+                            crm.requestUpdatePlayerRoomLocation(currentInRoomNumber);
+                            updateXCYCCurrentXY(currentInRoomNumber);
+                            int doorNum = bph.getDirection(currentXgrid, currentYgrid);
+                            drawInRoom(currentInRoomNumber, doorNum);
+                            reqBtnArray = crm.requestBtns(currentXgrid, currentYgrid);
+                            repaint();
+                            disableButtons(movementButtons);
+                            if(bph.isRoomAShortCutRoom(currentInRoomNumber)) inShortcutRoom = true;
+                            inRoom = true;
+                            playerAlreadySuggested = false;
+                            String movedInfoStr = "You were moved to the "+suggestedRoomStr;
+                            clientFrame.addToLogConsole(movedInfoStr);
+                        }
+                        else{
+                            clientFrame.addToLogConsole("You are already in the suggested room.");
+                        }
                     }
                     suggestionCountForTimer++;
                     crm.requestIncrementSuggestionCount();
@@ -446,6 +451,7 @@ public class BoardPanel extends JPanel {
                 if(isSuggestionMade) {
                     btnSuggest.setEnabled(false);
                     btnAccuse.setEnabled(false);
+                    btnExitRoom.setEnabled(false);
                     playerAlreadySuggested = true;
                 }
                 else{
