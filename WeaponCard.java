@@ -1,3 +1,8 @@
+/*********************************************
+ * Child class of card class. 
+ * Contains the attributes of the weapon card
+ *********************************************/
+
 import java.io.Serializable;
 
 public class WeaponCard extends Card implements Serializable{

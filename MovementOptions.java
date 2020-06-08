@@ -1,3 +1,7 @@
+/******************************************************
+ * This class handles movement logic for player pieces
+ *****************************************************/
+
 import java.util.Arrays;
 import java.util.HashMap;
 

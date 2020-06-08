@@ -1,3 +1,7 @@
+/***************************************
+ * Handles client/cerver communication during game
+ ***************************************/
+
 import java.io.Serializable;
 
 public class Message implements Serializable{

@@ -1,3 +1,8 @@
+/**********************************
+ * Child class of card class.
+ * Contains attributes of room card
+ *********************************/
+
 import java.io.Serializable;
 
 public class RoomCard extends Card implements Serializable{

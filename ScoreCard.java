@@ -1,3 +1,7 @@
+/***************************
+ * Score card on gui side
+ **************************/
+
 import javax.swing.JPanel;
 import javax.swing.*;
 import java.awt.*;

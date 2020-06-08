@@ -1,3 +1,8 @@
+/**************************************************************
+ * This class contains all functions related to the sending and
+ * receiving of data between client side gui and server
+ **************************************************************/
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;

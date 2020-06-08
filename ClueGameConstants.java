@@ -1,3 +1,9 @@
+/*****************************************************************
+ * This class contains final variables used throughout server and 
+ * client side portions of the game
+ ****************************************************************/
+
+
 public final class ClueGameConstants {
 
     public static final int PORT = 6060;
@@ -282,50 +288,39 @@ public final class ClueGameConstants {
         public int getYCoordLegend() {return y;}
     };
 
-    public static final String gameRulesString =
-            "Object of the Game\n"+
-                    "Mr. Boddy is found death in one of the rooms of his mansion. The players" +
-                    " must determine the answers to these three questions:\n"+
-                    "Who killed him? Where? and with What Weapon?"+
-                    "\n \n "+
-                    "Game Play\n"+
-                    "Miss Scarlett opens the game, the turns continue clockwise around the \n"+
-                    "table .On each turn, a player try to reach a different room of the \n"+
-                    "mansion to investigate. To start your turn, move your token by \n"+
-                    "rolling the die or use a Secret Passage when you are in a corner room.\n"+
-                    "If you roll the die, you move your token that many spaces:\n"+
-                    "Horizontally or vertically, forward or backward, but not diagonally.\n"+
-                    "You are not allowed to enter the same space twice on the same turn.\n"+
-                    "You may not enter on a space that is already occupied by another player.\n"+
-                    "If you move through a Secret Passage, you don't need to roll and you can\n"+
-                    " move immediately to the other room. This ends your movement.\n"+
-                    "It is possible that your opponents might block any and all doors and trap \n"+
-                    "you in a room. In that case, you have to wait for someone to move or \n"+
-                    "un-block a door to leave!\n"+
-                    "\n "+
-                    "\n "+
-                    "Suggestions or Guess\n"+
-                    "When you enter a room, you can make a suggestion by naming a suspect, \n"+
-                    "murder weapon and the room you just entered.e.g. 'The crime was \n"+
-                    "committed by Mr. Green in the lounge with a knife'. Then your opponents\n"+
-                    " (starting by the left player) must (if possible) prove that your \n"+
-                    "suggestion is false by showing you one card that matches your suggestion.\n"+
-                    " If the first player can't disprove, the next player must try it, etc...\n"+
-                    " until all players have  passed. As soon as someone shows you one of the \n"+
-                    "cards, it is prooved that it can't be in the envelope and you can cross it \n"+
-                    "off in your notebook as a possibility. If no one is able to prove your \n"+
-                    "suggestion false, you may either end your turn or make an accusation.\n"+
-                    "Note: the suggestion is always made for the room your token is at that \n"+
-                    "moment.\n\n "+
-                    "Accusing\n"+
-                    "If you think you have solved the crime by deduction, you can end your turn by\n"+
-                    "making an accusation and name any three elements. you can say: I accuse\n"+
-                    "suspect of committing the crime in the room with the weapon. Then, you\n"+
-                    "must look secretly at the cards in the envelope to check if your suggestion\n"+
-                    "is correct. If you are correct, you can place the 3 cards face-up on the table\n"+
-                    "to prove it and you won the game! \n"+
-                    "\n "+
-                    "Note: You can only make one accusation during a game. If your accusation\n" +
-                    "is wrong, you lost and you must leave the game and board \n";
+        public static final String gameRulesObjective =
+                "Mr. Boddy is found dead in one of the rooms of his mansion. The players must "
+                + "\r\ndetermine the answers to these three questions: Who killed him? Where? "
+                + "\r\nWith what weapon?";
+        public static final String gameRulesGamePlay =
+                "Miss Scarlett opens the game. The turns continue clockwise around the table. "
+                + "\r\nOn each turn, a player tries to reach a different room of the mansion "
+                + "to \r\ninvestigate. To start your turn, move your token by rolling the die. "
+                + "If you are in \r\na corner room, you can use a Secret Passage by pressing the "
+                + "\"Shortcut\" button. \r\nIf you roll the die, you can move your token that many"
+                + " spaces horizontally or \r\nvertically, forward or backward, but not diagonally. "
+                + "You may not enter on a space \r\nthat is already occupied by another player. It "
+                + "is possible that your opponents might\r\nblock any and all doors and trap you in a "
+                + "room. In that case, you have to wait for \r\nsomeone to move. To end your turn, "
+                + "hit the \"End Turn\" button.";
+        public static final String gameRulesSuggestion =
+                "When you enter a room, you can make a suggestion by naming a suspect,  \r\nmurder "
+                + "weapon and the room you just entered. e.g. 'The crime was committed \r\nby Mr. Green"
+                + " in the lounge with a knife.' Then your opponents (starting by the \r\nleft player) "
+                + "must (if possible) prove that your suggestion is false by showing you \r\none card that "
+                + "matches your suggestion. If the first player can't disprove, the next \r\nplayer must "
+                + "try it, etc... until all players have passed. As soon as someone shows \r\nyou one of "
+                + "the cards, it is proven that it can't be in the envelope and you can cross \r\nit off "
+                + "in your notebook as a possibility. If no one is able to prove your suggestion\r\nfalse, "
+                + "you may either end your turn or make an accusation.\r\nNote: the suggestion is always "
+                + "made for the room your token is at that moment.";
+        public static final String gameRulesAccusing =
+                "If you think you have solved the crime by deduction, you can end your turn by \r\nmaking "
+                + "an accusation and naming any three elements. To do so, press the \r\n\"Accuse\" button "
+                + "and pick a suspect, weapon, and room where you think the murder \r\ntook place. Then, you "
+                + "must look secretly at the cards in the envelope to check if \r\nyour accusation is correct. "
+                + "If you are correct, the winning cards will be shown to \r\nthe rest of the players in the "
+                + "game and you win the game. \r\nNote: You can only make one accusation during a game. If your "
+                + "accusation is \r\nwrong, you lost and can no longer play in the game.";
 
 }//end class

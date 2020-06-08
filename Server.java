@@ -1,3 +1,8 @@
+/***************************************************************
+ * This class contains the main function to execute the 
+ * server side portion of the game.
+ **************************************************************/
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;

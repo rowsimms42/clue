@@ -1,3 +1,8 @@
+/********************************************************
+ * This class establishes a connection to server
+ * and transfers data between server and client side gui
+ ********************************************************/
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;

@@ -1,3 +1,8 @@
+/*********************************************
+ * Child class of card class.
+ * Contains the attributes of the suspect card
+ *********************************************/
+
 import java.io.Serializable;
 
 public class SuspectCard extends Card implements Serializable{

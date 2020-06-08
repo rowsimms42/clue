@@ -1,3 +1,4 @@
+
 public class Rect{
     
     private int xMin, xMax, yMin, yMax;

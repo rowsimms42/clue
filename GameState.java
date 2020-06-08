@@ -1,3 +1,9 @@
+/***************************************************
+ * This class encapsulates the clue game pertaining 
+ * to game functionality
+ ***************************************************/
+
+import java.lang.invoke.StringConcatException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;

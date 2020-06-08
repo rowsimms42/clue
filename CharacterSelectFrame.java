@@ -1,3 +1,8 @@
+/************************************************************
+ * Class communicates with server and allows player to select
+ * one of the available characters
+ ************************************************************/
+
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;

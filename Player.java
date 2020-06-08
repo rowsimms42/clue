@@ -1,3 +1,8 @@
+/*************************************************
+ * This class contains the attributes of 
+ * a clue game player
+ ************************************************/
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;

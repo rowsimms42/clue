@@ -1,3 +1,7 @@
+/******************************************************
+ * This class is the base class for the client side gui
+ ******************************************************/
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -134,22 +138,60 @@ public class ClientFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 class GameRules extends JFrame{
                     public GameRules() {
-                        setResizable(true);
-                        setTitle("Clue Game Rules");
-                        getContentPane().setLayout(new FlowLayout());
-                        setBounds(6,6,494,693);
-                        JPanel gameRulesPanel = new JPanel();
-                        gameRulesPanel.setBounds(6, 6, 450, 691);
-                        JTextArea textArea = new JTextArea(60,50);
-                        textArea.setLineWrap(true);
-                        textArea.setEditable(false);
-                        JScrollPane scrollPane = new JScrollPane(textArea);
-                        scrollPane.setPreferredSize(new Dimension(430, 671));
-                        gameRulesPanel.add(scrollPane);
-                        getContentPane().add(gameRulesPanel);
-                        textArea.setText(ClueGameConstants.gameRulesString);
-                        setLocationRelativeTo(null);
-                        setVisible(true);
+                        getContentPane().setBackground(new Color(255, 255, 255));
+		                setResizable(true);
+		                setTitle("Clue Game Rules");
+		                setBounds(6,6,494,693);
+		                getContentPane().setLayout(null);
+		                JPanel gameRulesPanel = new JPanel();
+		                gameRulesPanel.setBounds(239, 5, 1, 1);
+		                gameRulesPanel.setLayout(null);
+		                getContentPane().add(gameRulesPanel);
+		                JLabel lblRulesObjective = new JLabel("Objective");
+		                lblRulesObjective.setFont(new Font("Bookman Old Style", Font.BOLD, 16));
+		                lblRulesObjective.setBounds(187, 16, 105, 29);
+		                getContentPane().add(lblRulesObjective);
+		                JTextArea rulesObjectiveTxtArea = new JTextArea();
+		                rulesObjectiveTxtArea.setEditable(false);
+		                rulesObjectiveTxtArea.setFont(new Font("Arial", Font.PLAIN, 12));
+		                rulesObjectiveTxtArea.setLineWrap(true);
+		                rulesObjectiveTxtArea.setText(ClueGameConstants.gameRulesObjective);
+		                rulesObjectiveTxtArea.setBackground(new Color(255, 255, 255));
+		                rulesObjectiveTxtArea.setBounds(10, 44, 460, 57);
+		                getContentPane().add(rulesObjectiveTxtArea);
+		                JLabel lblRulesGamePlay = new JLabel("Game Play");
+		                lblRulesGamePlay.setFont(new Font("Bookman Old Style", Font.BOLD, 16));
+		                lblRulesGamePlay.setBounds(181, 95, 129, 24);
+		                getContentPane().add(lblRulesGamePlay);	
+		                JTextArea rulesGamePlayTxtArea = new JTextArea();
+		                rulesGamePlayTxtArea.setText(ClueGameConstants.gameRulesGamePlay);
+		                rulesGamePlayTxtArea.setFont(new Font("Arial", Font.PLAIN, 12));
+		                rulesGamePlayTxtArea.setEditable(false);
+		                rulesGamePlayTxtArea.setBackground(new Color(255, 255, 255));
+		                rulesGamePlayTxtArea.setBounds(10, 122, 460, 137);
+		                getContentPane().add(rulesGamePlayTxtArea);
+		                JLabel lblRulesSuggestion = new JLabel("Suggestion");
+		                lblRulesSuggestion.setFont(new Font("Bookman Old Style", Font.BOLD, 16));
+		                lblRulesSuggestion.setBounds(181, 269, 129, 24);
+		                getContentPane().add(lblRulesSuggestion);
+		                JTextArea rulesSuggestionTxtArea = new JTextArea();
+		                rulesSuggestionTxtArea.setEditable(false);
+		                rulesSuggestionTxtArea.setFont(new Font("Arial", Font.PLAIN, 12));
+		                rulesSuggestionTxtArea.setText(ClueGameConstants.gameRulesSuggestion);
+		                rulesSuggestionTxtArea.setBounds(10, 295, 460, 152);
+		                getContentPane().add(rulesSuggestionTxtArea);
+		                JTextArea rulesAccusationTxtArea = new JTextArea();
+		                rulesAccusationTxtArea.setText(ClueGameConstants.gameRulesAccusing);
+		                rulesAccusationTxtArea.setEditable(false);
+		                rulesAccusationTxtArea.setFont(new Font("Arial", Font.PLAIN, 12));
+		                rulesAccusationTxtArea.setBounds(10, 481, 460, 125);
+		                getContentPane().add(rulesAccusationTxtArea);
+		                JLabel lblRulesAccusation = new JLabel("Accusation");
+		                lblRulesAccusation.setFont(new Font("Bookman Old Style", Font.BOLD, 16));
+		                lblRulesAccusation.setBounds(181, 457, 129, 24);
+		                getContentPane().add(lblRulesAccusation);
+		                setLocationRelativeTo(null);
+		                setVisible(true);
                     }
                 } //end of inner game rules class
                 new GameRules();

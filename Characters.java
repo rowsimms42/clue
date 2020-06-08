@@ -1,3 +1,7 @@
+/***************************************************
+ * Class that encapsulates the characters and their 
+ * attributes of the clue goard game
+***************************************************/
 
 import java.io.Serializable;
 

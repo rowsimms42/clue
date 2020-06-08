@@ -1,3 +1,8 @@
+/**********************************************
+ * Initial gui that is presented to enable start of game and 
+ * connection to server
+ *********************************************/
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;

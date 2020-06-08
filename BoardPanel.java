@@ -1,3 +1,7 @@
+/******************************************************
+ * Handles game board logic and character token drawing
+ *****************************************************/
+
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.Timer;

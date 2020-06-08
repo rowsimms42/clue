@@ -1,3 +1,8 @@
+/*******************************************************************
+ * Contains various helper functions that assist Board Panel class.
+ * Functions are called from Board Panel class.
+ ******************************************************************/
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

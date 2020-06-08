@@ -1,3 +1,8 @@
+/*********************************************
+ * This class contains the main run method 
+ * to execute the client side gui
+ ********************************************/
+
 import javax.swing.SwingUtilities;
 
 public class ClueClient {

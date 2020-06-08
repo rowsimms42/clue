@@ -1,3 +1,9 @@
+/*****************************************************
+ * This class runs on the server side portion of the game.
+ * It creates a new thread for each client that is connected
+ * to the server.
+ *****************************************************/
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

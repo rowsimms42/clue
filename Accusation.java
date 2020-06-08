@@ -1,3 +1,8 @@
+/************************************************************************
+ * Accusation class is called from Board Panel class and implements two 
+ * runnables for if player accuses correctly or incorrectly.
+ ***********************************************************************/
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
