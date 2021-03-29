@@ -331,6 +331,7 @@ public class ClientFrame extends JFrame {
 
         menuBar = new JMenuBar();
         gameMenu = new JMenu("Options");
+        gameMenu.setBackground(new Color(0, 204, 204));
         gameMenu.setFont(new Font("SansSerif", Font.BOLD, 12));
         gameRulesMenuItem = new JMenuItem("Game Rules");
         seeCardDeckMenuItem = new JMenuItem("View Cards");
